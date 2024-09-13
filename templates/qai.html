@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+  <head>
+    <meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+ 	  <meta charset="UTF-8" />
+ 	  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name='robots' content='noindex, nofollow' />
+    <title>高中職小幫手｜問答</title>
+  </head>
+  <body>
+    <div class="d-none">
+      {{header|safe}}
+    </div>
+    <header class="py-3 mb-1 user-select-none text-start">
+      <div class="container-fluid d-grid gap-3 align-items-center" style="grid-template-columns: 1fr 2fr;">
+        <a href="/" class="dropdown d-flex flex-row align-middle align-items-start p-0 w-50 m-auto pe-auto text-decoration-none user-select-auto">
+          <font class="fw-bold fs-1 d-flex flex-row align-middle justify-content-center ms-5" style="width:5rem;height:100%;">
+            <font class="text-primary">高</font>
+            <font class="text-primary">中</font>
+            <font class="text-primary">職</font>
+            <font class="text-primary">小</font>
+            <font class="text-primary">幫</font>
+            <font class="text-primary">手</font>
+            <small class="text-primary small fs-5 pt-4">Alpha</small>
+          </font>
+        </a>
+      </div>
+    </header>
+    <div class="container">
+      <main class="text-center card" style="height:50vh;">
+        <div class="card-body">
+          <h1 class="card-title">獨自學習？</h1>
+          <h2 class="card-subtitle mb-2 text-body-secondary">有問題不如問問大家吧！</h2>
+          <p class="card-text"><a href="./qas" class="mdc-button mdc-button--unelevated"><span class="mdc-button__ripple"></span>檢視全部問題</a></p>
+        </div>
+        <div>
+          
+          <div class="container">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="true" id="stopshowing">
+              <label class="form-check-label" for="stopshowing">不再顯示</label>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer>
+        <div>
+          <div style="text-align:center;">&copy; 2022 高中職小幫手</div>
+        </div>
+      
+      </footer>
+    </div>
+<script>
+  function ajx(mode){
+    $.ajax({
+      url:"/qa/set_s",
+      method:"post",
+      data:{"mode":mode}
+    });
+  };
+  $(function(){
+    fake_session="{{session['dark']}}";
+    if (fake_session){
+      $("html").attr("data-bs-theme",fake_session);
+    };
+    if ($("html").attr("data-bs-theme")){
+      $("#"+fake_session+"l").hide();
+    };
+    $(document).on('click', '.theme', function (e) {
+      let chld=$(this).children("img").attr("id");
+      let m={"light":"dark","dark":"light"};
+      // alert(chld);
+      ajx(chld);
+      $("html").attr("data-bs-theme",chld)
+      fake_session=chld;
+      $("#"+chld+"l").hide();
+      $("#"+m[chld]+"l").show();
+     });
+  });
+</script>
+</body>
+
+</html>

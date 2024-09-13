@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜訂餐統計</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+  <div class="container" id="outer-container">
+    {{sech|safe}}
+    <div class="container mt-5 row justify-content-around">
+      <form action="/food/induce" method="post" class="input-group mb-5 col-12 col-md-4" style="width: 20rem;max-width:95vw;">
+        <input type="password" class="form-control" placeholder="點單資料清除碼" name="pswd" required>
+        <button type="submit" class="btn btn-outline-primary">清除資料</button>
+      </form>
+      
+      <form method="post" class="input-group mb-5 col-12 col-md-4" style="width: 20rem;max-width:95vw;">
+        <input type="password" class="form-control" placeholder="投票資料清除碼" name="pswd" required>
+        <button type="submit" class="btn btn-outline-primary">清除資料</button>
+      </form>
+      
+      <form method="post" class="input-group mb-5 col-12 col-md-4" style="width: 20rem;max-width:95vw;">
+        <input type="text" class="form-control" placeholder="投票標題" name="title" required>
+        <button type="submit" class="btn btn-outline-primary">保存</button>
+      </form>
+      
+      <form method="post" class="input-group mb-5 col-12 col-md-4" style="width: 20rem;max-width:95vw;" id="order-mode-form">
+        <input type="password" class="form-control" placeholder="檢查碼" name="order" required>
+        <input type="hidden" name="mode" id="order_mode">
+        <button type="button" class="btn btn-outline-success fw-bold order-mode" -data-mode="start">點單開始</button>
+        <button type="button" class="btn btn-outline-warning fw-bold order-mode" -data-mode="stop">點單截止</button>
+      </form>
+      
+      <form method="post" class="input-group mb-5 col-12 col-md-4" style="width: 20rem;max-width:95vw;" id="vote-mode-form">
+        <input type="password" class="form-control" placeholder="檢查碼" name="vote" required>
+        <input type="hidden" name="mode" id="vote_mode">
+        <button type="button" class="btn btn-outline-success fw-bold vote-mode" -data-mode="start">投票開始</button>
+        <button type="button" class="btn btn-outline-warning fw-bold vote-mode" -data-mode="stop">投票截止</button>
+      </form>
+      
+      <p></p>
+      
+      <form method="post" class="mb-5 border rounded p-1 text-end" style="max-width:95vw;" enctype="multipart/form-data">
+      <input type="file" id="files" class="user-select-none" multiple placeholder="選擇檔案" name="files" required>
+        <button type="submit" class="btn btn-outline-primary mt-3">確定上傳</button>
+      </form>
+      
+    </div>
+  </div>
+  
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      $(".order-mode").click(function(){
+        $("#order_mode").val($(this).attr("-data-mode"))
+        $("#order-mode-form").submit()
+      })
+      $(".vote-mode").click(function(){
+        $("#vote_mode").val($(this).attr("-data-mode"))
+        $("#vote-mode-form").submit()
+      })
+      var ic1=`<i class="bi bi-list fs-1"></i>`
+      var ic2=`<i class="bi bi-x-lg fs-2"></i>`
+      $("#mynav").click(function(){
+        $(this).fadeOut(200,function(){
+          if($("#mynav").html()==ic1){
+            $("#mynav").html(ic2)
+          }else{
+            $("#mynav").html(ic1)
+          }
+        })
+        $(this).fadeIn(200)
+      })
+      $("header").remove()
+      $("footer").remove()
+      
+      $("#files").fileinput({
+        'showUpload': false,
+        "showRemove":false,
+        'dropZoneTitle':"拖放至此即可上傳",
+        'msgPlaceholder':"上傳檔案",
+        "browseLabel":"瀏覽",
+        "msgProcessing":"載入中"
+      });
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+  </script>
+</body>
+</html>

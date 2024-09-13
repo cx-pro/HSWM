@@ -1,0 +1,122 @@
+<div class="modal fade" id="taskAddModal" tabindex="-1" aria-labelledby="taskAddModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <form id="form"  class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="taskAddModalLabel">新增事項</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating mb-4">
+          <input type="datetime-local" id="task-datetime" class="form-control" placeholder=" " required>
+          <label for="task-date">日期 時間</label>
+        </div>
+        <div class="form-floating mb-4">
+          <input type="text" id="task-title" class="form-control" placeholder=" " required>
+          <label for="task-title">標題</label>
+        </div>
+        <div class="form-floating mb-4">
+          <textarea id="task-content" class="form-control" placeholder=" " required></textarea>
+          <label for="task-content">內容</label>
+        </div>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary fw-bold">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="user-select-none">
+  <style>
+    #calendar a{
+      color:inherit;
+    }
+  </style>
+  <div class="d-flex">
+    <h1>{{y}}年{{m}}月</h1>
+    <div class="btn-group text-center my-auto">
+      <button id="pre" class="btn btn-outline-primary fw-bold">前一月</button>
+      <button id="now" class="btn btn-outline-primary fw-bold">本月</button>
+      <button id="next" class="btn btn-outline-primary fw-bold">後一月</button>
+    </div>
+    <a class="bi bi-calendar-plus fs-2 text-decoration-none fw-bold ms-3" data-bs-toggle="modal" data-bs-target="#taskAddModal" style="cursor:pointer;"></a>
+  </div>
+  <div id="calendar" class="row rounded-3 align-content-stretch my-4 mx-2 justify-content-center">
+    <div class="row p-0 col-12">
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期一'%}text-success{%endif%}">星期一</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期二'%}text-success{%endif%}">星期二</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期三'%}text-success{%endif%}">星期三</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期四'%}text-success{%endif%}">星期四</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期五'%}text-success{%endif%}">星期五</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期六'%}text-success{%else%}text-danger{%endif%}">星期六</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期日'%}text-success{%else%}text-danger{%endif%}">星期日</div>
+  </div>
+    {% set today = get_today('%Y-%m-%d') %}
+    {%for i in tks%}
+    {% set indi = tks.index(i) %}
+    {% set leni = len(i) %}
+    {%if indi%7==0 and indi!=0%}</div><div class="row p-0 col-12">
+    {%endif%}
+    {%if indi==0%}
+    <div class="row p-0 col-12">
+    {%endif%}
+    <div -data-date="{{i[0]}}" class="col date border p-1 text-decoration-none text-center overflow-hidden {%if int(i[0].split('-')[1])!=int(m)%}bg-secondary text-light{%endif%} {%if today==i[0]%}border-success border-2{%endif%}" style="height:10vh;cursor:pointer;">
+        <div class="text-start {%if today==i[0]%}text-success fw-bold{%endif%}">{{i[0].split("-")[2]}}</div>
+        {%if leni==2%}
+        {%for j in i[1]%}
+        {%for n in data[j]%}
+        <div class="p-0 rounded mb-1 fw-bold text-nowrap bg-primary text-light small text-truncate text-center">{{n["title"][:5]}}{%if len(data[j]["title"])>5%}...{%endif%}</div>
+        {%endfor%}
+        {%endfor%}
+        {%endif%}
+    </div>
+    {%endfor%}
+    </div>
+  </div>
+  
+  <script>
+    $(()=>{
+      var loading_spinner='<div class="text-primary position-absolute top-50 start-50 d-inline translate-middle" role="status"><a onclick=location.replace("/") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+      
+      $("#next").click(function(){
+        $("#head-contain").html(loading_spinner)
+        $("#head-contain").load("{{request.path}}?y={%if int(m)+1>12%}{{int(y)+1}}{%else%}{{y}}{%endif%}&m={%if int(m)+1>12%}{{1}}{%else%}{{int(m)+1}}{%endif%}")
+      })
+
+      
+      $("#pre").click(function(){
+        $("#head-contain").html(loading_spinner)
+        $("#head-contain").load("{{request.path}}?y={%if int(m)-1<1%}{{int(y)-1}}{%else%}{{y}}{%endif%}&m={%if int(m)-1<1%}{{12}}{%else%}{{int(m)-1}}{%endif%}")
+      })
+
+      
+      $("#now").click(function(){
+        $("#head-contain").html(loading_spinner)
+        $("#head-contain").load("{{request.path}}?y={{today.split('-')[0]}}&m={{int(today.split('-')[1])}}")
+      })
+
+      
+      $(".date").click(function(){
+        $("#head-contain").html(loading_spinner)
+        $("#head-contain").load("{{request.path}}?date="+$(this).attr("-data-date"))
+      })
+
+      
+      $("#form").submit(function(e){
+        e.preventDefault()
+        $.post("/index_calendar",{
+          "title":$("#task-title").val(),
+          "content":$("#task-content").val(),
+          "end_datetime":$("#task-datetime").val(),
+          "method":"add"
+        },function () {
+          location.reload()
+        })
+      })
+
+      
+    })
+  </script>
+</div>

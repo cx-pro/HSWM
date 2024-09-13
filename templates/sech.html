@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <a class="navbar-brand fw-bold text-success-emphasis" href="/food/">訂餐統計</a>
+        <a class="navbar-toggler border-0 border rounded-circle" style="cursor:pointer;" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" id="mynav" aria-label="Toggle navigation"><i class="bi bi-list fs-1"></i></a>
+        <div class="collapse navbar-collapse fw-bold" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link{%if request.path=='/food/order'%} text-primary fw-bold{%endif%}" href="/food/order">訂&emsp;&emsp;餐</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{%if request.path=='/food/induce'%} text-primary fw-bold{%endif%}" href="/food/induce">統計餐點</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{%if request.path=='/food/vote'%} text-primary fw-bold{%endif%}" href="/food/vote">店家票選</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link{%if request.path=='/food/settings'%} text-primary fw-bold{%endif%}" href="/food/settings">資料設定</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>

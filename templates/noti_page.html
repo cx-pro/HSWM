@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜通知</title>
+</head>
+<body><div id="loader_container"></div>
+<!-- <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<!-- jquery-ui -->
+<link href="https://code.jquery.com/ui/1.13.1/themes/smoothness/jquery-ui.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://code.jquery.com/ui/1.13.1/jquery-ui.min.js" crossorigin="anonymous"></script>
+<!--------------->
+
+<link href="https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/buffer.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/plugins/filetype.min.js" type="text/javascript"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/fileinput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/js/locales/LANG.js"></script>
+<link href="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.2/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+
+
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+    *::-webkit-scrollbar {
+      width: .5rem;
+    }
+    *::-webkit-scrollbar-thumb {
+      border: #e9ecef solid .1rem;
+      border-radius: .8rem;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+      background-color: #4285F4;
+    }
+    *::-webkit-scrollbar:horizontal {
+      display: none;
+    }
+/* Hide scrollbar for IE, Edge and Firefox */
+    * {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+</style>
+  
+    <div id="loader_container"></div>
+<script>
+  $(()=>{
+      const loader=`<div class="z-3 bg-{{session.get('dark','light')}} position-absolute top-0 start-0" style="height:100vh;width:100vw;" id="page_loader"><div class="spinner-grow text-primary position-absolute top-50 start-50 translate-middle" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div></div>`
+      $(window).off("beforeunload").on("beforeunload",function(){
+        $("#loader_container").html(loader)
+      })
+  })
+</script>
+  <marquee class="bg-primary-subtle border-top border-bottom border-primary fw-bold w-100 text-light-subtle overflow-x-scroll p-1 text-nowrap" scrollamount="3" style="height:2rem;">頁面若經常在加載後要求登入，則為製作者修改程式後重啟系統造成，非常抱歉。</marquee>
+<script>
+  function aja(key){
+    $.ajax({
+      url:"/rs",
+      method:"post",
+      data:{"key":key}
+    });
+  };
+  function ajx(mode){
+    $.ajax({
+      url:"/qa/set_s",
+      method:"post",
+      data:{"mode":mode}
+    });
+  };
+  $(function(){
+    // var socket = io.connect('https://' + document.domain + ':' + location.port);
+    // socket.on('reload', function() {
+    //   location.reload();
+    // });
+    $("#network-status").html(`${navigator.onLine ? '<i class="bi bi-wifi text-success"></i>' : '<i class="bi bi-wifi-off text-danger"></i>'}`)
+    $("#network-status").attr("data-bs-title",`${navigator.onLine ? "線上":"離線"}`)
+    $("#network-status").attr("data-bs-custom-class",`${navigator.onLine ? "success-tooltip":"danger-tooltip"}`)
+    function updateOnlineStatus(event) {
+      $("#network-status").html(`${navigator.onLine ? '<i class="bi bi-wifi text-success"></i>' : '<i class="bi bi-wifi-off text-danger"></i>'}`)
+      $("#network-status").attr("data-bs-title",`${navigator.onLine ? "線上":"離線"}`)
+      $("#network-status").attr("data-bs-custom-class",`${navigator.onLine ? "success-tooltip":"danger-tooltip"}`)
+      tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+      toastElList = document.querySelectorAll('.toast')
+      toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl))
+    }
+    window.addEventListener('online',  updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+    
+    fake_session="{{session['dark']}}";
+    if (fake_session){
+      $("html").attr("data-bs-theme",fake_session);
+    };
+    if ($("html").attr("data-bs-theme")){
+      $("#"+fake_session+"l").hide();
+    };
+    $(document).on('click', '.theme', function (e) {
+      let chld=$(this).children("i").attr("id");
+      let m={"light":"dark","dark":"light"};
+      // alert(chld);
+      ajx(chld);
+      $("html").attr("data-bs-theme",chld)
+      fake_session=chld;
+      $("#"+chld+"l").hide();
+      $("#"+m[chld]+"l").show();
+      // if(!$("head").html().includes(`<meta name="theme-color" content="blue" media="(prefers-color-scheme: dark)">`)){
+      //   $("head").append(`<meta name="theme-color" content="blue" media="(prefers-color-scheme: dark)">`)
+      // }
+     });
+  });
+</script>
+<style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  .danger-tooltip {
+    --bs-tooltip-bg: var(--bs-danger);
+    font-weight:bold;
+  }
+  .warning-tooltip {
+    --bs-tooltip-bg: var(--bs-warning);
+    font-weight:bold;
+  }
+  .success-tooltip {
+    --bs-tooltip-bg: var(--bs-success);
+    font-weight:bold;
+  }
+</style>
+<script>
+    $(()=>{
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+      const toastElList = document.querySelectorAll('.toast')
+      const toastList = [...toastElList].map(toastEl => new bootstrap.Toast(toastEl))
+    })
+</script>
+
+      
+        <main class="overflow-scroll" id="main" style="max-height:84.5vh;">
+    
+  {%if notifications%}
+  <div class="list-group border rounded position-absolute z-3" style="cursor: pointer; top: 205px; left: 412px;" id="custom-contextmenu">
+      <div><a class="list-group-item rounded fw-bold text-danger" data-bs-toggle="modal" data-bs-target="#Notify-clear">刪除</a></div>
+  </div>
+
+  <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="Notify-clear">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header border-bottom-0">
+          <h1 class="modal-title fs-5">確認</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-0">
+        
+          <div class="fw-bold text-primary fs-5" id="notify-d-label">確認刪除所有通知?</div>
+          <div class="fw-bold text-danger fs-4">此操作無法復原!!</div>
+      </div>
+      <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0 fw-bold">
+          <button type="button" class="btn btn-danger delete" data-del-index="*">確定</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="modal fade" id="Notify-Panel" tabindex="-1" aria-labelledby="Notify-Panel-Label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="Notify-Panel-Label">通知設定</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 py-3">
+          {%if current_user.is_student%}
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="HM-Notify">
+            <label class="form-check-label fw-bold fs-6" for="HM-Notify">作業通知</label>
+          </div>
+          {%endif%}
+        </div>
+        <div class="modal-footer" id="check-field">
+          <i id="Notify-settings-confirm" class="bi bi-check2 btn fs-3 my-0 py-0 border-0 text-primary fw-bold"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+    {%endif%}
+    {%if current_user.is_authenticated and notifications%}
+    <div class="float-end btn-group">
+      <i class="bi bi-list-nested fs-3 btn text-primary" data-bs-toggle="modal" id="notify-clear-caller" data-bs-target="#Notify-clear"></i>
+      <i class="bi bi-gear fs-3 btn text-primary" id="Notify-Panel-caller" data-bs-toggle="modal" data-bs-target="#Notify-Panel"></i></div>
+    {%endif%}
+        <div class="container">
+          <div class="py-4 mx-auto py-md-5 align-items-center justify-content-center">
+            <div class="row mx-auto">
+              {%if current_user.is_authenticated%}
+              {%if notifications%}
+              {%for i in notifications%}
+              <a href="{{i['link']}}" id="{{notifications.index(i)}}" class="col-12 ms-1 notifications col-md-4 rounded mb-3 text-decoration-none {{i['bg-color']}} mx-auto d-flex gap-3 py-3" aria-current="true">
+                <i class="bi {{i['icon']}} fs-1"></i>
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                  <div>
+                    <h6 class="mb-0 fw-bold">{{i['title']}}</h6>
+                    <p class="mb-0 opacity-75">{{i['content']}}</p>
+                  </div>
+                  <small class="opacity-50 text-nowrap">{{i['time']}}</small>
+                </div>
+              </a>
+              {%endfor%}
+              {%else%}
+              <div class="col-12 col-md-4 text-center fw-bold fs-1 text-primary mb-3">無通知</div>
+              <div class="col-12 col-md-4 mx-auto placeholder-glow rounded rounded-4 mb-5"><span class="placeholder py-5 w-100 rounded rounded-4 bg-primary" style="height:100%;"></span></div>
+              <div class="col-12 col-md-4 mx-auto placeholder-glow rounded rounded-4 mb-5"><span class="placeholder py-5 w-100 rounded rounded-4 bg-success" style="height:100%;"></span></div>
+              <div class="col-12 col-md-4 mx-auto placeholder-glow rounded rounded-4 mb-5"><span class="placeholder py-5 w-100 rounded rounded-4 bg-info" style="height:100%;"></span></div>
+              {%endif%}
+              {%else%}
+              <a href="/login?next={{request.path}}" class="col-12 col-md-4 rounded mb-3 text-decoration-none bg-primary text-light d-flex gap-3 py-3" aria-current="true">
+                <i class="bi bi-info-lg fs-1"></i>
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                  <div>
+                    <h6 class="mb-0 fw-bold">請先登入</h6>
+                    <p class="mb-0 opacity-75">查看通知需要先登入系統</p>
+                  </div>
+                  <small class="opacity-50 text-nowrap">現在</small>
+                </div>
+              </a>
+              {%endif%}
+            </div>
+          </div>
+        </div>
+  <script>
+    
+    function mouseX(evt) {
+      if (evt.pageX) {
+        return evt.pageX;
+      } else if (evt.clientX) {
+        return evt.clientX + (document.documentElement.scrollLeft ?
+          document.documentElement.scrollLeft :
+          document.body.scrollLeft);
+      } else {
+        return null;
+      }
+    }
+    
+    function mouseY(evt) {
+      if (evt.pageY) {
+        return evt.pageY;
+      } else if (evt.clientY) {
+        return evt.clientY + (document.documentElement.scrollTop ?
+          document.documentElement.scrollTop :
+          document.body.scrollTop);
+      } else {
+        return null;
+      }
+    }
+    var loader=`<div class="spinner-grow text-primary" role="status"></div>`
+    var check_btn=`<i id="Notify-settings-confirm" class="bi bi-check2 btn fs-3 my-0 py-0 border-0 text-primary fw-bold"></i>`
+    $(()=>{
+      $("#custom-contextmenu").hide()
+      $("body").click(function(e){
+        if($("#custom-contextmenu").css("display")!="none"){
+          $("#custom-contextmenu").hide()
+        }
+      })
+      $("#Notify-Panel-caller").click(function(){
+        $.get("/user_settings",function(data){
+          if(!data.hasOwnProperty("HM-notify")){
+           $("#HM-Notify").prop("checked", true) 
+          }else{
+           $("#HM-Notify").prop("checked", data["HM-notify"]) 
+          }
+        })
+      })
+      $("#notify-clear-caller").click(function(){
+        $("#notify-d-label").html("確認刪除所有通知?")
+        
+        $(".delete").attr("data-del-index","*")
+      })
+      $(".delete").click(function(){
+        if($(this)[0].hasAttribute("data-del-index")){
+          $.ajax({
+            url:"/notifications",
+            method:"post",
+            data:{"index":$(this).attr("data-del-index")},
+            success:function(){location.reload()}
+          })
+        }
+      })
+      $(".notifications").contextmenu(function(e){
+        e.preventDefault()
+        $(".delete").attr("data-del-index",this.id)
+        $("#notify-d-label").html("確認刪除此通知?")
+        $("#custom-contextmenu").hide()
+        $("#custom-contextmenu").show()
+        $("#custom-contextmenu").css("top",mouseY(e) + 'px');
+        $("#custom-contextmenu").css("left",mouseX(e) + 'px');
+      })
+      
+      $("#Notify-settings-confirm").click(function(){
+        $("#check-field").html(loader)
+        $.ajax({
+          url:"/user_settings",
+          method:"post",
+          data:{"HM-notify":$("#HM-Notify").prop("checked")},
+          success:function(data){
+            $("#Notify-Panel").modal("hide")
+            $("#check-field").html(check_btn)
+          }
+        })
+      })
+    })
+  </script>
+      </main>
+
+  
+<div id="msgcon">
+   {%if session.get("msg")%}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle pt-5">
+      <div class="toast align-items-center show mt-5 fade" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body">
+            {{msg}}
+          </div>
+          <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="aja('msgs')"></button>
+        </div>
+      </div>
+    </div>
+    {%endif%}
+</div>
+<div id="tocon"></div>
+<div class="btn-group dropup">
+<a class="position-fixed bottom-0 end-0 p-1 mb-2 me-2 fade" style=";max-width:5rem;--bs-bg-opacity: .5;" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false" style="cursor: pointer;" id="reporter_btn"><i class="bi bi-send-exclamation fw-bold" style="font-size:3rem"></i></a>
+  <div id="reporter_contain">
+  <a class="position-fixed bottom-0 end-0 p-1 mb-2 me-2" style=";max-width:5rem;--bs-bg-opacity: .5;" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false" aria-expanded="false" style="cursor: pointer;">
+  <div class="text-primary" role="status"><div class="spinner-grow"><span class="visually-hidden">Loading...</span></div></div></a>
+  </div>
+</div>
+  <footer class="py-3 border-top mt-auto mb-0 fw-bold">
+    <p class="text-center text-muted">&copy; 2022 高中職小幫手</p>
+  </footer>
+<script>
+  $(function(){
+      $("#reporter_btn").hide()
+    $.post({url:"/reporter",data:{},success:function(data){
+      $("#reporter_contain").html(data)
+      $("#reporter_btn").removeClass("fade")
+      $("#reporter_btn").show(500)
+    }})
+    $("body").addClass("d-flex flex-column min-vh-100 w-100 mx-auto overflow-scroll");
+    $("#drop_close").click(function(){
+      $(".dropdown-menu").dropdown("hide");
+    })
+    });
+</script>
+  </body>
+</html>

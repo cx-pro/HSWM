@@ -1,0 +1,219 @@
+<div class="modal fade" id="taskAddModal" tabindex="-1" aria-labelledby="taskAddModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <form id="form"  class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="taskAddModalLabel">新增事項</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating mb-4">
+          <input type="datetime-local" id="task-datetime" value="{{datelist[0]}}-{{datelist[1]}}-{{datelist[2]}}T12:00" class="form-control" placeholder=" " required>
+          <label for="task-datetime">日期 時間</label>
+        </div>
+        <div class="form-floating mb-4">
+          <input type="text" id="task-title" class="form-control" placeholder=" " required>
+          <label for="task-title">標題</label>
+        </div>
+        <div class="form-floating mb-4">
+          <textarea id="task-content" class="form-control" placeholder=" " required></textarea>
+          <label for="task-content">內容</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary fw-bold">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="modal fade" id="taskEditModal" tabindex="-1" aria-labelledby="taskEditModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <form id="formedit"  class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="taskEditModalLabel">編輯事項</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating mb-4">
+          <input type="datetime-local" id="edit-datetime" class="form-control" placeholder=" " required>
+          <label for="edit-datetime">日期 時間</label>
+        </div>
+        <div class="form-floating mb-4">
+          <input type="text" id="edit-title" class="form-control" placeholder=" " required>
+          <label for="edit-title">標題</label>
+        </div>
+        <div class="form-floating mb-4">
+          <textarea id="edit-content" class="form-control" placeholder=" " required></textarea>
+          <label for="edit-content">內容</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary fw-bold">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div class="modal fade" id="taskDelModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-3 shadow">
+      <div class="modal-body p-3 py-5 text-center">
+        <h5 class="mb-0 fw-bold">確認刪除此記事?</h5>
+        <p class="mb-0 text-danger fw-bold">此操作無法復原!</p>
+      </div>
+      <div class="modal-footer flex-nowrap p-0">
+        <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end text-danger" id="del-task"><strong>確定刪除</strong></button>
+        <button type="button" class="btn text-muted btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="text-start">
+  <a class="back text-decoration-none"><i class="bi bi-box-arrow-left fs-1"></i></a>
+  <a class="bi bi-calendar-plus fs-1 text-decoration-none fw-bold ms-3" data-bs-toggle="modal" data-bs-target="#taskAddModal" style="cursor:pointer;"></a>
+</div>
+<div class="accordion w-100" id="accordionDate">
+  {%set c=namespace(value=-1)%}
+  {%for i in tks%}
+    {%for j in i[1]%}
+      {%for k in data[j]%}
+  
+      {% set ki=str(tks.index(i))+"_"+str(i[1].index(j))+"_"+str(data[j].index(k)) %}
+      {% set c.value = c.value + 1  %}
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button{%if c.value!=0%} collapsed{%endif%} fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ki}}" aria-expanded="{{'true' 
+ if c.value==0 else 'false'}}" aria-controls="collapse{{ki}}" id="title{{j}}">
+            {{k["title"]}}
+          </button>
+        </h2>
+        <div id="collapse{{ki}}" class="accordion-collapse collapse{%if c.value==0%} show{%endif%}" data-bs-parent="#accordionDate">
+          <div class="accordion-body user-select-auto">
+            <div class="w-100 d-flex mb-3">
+              <div class="small p-1 rounded bg-primary text-light fw-bold ms-2">{{k["start_time"]}}</div>
+              <div class="small p-1 rounded bg-primary text-light fw-bold ms-2" id="end_date{{j}}">{{k["end_date"]}}</div>
+              <div class="small p-1 rounded bg-primary text-light fw-bold ms-2" id="end_time{{j}}">{{k["end_time"]}}</div>
+              <div class="small p-1 rounded bg-primary text-light fw-bold ms-2">{%if "tasker" in k%}{{users[k["tasker"]]["fullname"]}}{%else%}個人記事{%endif%}</div>
+            </div>
+            {%if not "tasker" in k%}
+            <div class="float-end ms-auto me-0">
+              <a class="text-decoration-none fw-bold text-end bi bi-pen fs-4 edit" data-bs-toggle="modal" data-bs-target="#taskEditModal" -data-id="{{j}}" style="cursor:pointer;"></a>
+              <a class="text-decoration-none text-danger fw-bold text-end bi bi-trash3 fs-4 del" data-bs-toggle="modal" data-bs-target="#taskDelModal" -data-id="{{j}}" style="cursor:pointer;"></a>
+            </div>
+            {%endif%}
+            <pre class="text-start ms-3 fs-5" id="content{{j}}">{{k["content"]|safe}}</pre>
+            {%if k["files"]%}
+            <div class="">
+              <h3>附檔</h3>
+              <hr>
+              {%for fp in k["files"]%}
+                {%if not fp in filem%}
+                <a href="/{{fp}}"><i class="bi bi-file-earmark fs-3"></i></a>
+                {%endif%}
+              {%endfor%}
+            </div>
+            <div id="carouselPics" class="carousel slide mx-auto" style="max-width:50%;" data-bs-ride="carousel">
+              
+              <div class="carousel-indicators">
+                {%set c2=namespace(value=-1)%}
+                {%for img in k["files"]%}
+                  {%if img in filem%}
+                    {% set c2.value = c2.value + 1  %}
+                    <button type="button" data-bs-target="#carouselPics" data-bs-slide-to="{{c2.value}}" {%if c2.value==0%} class="active" aria-current="true"{%endif%}></button>
+                  {%endif%}
+                {%endfor%}
+              </div>
+              <div class="carousel-inner">
+                {%set c2=namespace(value=-1)%}
+                {%for img in k["files"]%}
+                  {%if img in filem%}
+                    {% set c2.value = c2.value + 1  %}
+                    
+                    <div class="carousel-item {%if c2.value==0%}active{%endif%}">
+                      <img src="{{img}}" class="d-block w-100">
+                    </div>
+                  {%endif%}
+                {%endfor%}
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carouselPics" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">上一張</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carouselPics" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">下一張</span>
+              </button>
+            </div>
+            {%endif%}
+          </div>
+        </div>
+      </div>
+  
+      {%endfor%}
+    {%endfor%}
+  {%endfor%}
+  
+</div>
+<script>
+  $(()=>{
+      var loading_spinner='<div class="text-primary position-absolute top-50 start-50 d-inline translate-middle" role="status"><a onclick=location.replace("/") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+      var cur_ind;
+    
+    $(".back").click(function () {
+      $("#head-contain").html(loading_spinner)
+      $("#head-contain").load("{{request.path}}?y={{datelist[0]}}&m={{datelist[1]}}")
+    })
+
+    
+    $("#form").submit(function(e){
+      e.preventDefault()
+      $.post("/index_calendar",{
+        "title":$("#task-title").val(),
+        "content":$("#task-content").val(),
+        "end_datetime":$("#task-datetime").val(),
+        "method":"add"
+      },function () {
+        location.reload()
+      })
+    })
+
+    
+    $("#formedit").submit(function(e){
+      e.preventDefault()
+      $.post("/index_calendar",{
+        "title":$("#edit-title").val(),
+        "content":$("#edit-content").val(),
+        "end_datetime":$("#edit-datetime").val(),
+        "method":"edit",
+        "ind":cur_ind.split("-")[1]
+      },function () {
+        location.reload()
+      })
+    })
+
+    $(".del").click(function () {
+      cur_ind=$(this).attr("-data-id")
+    })
+    $("#del-task").click(function () {
+      $.post("/index_calendar",{
+        "method":"del",
+        "ind":cur_ind.split("-")[1]
+      },function () {
+        location.reload()
+      })
+    })
+    
+    $(".edit").click(function(){
+      var id=$(this).attr("-data-id")
+      cur_ind=id
+      $("#edit-datetime").val(($(`#end_date${id}`).html()+"T"+$(`#end_time${id}`).html()).trim())
+      $("#edit-title").val(($(`#title${id}`).html()).trim())
+      $("#edit-content").val($(`#content${id}`).html())
+    })
+  })
+</script>

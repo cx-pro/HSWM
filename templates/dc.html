@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜確認刪除 </title>
+    <style>
+      *{
+        text-align:center;
+        margin: 0;
+        padding: 0;
+        box-sizing:border-box;
+      }
+    </style>
+</head>
+<body>
+    {{header|safe}}
+  <h1>確認刪除?</h1>
+  <p></p>
+  <form action="./dc?id={{id}}" method="post">
+    <input class="btn btn-danger btn-lg" style="width:40%;" type="submit" value="確認">
+  </form>
+  <p></p>
+  <button class="btn btn-secondary btn-lg" style="width:40%;margin-left:30%;" onclick="location.replace('./pdfl')">取消</button>
+{{footer|safe}}
+</body>
+</html>

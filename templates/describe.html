@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜敘述</title>
+</head>
+<body>
+  <div class="container">
+    <hr>
+    <legend class="text-success fw-bold">範例說明</legend>
+    <div class="col">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <div class="fw-bold">
+                      <font class="float-start fs-5">標題</font><small class="text-muted float-end">科目</small>
+                    </div>
+                    <p class="my-5"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted"></small>
+                        <button type="button" class="btn btn-sm btn-outline-secondary" style="width:25%;">檢視</button>
+                      <small class="text-muted">日期</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+    <p class="my-5"></p>
+    <div class="text-start">
+    <p><font class="border rounded border-2 p-2"><small class="fs-5 fw-bold">標題</small></font>：問題的標題。</p>
+    <p><font class="border rounded border-2 p-2"><small class="fs-5 fw-bold">科目</small></font>：問題的科目別。</p>
+    <p><font class="border rounded border-2 p-2"><small class="fs-5 fw-bold">日期</small></font>：問題發布日期。</p>
+    <p><font><button type="button" class="btn fs-6 btn-sm btn-outline-secondary" style="width:25%;">檢視</button></font>：檢視問題詳情。</p>
+    </div>
+    <hr>
+    <legend class="text-success fw-bold">搜尋說明</legend>
+    <div class="collapse-horizontal">
+      <div class="card card-body">
+        <label for="search" class="text-start p-0 m-0"><i class="bi bi-search"></i></label>
+        <input type="search" id="exsearch" class="form-control" autocomplete="off">
+      </div>
+    </div>
+    <p class="my-5"></p>
+    <div class="text-start">
+      <p></p>
+      <p class="alert alert-info w-25 p-0 text-center">目前支援以下搜尋方法</p>
+      <p class="alert alert-info w-25 p-0 text-center">點按可看範例</p>
+    <p onclick="$('#exsearch').val('國文 第二課');" class="user-select-none border rounded p-auto fw-bold border-2 text-center" style="cursor:pointer;">搜尋 「國文」 + 「 」 + 「第二課」 ： 搜尋有「國文」 或 「第二課」的問題。</p>
+      <p class="alert alert-info w-25 p-0 text-center">在搜尋欄按下大鍵盤Enter<br>或放大鏡圖示可執行搜尋</p>
+    </div>
+    <p class="my-5"></p>
+    <hr>
+    <p class="my-5"></p>
+    <legend class="text-success fw-bold">我的回覆說明</legend>
+    <div class="col">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <p class="text-start">原問題標題</p>
+          <div class="text-center fs-4">內容</div>
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted"></small>
+              <small class="text-muted">日期</small>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="my-5"></p>
+    <div class="text-start">
+    <p><font class="border rounded border-2 p-2"><small class="fs-5 fw-bold">原問題標題</small></font>：原問題的標題。點按該處文字可以連結到原問題</p>
+    <p><font class="border rounded border-2 p-2"><small class="fs-5 fw-bold">日期</small></font>：回覆日期。</p>
+    <p><font class="border rounded border-2 p-2"><small class="fs-5 fw-bold">內容</small></font>：回覆內容。</p>
+    </div>
+    <p class="my-5"></p>
+    <hr>
+    <p class="my-5"></p>
+  </div>
+</body>
+</html>

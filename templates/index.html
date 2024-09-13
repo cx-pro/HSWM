@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜首頁</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+  <div class="container p-0 d-flex align-items-center" id="main-container" style="min-height:60vh;">
+    <div class="text-center w-100" id="head-contain" style="max-height:100%;">
+      <font class="text-center fw-bold fs-1 m-auto mb-0 user-select-none">
+        <font class="text-primary">高</font>
+        <font class="text-primary">中</font>
+        <font class="text-primary">職</font>
+        <font class="text-primary">小</font>
+        <font class="text-primary">幫</font>
+        <font class="text-primary">手</font>
+      </font>
+      <div id="datetime" class="text-center fs-5 text-info fw-bold user-select-none">{{get_today("%Y年%m月%d日\t")|safe}}&emsp;<span class="text-success">{{get_today("%A")|safe}}</span></div>
+      <div class="text-center ms-0" id="tasks">
+        
+      </div>
+    </div>
+  </div>
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      var loading_spinner='<div class="text-primary d-inline" role="status"><a onclick=location.replace("/qa/qas") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+      {%if current_user.is_authenticated%}
+      {%if current_user.settings%}
+      if(`{{current_user.settings.get("index_mode")}}`=="both"){
+        var path ="/index_task #tks"
+        var par="#tasks"
+      }else if(`{{current_user.settings.get("index_mode")}}`=="todays"){
+        var path ="/index_task"
+        var par="#head-contain"
+      }else if(`{{current_user.settings.get("index_mode")}}`=="calendar"){
+        var path="/index_calendar"
+        var par="#head-contain"
+      }
+      if(path&&par){
+        $(par).html(loading_spinner);
+        $(par).load(path)
+      }
+      {%endif%}
+      {%endif%}
+      $(document).off('change', '.check').on('change', '.check', function (e) {
+        $("#"+this.id+"T").toggleClass("text-decoration-line-through")
+        $("#"+this.id+"S").toggleClass("text-decoration-line-through")
+        $.when(
+        $.ajax({
+          url:"/index_task",
+          method:"post",
+          data:{"pos":this.id}
+        })
+        ).then(function(){$(par).html(loading_spinner);$(par).load(path)})
+      })
+      var time=0
+      // setInterval(function(){
+      //   time++;
+      //   if(time<60){
+      //   $("#sec").html(time)
+      //   }else{
+      //     if(time<3600){
+      //         $("#sec").html(Math.floor(time/60)+" 分 "+time%60)
+      //     }else{
+      //       if(time<86400){
+      //         $("#sec").html(Math.floor(time/3600)+" 時 "+Math.floor(time%3600/60)+" 分 "+time%3600%60)}
+      //       else{
+      //         if(time<31536000){
+      //           $("#sec").html(Math.floor(time%31536000/86400)+" 日 "+Math.floor(time%31536000%86400/3600)+" 時 "+Math.floor(time%31536000%86400%3600/60)+" 分 "+time%31536000%86400%3600%60)
+      //         }else{
+      //         $("#sec").html(Math.floor(time/31536000)+" 年 "+Math.floor(time%31536000/86400)+" 日 "+Math.floor(time%31536000%86400/3600)+" 時 "+Math.floor(time%31536000%86400%3600/60)+" 分 "+time%31536000%86400%3600%60)}
+      //       }
+      //     }
+      //   }
+      // },1000)
+    })
+  </script>
+  <script>
+    $(()=>{
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+  </script>
+</body>
+</html>

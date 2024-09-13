@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜通知</title>
+</head>
+<body>
+  {{header|safe}}
+  <main class="overflow-scroll" id="main" style="max-height:84.5vh;">
+    
+  {%if notifications%}
+  <div class="list-group border rounded position-absolute z-3" style="cursor: pointer; top: 205px; left: 412px;" id="custom-contextmenu">
+      <div><a class="list-group-item rounded fw-bold text-danger" data-bs-toggle="modal" data-bs-target="#Notify-clear">刪除</a></div>
+  </div>
+
+  <div class="modal modal-sheet fade p-4 py-md-5" tabindex="-1" role="dialog" id="Notify-clear">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header border-bottom-0">
+          <h1 class="modal-title fs-5">確認</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body py-0">
+        
+          <div class="fw-bold text-primary fs-5" id="notify-d-label">確認刪除所有通知?</div>
+          <div class="fw-bold text-danger fs-4">此操作無法復原!!</div>
+      </div>
+      <div class="modal-footer flex-column align-items-stretch w-100 gap-2 pb-3 border-top-0 fw-bold">
+          <button type="button" class="btn btn-danger delete" data-del-index="*">確定</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+  {%endif%}
+  <div class="modal fade" id="Notify-Panel" tabindex="-1" aria-labelledby="Notify-Panel-Label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="Notify-Panel-Label">通知設定</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 py-3">
+          {%if current_user.is_student%}
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="HM-Notify">
+            <label class="form-check-label fw-bold fs-6" for="HM-Notify">作業通知</label>
+          </div>
+          {%endif%}
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="NMSG-Notify">
+            <label class="form-check-label fw-bold fs-6" for="NMSG-Notify">新訊息通知</label>
+          </div>
+        </div>
+        <div class="modal-footer" id="check-field">
+          <i id="Notify-settings-confirm" class="bi bi-check2 btn fs-3 my-0 py-0 border-0 text-primary fw-bold"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+    {%if current_user.is_authenticated%}
+    <div class="float-end btn-group">
+      {%if notifications%}
+      <i class="bi bi-list-nested fs-3 btn text-primary" data-bs-toggle="modal" id="notify-clear-caller" data-bs-target="#Notify-clear"></i>
+      {%endif%}
+      <i class="bi bi-gear fs-3 btn text-primary" id="Notify-Panel-caller" data-bs-toggle="modal" data-bs-target="#Notify-Panel"></i></div>
+    {%endif%}
+        <div class="container">
+          <div class="py-4 mx-auto py-md-5 align-items-center justify-content-center">
+            <div class="row mx-auto">
+              {%if current_user.is_authenticated%}
+              {%if notifications%}
+              {%for i in notifications%}
+              <a href="{{i['link']}}" id="{{notifications.index(i)}}" class="col-12 ms-1 notifications col-md-4 rounded mb-3 text-decoration-none {{i['bg-color']}} mx-auto d-flex gap-3 py-3" aria-current="true">
+                <i class="bi {{i['icon']}} fs-1"></i>
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                  <div>
+                    <h6 class="mb-0 fw-bold">{{i['title']}}</h6>
+                    <p class="mb-0 opacity-75">{{i['content']}}</p>
+                  </div>
+                  <small class="opacity-50 text-nowrap">{{i['time']}}</small>
+                </div>
+              </a>
+              {%endfor%}
+              {%else%}
+              <div class="col-12 col-md-4 text-center fw-bold fs-1 text-primary mb-3">無通知</div>
+              <div class="col-12 col-md-4 mx-auto placeholder-glow rounded rounded-4 mb-5"><span class="placeholder py-5 w-100 rounded rounded-4 bg-primary" style="height:100%;"></span></div>
+              <div class="col-12 col-md-4 mx-auto placeholder-glow rounded rounded-4 mb-5"><span class="placeholder py-5 w-100 rounded rounded-4 bg-success" style="height:100%;"></span></div>
+              <div class="col-12 col-md-4 mx-auto placeholder-glow rounded rounded-4 mb-5"><span class="placeholder py-5 w-100 rounded rounded-4 bg-info" style="height:100%;"></span></div>
+              {%endif%}
+              {%else%}
+              <a href="/login?next={{request.path}}" class="col-12 col-md-4 rounded mb-3 text-decoration-none bg-primary text-light d-flex gap-3 py-3" aria-current="true">
+                <i class="bi bi-info-lg fs-1"></i>
+                <div class="d-flex gap-2 w-100 justify-content-between">
+                  <div>
+                    <h6 class="mb-0 fw-bold">請先登入</h6>
+                    <p class="mb-0 opacity-75">查看通知需要先登入系統</p>
+                  </div>
+                  <small class="opacity-50 text-nowrap">現在</small>
+                </div>
+              </a>
+              {%endif%}
+            </div>
+          </div>
+        </div>
+  <script>
+    
+    function mouseX(evt) {
+      if (evt.pageX) {
+        return evt.pageX;
+      } else if (evt.clientX) {
+        return evt.clientX + (document.documentElement.scrollLeft ?
+          document.documentElement.scrollLeft :
+          document.body.scrollLeft);
+      } else {
+        return null;
+      }
+    }
+    
+    function mouseY(evt) {
+      if (evt.pageY) {
+        return evt.pageY;
+      } else if (evt.clientY) {
+        return evt.clientY + (document.documentElement.scrollTop ?
+          document.documentElement.scrollTop :
+          document.body.scrollTop);
+      } else {
+        return null;
+      }
+    }
+    var loader=`<div class="spinner-grow text-primary" role="status"></div>`
+    var check_btn=`<i id="Notify-settings-confirm" class="bi bi-check2 btn fs-3 my-0 py-0 border-0 text-primary fw-bold"></i>`
+    $(()=>{
+      $("#custom-contextmenu").hide()
+      $("body").click(function(e){
+        if($("#custom-contextmenu").css("display")!="none"){
+          $("#custom-contextmenu").hide()
+        }
+      })
+      $("#Notify-Panel-caller").click(function(){
+        $.get("/user_settings",function(data){
+          if(!"HM-Notify" in data){
+           $("#HM-Notify").prop("checked", true) 
+          }else{
+           $("#HM-Notify").prop("checked", data["HM-Notify"]) 
+          }
+          if(!"NMSG-Notify" in data){
+           $("#NMSG-Notify").prop("checked", true) 
+          }else{
+           $("#NMSG-Notify").prop("checked", data["NMSG-Notify"]) 
+          }
+        })
+      })
+      $("#notify-clear-caller").click(function(){
+        $("#notify-d-label").html("確認刪除所有通知?")
+        
+        $(".delete").attr("data-del-index","*")
+      })
+      $(".delete").click(function(){
+        if($(this)[0].hasAttribute("data-del-index")){
+          $.ajax({
+            url:location,
+            method:"post",
+            data:{"index":$(this).attr("data-del-index")},
+            success:function(){location.reload()}
+          })
+        }
+      })
+      $(".notifications").contextmenu(function(e){
+        e.preventDefault()
+        $(".delete").attr("data-del-index",this.id)
+        $("#notify-d-label").html("確認刪除此通知?")
+        $("#custom-contextmenu").hide()
+        $("#custom-contextmenu").show()
+        $("#custom-contextmenu").css("top",mouseY(e) + 'px');
+        $("#custom-contextmenu").css("left",mouseX(e) + 'px');
+      })
+      
+      $("#Notify-settings-confirm").click(function(){
+        $("#check-field").html(loader)
+        $.ajax({
+          url:"/user_settings",
+          method:"post",
+          data:{"HM-Notify":$("#HM-Notify").prop("checked"),"NMSG-Notify":$("#NMSG-Notify").prop("checked")},
+          success:function(data){location.reload()
+          }
+        })
+      })
+    })
+  </script>
+      </main>
+  {{footer|safe}}
+</body>
+</html>

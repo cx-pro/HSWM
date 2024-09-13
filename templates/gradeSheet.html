@@ -1,0 +1,315 @@
+{%if data["data"]%}
+<div class="modal fade" id="delGradeModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-3 shadow">
+      <div class="modal-body p-3 py-5 text-center">
+        <h5 class="mb-0 fw-bold">確認刪除此成績單?</h5>
+        <p class="mb-0 text-danger fw-bold">此操作無法復原!</p>
+      </div>
+      <div class="modal-footer flex-nowrap p-0">
+        <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end text-danger" id="del-grade"><strong>確定刪除</strong></button>
+        <button type="button" class="btn text-muted btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="editGradeModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header p-5 pb-4 border-bottom-0">
+        <h1 class="fw-bold mb-0 fs-2">編輯成績單</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body p-5 pt-0" id="edit-form">
+        <div class="d-flex flex-column">
+          <div class="mb-5 p-0">
+            <div class="w-100 input-group m-0 mb-2 p-0">
+              <span class="input-group-text">標題</span>
+              <input type="text" class="form-control title" value="{{data['title']}}" aria-label="標題">
+            </div>
+          </div>
+          <div class="row overflow-y-scroll" id="rows-container" style="height:50vh;">
+            {%for k,v in data["data"].items()%}
+            <div class="col-12 mb-2 p-0 rows">
+              <div class="input-group m-0 px-2 mb-2">
+                <span class="input-group-text">科目</span>
+                <input type="text" class="form-control field subject" value="{{k}}" aria-label="科目">
+                <span class="input-group-text">分數</span>
+                <input type="number" step="0.1" class="form-control field score" value="{{v}}" aria-label="分數">
+              </div>
+            </div>
+            {%endfor%}
+          </div>
+        </div>
+        <div class="d-flex flex-column">
+          <div class="btn-group mt-4">
+            <button type="button" class="btn btn-outline-secondary fw-bold reset-edit">重設</button>
+            <button type="button" class="btn btn-outline-primary fw-bold add-row">新增一項</button>
+            <button type="button" class="btn btn-outline-info fw-bold rm-row">移除未填欄位</button>
+            <button type="button" class="btn btn-outline-success fw-bold sub-edit">送出</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="container">
+  <div class="px-2 pt-1">
+    <span onclick="history.back()" class="user-select-none" style="cursor: pointer;"><a class="d-inline d-md-none fw-bold fs-3 me-3 text-decoration-none"><i class="bi bi-arrow-left"></i><span class="fs-5">返回</span></a></span>
+  </div>
+  <h3 >成績分析</h3>
+  <div class="btn-group mt-3">
+    <button type="button" class="btn btn-outline-secondary" id="chart-edit" data-bs-toggle="modal" data-bs-target="#editGradeModal" ><i class="bi bi-gear"></i></button>
+    <button type="button" class="btn btn-outline-danger" id="chart-del" data-bs-toggle="modal" data-bs-target="#delGradeModal" class="text-decoration-none"><i class="bi bi-trash3"></i></button>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-12 col-md-6">
+      <canvas id="chartContent"></canvas>
+    </div>
+    <div class="col-12 col-md-6">
+      <canvas id="chartContent2"></canvas>
+    </div>
+    
+  </div>
+</div>
+<script>
+  $(()=>{
+    var ori_form=$("#rows-container").html()
+    
+    $(".reset-edit").click(function () {
+      $("#rows-container").html(ori_form)
+      $(".title").val(`{{data["title"]}}`)
+    })
+
+        $("#del-grade").click(function () {
+      if(!$("#del-grade").hasClass("disabled")){
+      $("#del-grade").addClass("disabled")
+      }
+      $.post("/grade/post",{"method":"del-grade","id":"{{data['id']}}"},function() {
+        location.reload()
+      })
+    })
+    $("#chart-edit").change(function () {
+    })
+
+  
+  $(".sub-edit").click(function(){
+    $(".rm-row").click()
+    var flag=true
+    var data={}
+    if(!$(this).hasClass("disabled")){$(this).addClass("disabled")}
+    $(".subject").each(function(ind,elem){
+      if(!flag){return}
+      var subject=$(elem).val()
+      var score=$(elem).parent().children(".score").val()
+      if ((!subject || !score)&&(subject || score)){
+        flag=false
+        return
+      }
+      data[subject]=score
+    })
+    var emptydata=$.isEmptyObject(data)
+    if(!flag||emptydata){
+      const tooltip = new bootstrap.Tooltip(".sub-edit", {
+        "placement":"top",
+        "title":!flag?"有資料未填寫":"未填寫資料",
+        "customClass":"warning-tooltip"
+      }).show()
+    }
+    if(!emptydata&flag){
+      data["title"]=$(".title").val()
+      data["method"]="edit-grade"
+      data["id"]="{{data['id']}}"
+      $.post("/grade/post",data,function() {
+        location.reload()
+      })
+    }
+    $(this).removeClass("disabled")
+  
+  })
+  
+    
+  $(".rm-row").click(function(){
+    $(".rows").each(function(ind,elem){
+      if(!$(elem).children().children(".subject").val()&&!$(elem).children().children(".score").val()){
+        $(elem).remove()
+      }
+    })
+  })
+  
+  $(".add-row").click(function(){
+    $("#rows-container").append(`<div class="col-12 mb-2 p-0 rows">
+    <div class="input-group m-0 mb-2 px-2">
+      <span class="input-group-text">科目</span>
+      <input type="text" class="form-control field subject" aria-label="科目">
+      <span class="input-group-text">分數</span>
+      <input type="text" step="0.1" class="form-control field score" aria-label="分數">
+    </div>
+  </div>`)
+  })
+  
+  var labels=[
+      {%for k in data['data'].keys()%}
+       "{{k}}",
+      {%endfor%}
+    ]
+  var datas=[
+      {%for v in data['data'].values()%}
+       {{v}},
+      {%endfor%}
+       ]
+  var myChart = new Chart(document.getElementById('chartContent'), {
+    type: 'radar',
+    data: {
+        labels: labels,
+        datasets: [{ 
+            label:"{{data['title']}}成績",
+            data: datas,
+            fill: true,
+            backgroundColor: 'rgba(132, 99, 255, 0.2)',
+            borderColor: 'rgb(132, 99, 255)',
+            pointBackgroundColor: 'rgb(132, 99, 255)',
+            pointBorderColor: 'rgb(132, 99, 255)',
+            pointHoverBackgroundColor: 'rgb(132, 99, 255)',
+            pointHoverBorderColor: 'rgb(132, 99, 255)'
+        }]
+    },
+    options:{
+      responsive: true,
+      scales: {
+        r: {
+            angleLines: {
+                display: false
+            },
+            suggestedMin: 0,
+            suggestedMax: {{max(list(data["data"].values()))}}
+        }
+    }
+    }
+  });
+    var labels2=[
+        {%for k in data['data'].keys()%}
+         "{{k}}",
+        {%endfor%}
+       ]
+    var datas2=[
+            {%for v in data['data'].values()%}
+             {{v}},
+            {%endfor%}
+          ]
+    var myChart2 = new Chart(document.getElementById('chartContent2'), {
+    type: 'doughnut',
+    data: {
+      labels: labels2,
+      datasets: [
+        {
+          label: '{{data["title"]}}',
+          data: datas2
+        }
+      ]
+    },
+    options:{
+      responsive: true
+    }
+  });
+
+})
+</script>
+{%else%}
+<div class="container py-5">
+  <div class="px-2 pt-1">
+    <span onclick="history.back()" class="user-select-none" style="cursor: pointer;"><a class="d-inline d-md-none fw-bold fs-3 me-3 text-decoration-none"><i class="bi bi-arrow-left"></i><span class="fs-5">返回</span></a></span>
+  </div>
+  <h3 >成績登記</h3>
+  <input type="text" class="form-control" id="title" aria-label="標題" placeholder="成績單標題">
+  <hr>
+  <div class="row px-2" id="rows-container">
+    <div class="col-12 mb-2 p-0 rows">
+      <div class="input-group m-0">
+        <span class="input-group-text">科目</span>
+        <input type="text" class="form-control field subject" aria-label="科目">
+        <span class="input-group-text">分數</span>
+        <input type="number" step="0.1" class="form-control field score" aria-label="分數">
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="py-3 mx-auto fw-bold px-2 position-absolute bottom-0 start-50 translate-middle-x border-top" style="width:95%;height:4rem" id="toolbar-bottom">
+  <div class="btn-group w-100 shadow">
+    <button type="button" class="btn btn-outline-primary fw-bold add-row">新增一項</button>
+    <button type="button" class="btn btn-outline-info fw-bold rm-row">移除未填欄位</button>
+    <button type="button" class="btn btn-outline-success fw-bold sub-score">送出資料</button>
+  </div>
+</footer>
+<script>
+  $(()=>{
+    $(document).off("change",".field").on("change",".field",function () {
+      $(".sub-score").tooltip("dispose")
+    })
+    
+    
+    $(".add-row").click(function(){
+      $("#rows-container").append(`<div class="col-12 mb-2 p-0 rows">
+      <div class="input-group m-0">
+        <span class="input-group-text">科目</span>
+        <input type="text" class="form-control field subject" aria-label="科目">
+        <span class="input-group-text">分數</span>
+        <input type="text" step="0.1" class="form-control field score" aria-label="分數">
+      </div>
+    </div>`)
+    })
+
+    
+    $(".rm-row").click(function(){
+      $(".rows").each(function(ind,elem){
+        if(!$(elem).children().children(".subject").val()&&!$(elem).children().children(".score").val()){
+          $(elem).remove()
+        }
+      })
+    })
+
+
+    $(".sub-score").click(function(){
+      $(".rm-row").click()
+      var flag=true
+      var data={}
+      if(!$(this).hasClass("disabled")){$(this).addClass("disabled")}
+      $(".subject").each(function(ind,elem){
+        if(!flag){return}
+        var subject=$(elem).val()
+        var score=$(elem).parent().children(".score").val()
+        if ((!subject || !score)&&(subject || score)){
+          flag=false
+          return
+        }
+        data[subject]=score
+      })
+      var emptydata=$.isEmptyObject(data)
+      if(!flag||emptydata){
+        const tooltip = new bootstrap.Tooltip(".sub-score", {
+          "placement":"top",
+          "title":!flag?"有資料未填寫":"未填寫資料",
+          "customClass":"warning-tooltip"
+        }).show()
+      }
+      if(!emptydata&flag){
+        data["title"]=$("#title").val()
+        data["method"]="add-grade"
+        data["id"]="{{data['id']}}"
+        $.post("/grade/post",data,function() {
+          location.reload()
+        })
+      }
+      $(this).removeClass("disabled")
+    })
+
+    
+  })
+</script>
+{%endif%}

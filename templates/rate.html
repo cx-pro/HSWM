@@ -1,0 +1,177 @@
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable overflow-scroll">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">積分增加</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="$('#reason').val('');"></button>
+          </div>
+          <div class="modal-body">
+              <label for="praised">受處分者</label>
+              <textarea name="praised" id="praised" class="form-control fs-5" placeholder=" " readonly></textarea>
+            <div class="form-floating">
+              <input type="number" name="count" id="count" class="form-control" placeholder=" ">
+              <label for="count">積分增加數</label>
+            </div>
+            <div class="form-floating">
+              <textarea name="reason" id="reason" class="form-control" placeholder=" " style="height:50vh;"></textarea>
+              <label for="reason">積分變動說明</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#reason').val('');">取消</button>
+            <button type="button" class="btn btn-primary mineadd" id="">送出</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable overflow-scroll">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">積分減少</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="$('#reason2').val('');"></button>
+          </div>
+          <div class="modal-body">
+              <label for="fined">受處分者</label>
+              <textarea name="fined" id="fined" class="form-control fs-5" placeholder=" " readonly></textarea>
+            <div class="form-floating">
+              <input type="number" name="count2" id="count2" class="form-control" placeholder=" ">
+              <label for="count2">積分減少數</label>
+            </div>
+            <div class="form-floating">
+              <textarea name="reason2" id="reason2" class="form-control" placeholder=" " style="height:50vh;"></textarea>
+              <label for="reason2">積分變動說明</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#reason2').val('');">取消</button>
+            <button type="button" class="btn btn-primary mineminus" id="">送出</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<main class="d-flex">
+  <div class="border-end w-25 pe-3 text-center">
+    <h2 class="text-nowrap">班級</h2>
+    <hr>
+    <button class="btn btn-outline-primary w-100 {%if not request.args.get('cls')%}active{%endif%}" onclick="cl('/qa/rate')">全部</button>
+    <p class="my-2"></p>
+    {%for i in current_user.classes%}
+    <button class="btn btn-outline-primary w-100 {%if request.args.get('cls')==i%}active{%endif%}" onclick="cl('/qa/rate?cls={{i}}')">{{i}}</button>
+    <p class="my-2"></p>
+    {%endfor%}
+  </div>
+<div class="container-fluid">
+  <div class="row">
+    <main class="col-sm-6 col-md-8 minecontain">
+        <p class="my-5"></p>
+  <div class="alert alert-info text-center">
+    點擊標題可連結到原文
+  </div>
+<div>
+  {%for date,l in data.items()%}
+  {%for i in l%}
+    <div class="col">
+      <div class="card">
+      <div class="card-body text-wrap">
+          <div class="d-flex flex-row justify-content-between">
+            <span class="text-start minebtn" id='/qa/q{{i["id"]}}' style="cursor: pointer;">{{data2[i["id"]]["title"]}}</span>
+            <span class="text-end" id="cc{{i['id']}}-{{l.index(i)}}">{{users[i["user"]]["fullname"]}}</span>
+          </div>
+          <div class="text-center" id="c{{i['id']}}-{{l.index(i)}}">{{i["content"].replace("\n","<br/>")|safe}}</div>
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted">
+              <div class="dropdown">
+              <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="dropdown" aria-expanded="false">操作</button>
+                <ul class="dropdown-menu" style="cursor: pointer;">
+                  <li><a class="dropdown-item myadd" data-bs-toggle="modal" id="{{i['id']}}-{{l.index(i)}}" data-bs-target="#staticBackdrop">加積分</a></li>
+<!--                   <li><hr class="dropdown-divider"></li> -->
+                  <li><a class="dropdown-item myminus" data-bs-toggle="modal" id="{{i['id']}}-{{l.index(i)}}" data-bs-target="#staticBackdrop2">扣積分</a></li>
+                </ul>
+              </div>
+            </small>
+            <small class="text-muted">{{i["date"]}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  <p></p>
+    {%endfor%}
+  {%endfor%}
+</div>
+<footer class="mt-auto mb-0">
+  <hr>
+  <p class="text-muted fs-5 fw-bold">到最底了</p>
+</footer>
+    </main>
+    <main class="col-6 col-md-4">
+      <h2>排行榜</h2>
+      <div class="table-responsive">
+        <table class="table table-striped table-sm table-hover">
+          <thead>
+            <tr>
+              <th scope="col">積分</th>
+              <th scope="col">學生</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%for i,j in data3.items()%}
+            <tr>
+              <td>{{j}}</td>
+              <td>{{users[i]["fullname"]}}</td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+</div>
+</main>
+<script>
+  $(function(){
+     $(document).off('click', '.myadd').on('click', '.myadd', function (e) {
+      $("#praised").val($("#cc"+$(this).attr("id")).html());
+      $("#reason").val("於《"+$("span[id='/qa/q"+$(this).attr("id").slice(0,$(this).attr("id").indexOf("-"))+"']").html()+"》問題回答優秀。");
+      $(".mineadd").attr("id","p"+$(this).attr("id"));
+    });
+     $(document).off('click', '.myminus').on('click', '.myminus', function (e) {
+      $("#fined").val($("#cc"+$(this).attr("id")).html());
+      $("#reason2").val("於《"+$("span[id='/qa/q"+$(this).attr("id").slice(0,$(this).attr("id").indexOf("-"))+"']").html()+"》問題回答違規。");
+      $(".mineminus").attr("id","p"+$(this).attr("id"));
+    });
+     $(document).off('click', '.mineadd').on('click', '.mineadd', function (e) {
+       if((!$("#reason").val()) || (!$("#count").val())){alert("資料填寫不完整")
+                                                          ;return};
+        $.ajax({
+          url:"/qa/padd"+$(this).attr("id").slice(1),
+          method:"post",
+          data:{"reason":$("#reason").val(),"count":$("#count").val()},
+          success:function(){
+            $("#staticBackdrop").modal("hide");
+            $("#reason").val("");
+            $(".modal-backdrop").remove();
+            $(".container").html(loading_spinner);
+            $(".container").load("/qa/rate")
+          }
+        })
+       });
+     $(document).off('click', '.mineminus').on('click', '.mineminus', function (e) {
+       if((!$("#reason2").val()) || (!$("#count2").val())){alert("資料填寫不完整")
+                                                          ;return};
+        $.ajax({
+          url:"/qa/padd"+$(this).attr("id").slice(1),
+          method:"post",
+          data:{"reason":$("#reason2").val(),"count":-$("#count2").val()},
+          success:function(){
+            $("#staticBackdrop2").modal("hide");
+            $("#reason2").val("");
+            $(".modal-backdrop").remove();
+            $(".container").html(loading_spinner);
+            $(".container").load("/qa/rate")
+          }
+        })
+       });
+    });
+</script>

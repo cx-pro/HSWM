@@ -1,0 +1,196 @@
+{%if false%}
+{%if not session.get("chat-modal-confirm")%}
+<div class="text-center modal modal-tour d-block bg-dark bg-opacity-75 py-5 z-3" style="background-color:rgba(33,37,41,1);position:fixed;height: 100%;width:100%;" tabindex="-1" role="dialog" id="modalTour">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-body p-5">
+        <h2 class="fw-bold fs-1 mb-0 text-primary">請務必詳閱</h2>
+        <p></p>
+        <div class="fs-5 text-center">
+          <div class="">使用本聊天室時，請遵守相關法規並尊重他人。</div>
+          <div class="">請勿濫用本聊天室，濫用之定義<font class="fw-bold text-danger">包括但不限於</font>：在本聊天室辱罵他人、從事任何形式的貨幣交易等。</div>
+        </div>
+        <div class="mt-5 mx-auto user-select-none">
+          <input class="form-check-input" type="checkbox" style="cursor:pointer" id="flexCheckChecked">
+          <label class="form-check-label fw-bold fs-5" for="flexCheckChecked" style="cursor:pointer" onclick="$('#confirm-btn').toggle(100)">我已<font class="text-danger">詳閱</font>並<font class="text-success">同意</font></label>
+        </div>
+        <button type="button" class="btn btn-lg btn-primary fw-bold mt-1 w-100" id="confirm-btn" data-bs-target="#modalTour" data-bs-dismiss="modal" onclick="$('#modalTour').remove();$.ajax({url:'/setSession',method:'post',data:{'key':'chat-modal-confirm','val':true}})">確定</button>
+      </div>
+    </div>
+  </div>
+</div>
+{%endif%}
+{%endif%}
+
+
+<div class="modal fade" id="clearChatModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content rounded-3 shadow">
+      <div class="modal-body p-3 py-5 text-center">
+        <h5 class="mb-0 fw-bold">確認刪除此對話紀錄?</h5>
+        <p class="mb-0 text-danger fw-bold">此操作無法復原!</p>
+      </div>
+      <div class="modal-footer flex-nowrap p-0">
+        <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end text-danger" id="clear-chat"><strong>確定刪除</strong></button>
+        <button type="button" class="btn text-muted btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div id="settings" class="d-none">
+  <div class="px-2 pt-1">
+      <span class="user-select-none" onclick="history.back()" style="cursor: pointer;"><a class="d-inline fw-bold fs-3 text-decoration-none"><i class="bi bi-arrow-left"></i></a></span>
+    <hr>
+  </div>
+  <div class="row justify-content-center justify-content-md-start px-3">
+    {%if not fl[ind][0].startswith("g")%}
+    <img src="{%if not 'http' in users.get(fl[ind][1],{'avatar':'profile_pics/default/Default_Avatar.svg'})['avatar']%}/static/{%endif%}{{users.get(fl[ind][1],{'avatar':'profile_pics/default/Default_Avatar.svg'})['avatar']}}" class="object-fit-cover rounded-circle col-12 col-md-6" style="height:10rem;max-height:20vh;width:auto;">
+    {%endif%}
+    <div class="col-12 col-md-6 text-center text-md-start fw-bold fs-4 mt-3"><span id="name-contain">{%if len(fl[ind])>3%}{{fl[ind][3]}}{%else%}{{users.get(fl[ind][1],{"fullname":"已移除用戶"})["fullname"]}}{%endif%}</span><span class="fs-5 ms-3"><i class="bi bi-pencil" style="cursor: pointer;" id="edit-name"></i></span></div>
+    <div class="col-12 mt-3">
+      <div class="row gap-1 justify-content-evenly user-select-none fw-bold">
+        
+        {%if not fl[ind][0].startswith("g")%}
+        <div class="col-3 text-center"><a href="/@{{fl[ind][1]}}" class="text-decoration-none"><i class="bi bi-person-circle" style="font-size:2.5rem"></i><div class="fs-6 text-muted">個人檔案</div></a></div>
+        {%endif%}
+        <div class="col-3 text-center"><a href="" data-bs-toggle="modal" data-bs-target="#clearChatModal" class="text-decoration-none"><i class="bi text-danger bi-trash" style="font-size:2.5rem"></i><div class="fs-6 text-muted">刪除聊天紀錄</div></a></div>
+        <div class="col-3 text-center"><a href="/chat/save?id={{fl[ind][0]}}" target="_blank" class="text-decoration-none"><i class="bi text-success bi-archive" style="font-size:2.5rem"></i><div class="fs-6 text-muted">下載聊天紀錄</div></a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="d-flex flex-column w-100 mx-auto overflow-scroll mx-auto px-0" style="height:83vh" id="chatContain">
+  <div class="fs-4 text-start msg-container ms-1">
+    <div class="px-2 pt-1">
+      <span onclick="history.back()" class="user-select-none" style="cursor: pointer;"><a class="d-inline d-md-none fw-bold fs-3 me-3 text-decoration-none"><i class="bi bi-arrow-left"></i></a>{%if len(fl[ind])>3%}{{fl[ind][3]}}{%else%}{{users.get(fl[ind][1],{"fullname":"已移除用戶"})["fullname"]}}{%endif%}</span>
+      <div class="float-end"><a href="#s" class="bi bi-three-dots fs-4 settings-toggle text-muted" style="cursor:pointer;"></a></div>
+      <hr>
+    </div>
+    <div class="text-break p-2 fs-4 overflow-y-scroll messages" style="height:62vh">
+      {%for msg in msgs%}
+        {%if msgs[msgs.index(msg)-1][3]!=msg[3] or msgs.index(msg)==0%}
+        <div class="text-center fs-6 my-3 msg-date user-select-none">{{msg[3]}}</div>
+        {%endif%}
+        {%if msgs[msgs.index(msg)-1][4][:5]!=msg[4][:5] or msgs.index(msg)==0%}
+        <div class="text-center fs-6 my-3 msg-time user-select-none">{{msg[4][:5]}}</div>
+        {%endif%}
+        {%if msg[2]==current_user.id%}
+        <div class="d-flex mt-3 justify-content-end">
+          <div class="ms-3 rounded-4 py-1 px-3 bg-primary me-3 text-light shadow mb-2" style="width: max-content;max-width:50%;">{{msg[1]}}</div>
+        </div>
+        {%else%}
+        <div class="d-flex mt-3">
+          <div class="p-0 user-select-none" oncontextmenu="return false;">
+          <img src="{%if not users[msg[2]]['avatar'].startswith('http')%}/static/{%endif%}{{users[msg[2]]['avatar']}}" class="object-fit-contain rounded-circle" style="width:2rem;"></div>
+          <div class="ms-3 rounded-4 py-1 px-3 bg-secondary-subtle text-muted
+            shadow mb-2" style="width: max-content;max-width:50%;">{{msg[1]}}</div>
+        </div>
+        {%endif%}
+      {%endfor%}
+    </div>
+  </div>
+  <footer class="py-3 mx-auto mt-auto mb-0 fw-bold px-2" style="width:95%;">
+    <div class="row">
+      <!-- <div class="col-2 col-md-1 text-center">
+        <div class="dropup" id="more-dropmenu">
+          
+          <div style="cursor:pointer;" id="more-menu">
+            <div class="bi fs-1 d-block d-md-none bi-plus-lg"></div>
+            <div class="bi fs-3 d-none d-md-block bi-plus-lg"></div>
+          </div>
+          <div class="dropdown-menu p-0 user-select-none">
+            <div class="list-group m-0 border-0">
+              <div class="list-group-item list-group-item-action text-center" style="cursor:pointer;">插入行程</div>
+              <div class="list-group-item list-group-item-action text-center" style="cursor:pointer;">插入問題</div>
+              <div class="list-group-item list-group-item-action text-center" style="cursor:pointer;">插入檔案</div>
+              <div class="list-group-item list-group-item-action" style="cursor:pointer;">插入成績</div>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      
+    <form id="message-form" onsubmit="return false;" class="rounded">
+      <div class="input-group border-1 shadow bg-light-subtle rounded" style="height:2.8rem">
+        <textarea class="form-control border-primary bg-light-subtle messageInput" name="message" id="mi2" placeholder="在此輸入訊息..." style="--bs-border-opacity: .8;height:2.8rem;" type="text" autocomplete="off" ></textarea>
+        <button type="submit" class="btn btn-outline-success col-2 col-md-1 text-center sub_msg" style="height:2.8rem" data-input-target="#mi2"><i class="bi bi-send fs-5"></i></button>
+      </div>
+    </form>
+      
+    </div>
+  </footer>
+  
+</div>
+<script>
+  $(()=>{
+
+    $("#clear-chat").click(function(){
+      if(!$("#clear-chat").hasClass("disabled")){
+      $("#clear-chat").addClass("disabled")
+      }
+      $.ajax({
+        url:"/chat/clear?id={{fl[ind][0]}}",
+        method:"post",
+        success:location.reload()
+      })  
+    })
+
+    
+    $("#edit-name").click(function(){
+      $("#name-contain").html(`<span class="input-group"><input type="text" id="newName" value="{%if len(fl[ind])>3%}{{fl[ind][3]}}{%else%}{{users.get(fl[ind][1],{"fullname":"已移除用戶"})["fullname"]}}{%endif%}" class="form-control form-control-sm"><button class="reset btn btn-sm btn-secondary" type="button">取消</button><button class="save btn btn-sm btn-primary" type="button">儲存</button></span>`)
+      if(!$("#edit-name").hasClass("d-none")){$("#edit-name").addClass("d-none")}
+    })
+
+    
+    $(document).off("click",".reset").on("click",".reset",function(event){
+      $("#name-contain").html(`{%if len(fl[ind])>3%}{{fl[ind][3]}}{%else%}{{users.get(fl[ind][1],{"fullname":"已移除用戶"})["fullname"]}}{%endif%}`)
+      if($("#edit-name").hasClass("d-none")){$("#edit-name").removeClass("d-none")}
+    })
+
+    
+    $(document).off("click",".save").on("click",".save",function(event){
+      var newName=$("#newName").val()
+      $.ajax({
+        url:"/chat/change_name",
+        method:"post",
+        data:{"ind":"{{ind}}","newName":newName},
+        success:function() {
+          location.reload()
+        }
+      })
+    })
+    
+    
+    $(".settings-toggle").click(function(){
+      if($("#settings").hasClass("d-none")){
+        $("#settings").removeClass("d-none")
+      }else{
+        $("#settings").addClass("d-none")
+      }
+      if($("#chatContain").hasClass("d-none")){
+        $("#chatContain").removeClass("d-none")
+      }else{
+        $("#chatContain").addClass("d-none")
+      }
+    })
+  })
+  $("#more-menu").click(function(){
+    var x="225deg"
+    var plus="0deg"
+    var deg=x
+    if($(this).css("rotate")!=x){
+      deg=x
+      $("#more-dropmenu").dropdown("show")
+    }else{
+      deg=plus
+      $("#more-dropmenu").dropdown("hide")
+    }
+        $(this).animate({
+          rotate:deg
+        })
+  })
+</script>

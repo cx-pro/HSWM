@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜管理員首頁</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+  <div class="container text-center overflow-scroll row mx-auto justify-content-around" style="height:65vh">
+    <div class="mb-2 col-4 col-md-3 fw-bold">
+      <a class="btn text-decoration-none btn-lg fs-3 text-muted" href="/adm/files"><i class="bi fs-1 bi-archive"></i><div>檔案櫃</div></a>
+    </div>
+    <div class="mb-2 col-4 col-md-3 fw-bold">
+      <a href="/fgupr" class="btn btn-lg text-center fs-3 text-muted">
+        <div class="bi fs-1 bi-inbox"></div>
+        忘記密碼及問題回報
+      </a>
+    </div>
+    <div class="mb-2 col-4 col-md-3 fw-bold">
+      <a href="/clear_captchas" class="btn btn-lg text-center fs-3 text-muted" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-title="使用G-recaptcha，或未曾重啟過伺服器則不需使用" 
+      data-bs-custom-class="custom-tooltip">
+        <div class="bi fs-1 bi-list-nested"></div>
+        清除驗證快取
+      </a>
+    </div>
+    <!-- <div class="mb-2 col-4 col-md-3 fw-bold">
+      <a href="/adm/tcode" class="btn btn-lg text-center fs-3 text-muted">
+        <div class="bi fs-1 bi-upc"></div>
+        教師身分代碼管理
+      </a>
+    </div> -->
+  </div>
+  {{footer|safe}}
+</body>
+</html>

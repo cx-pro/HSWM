@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+    <title>聊天室</title>
+  </head>
+  <body>
+    {{header.replace(header[header.find("<header"):header.find("</header>")],"")|safe}}
+    <div class="container">
+    <div class="row">
+      <div class="col position-relative border-start border-end" id="msg-container">
+        <div class="d-flex flex-column w-100 mx-auto" id="chatContain">
+          <div class="fs-4 text-start msg-container">
+            <div class="px-2 pt-1">
+              <span class="user-select-none" style="cursor: pointer;">{%if len(fl[ind])>3%}{{fl[ind][3]}}{%else%}{{users.get(fl[ind][1],{"fullname":"已移除用戶"})["fullname"]}}{%endif%}</span>
+              <div class="float-end"><a class="bi bi-three-dots fs-4 text-muted" style="cursor:pointer;"></a></div>
+              <hr>
+            </div>
+            <div class="text-break p-2 fs-4 messages">
+              {%for msg in msgs%}
+                {%if msgs[msgs.index(msg)-1][3]!=msg[3]%}
+                <div class="text-center fs-6 my-3 msg-date user-select-none">{{msg[3]}}</div>
+                {%endif%}
+                {%if msgs[msgs.index(msg)-1][4][:5]!=msg[4][:5]%}
+                <div class="text-center fs-6 my-3 msg-time user-select-none">{{msg[4][:5]}}</div>
+                {%endif%}
+                {%if msg[2]==ffl[1]%}
+                <div class="row mt-3 justify-content-end">
+                  <div class="ms-3 rounded-4 py-1 px-3 bg-primary me-3 text-light shadow" style="width: max-content;max-width:50%;">{{msg[1]}}</div>
+                </div>
+                {%else%}
+                <div class="row mt-3">
+                  <div class="ms-3 rounded-4 py-1 px-3 bg-primary text-light shadow" style="width: max-content;max-width:50%;">{{msg[1]}}</div>
+                </div>
+                {%endif%}
+              {%endfor%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    {{footer.replace(footer[:footer.find("</footer>")],"")|safe}}
+  
+    <div class="text-center border-top py-2 text-muted fw-bold mx-auto mt-auto mb-0 w-100">&copy; 2022 高中職小幫手</div>
+  </body>
+</html>

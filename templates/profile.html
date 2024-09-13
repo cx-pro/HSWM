@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜個人檔案</title>
+</head>
+<body>
+    {{header|safe}}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <form class="modal-dialog modal-dialog-centered" method="post" enctype="multipart/form-data">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">上傳自訂頭像</h1>
+        <button type="button" class="btn-close close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="file" name="pfile" id="pfile" class="user-select-none" accept="image/*" placeholder="選擇檔案" required data-bs-toggle="tooltip" data-bs-title="可以上傳動圖喔" 
+          data-bs-custom-class="custom-tooltip">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary close" data-bs-dismiss="modal">取消</button>
+        <button type="submit" class="btn btn-primary">確定</button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="container" id="par">
+    <div class="container d-flex flex-row align-items-center row mt-3">
+      <div class="d-block d-md-none col-2"></div>
+      <div class="col-8 col-md-4 img-thumbnail bg-light-subtle">
+        <img draggable="false" src="{%if not userinfo['avatar'].startswith('http')%}/static/{%endif%}{{userinfo['avatar']}}" class="w-100">
+        {%if request.path.startswith("/profile")%}
+        <span class="position-relative top-100 start-100 bg-light-subtle badge rounded-3 border fw-bold" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-placement="bottom" style="cursor:pointer;"><i class="bi bi-upload text-muted fs-4" data-bs-toggle="tooltip" data-bs-title="可以上傳動圖喔" 
+          data-bs-custom-class="custom-tooltip"></i>
+            <span class="visually-hidden">上傳頭像</span>
+        </span>
+        {%endif%}
+      </div>
+      <div class="d-block d-md-none col-2"></div>
+      <div class="w-100 d-block d-md-none"></div>
+      <div class="d-block d-md-none col-1"></div>
+      <div class="col-10 col-md-8 d-flex align-item-center text-center">
+          <div class="p-2 fs-3 text-primary fw-bold text-nowrap">
+              {%if userinfo["role"]=="stu"%}
+              <div class="p-2 fs-3">
+                {{userinfo['department']}}
+              </div><hr class="fw-bold border border-primary border-2 rounded text-primary">
+              <div class="p-2 fs-3">
+                {{userinfo['class']|safe}}班
+              </div>
+              {%else%}
+              {%if userinfo["role"]=="adm"%}管理員
+              {%else%}
+              {%if userinfo["role"]=="tch"%}
+              教師
+              {%endif%}
+              {%endif%}
+              {%endif%}
+          </div>
+          <div class="p-2 ms-1 fs-1 fw-bold text-nowrap">{{userinfo['fullname']}}</div>
+        </div>
+      <div class="d-block d-md-none col-1"></div>
+    </div>
+  <p class="my-5"></p>
+  {%if current_user.is_student%}
+  {%if request.path=="/profile"%}
+  <p class="border rounded p-2 mx-3 bg-light-subtle" style="width:10rem;"><i class="bi fs-4 fw-bold bi-wallet"></i>
+    <span class="fs-5 text-center text-primary">{{points}}</span>
+    <a href="/pentry" class="text-decoration-none user-select-none text-muted float-end fs-4 fw-bold"><i class="bi bi-clock-history"></i></a>
+  </p>
+  {%else%}
+    {%if current_user.is_authenticated%}
+      {%if user_id!=current_user.id and not user_id in fl%}
+      <button class="mx-3 btn btn-outline-primary mb-3" id="join-friend">加入好友</button>
+      <script>
+        $(()=>{
+              $('#join-friend').click(function (e) {
+                  $.ajax({
+                    url:"/chat/adds?tar=friend",
+                    method:"post",
+                    data:{"username":"{{user_id}}"},
+                    success:function() {
+                      $("#modal-add-friend").modal("hide")
+                      location.reload()
+                    }
+                  })
+                });})
+      </script>
+      {%endif%}
+    {%endif%}
+  {%endif%}
+  {%if userinfo["asistnt"]!=[]%}
+  <div class="border rounded p-2 fw-bold mx-3 bg-light-subtle overflow-scroll">
+    <div>
+      <i class="bi bi-person-workspace fs-4 fw-bold"></i>
+    協助</div>
+    <p></p>
+    {%for i in userinfo["asistnt"]%}
+    <div class="overflow-scroll">
+      <div>{{users[i]["course"]}} - {{users[i]["fullname"]}}</div>
+    </div>
+    {%endfor%}
+  </div>
+  {%endif%}
+  {%endif%}
+  <p class="my-5"></p>
+    <div class="container">
+      <div id="contain" class="border rounded p-1 bg-light-subtle" style="height:50vh;">
+    <div class="fs-5 form-control border border-0 bg-light-subtle" style="height:100%;" id="origin-content">
+{%if current_user.id==user_id%}<i class="bi bi-pencil-square float-end" id="edit" style="cursor:pointer;"></i>{%endif%}{{userinfo['intro']|safe}}</div>
+      </div>
+  </div>
+  <p class="my-5"></p>
+  <p class="my-5"></p>
+</div>
+{{footer|safe}}
+{%if current_user.id==user_id%}
+<script>
+  loading_spinner='<div class="text-primary position-relative top-50 start-50 d-inline translate-middle" role="status"><a onclick=location.replace("/qa/qas") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+  $(function(){
+      $(".close").click(function(){$("#pfile").fileinput('clear').fileinput('clearFileStack')})
+      $("#pfile").fileinput({
+        'showUpload': false,
+        "showRemove":false,
+        'dropZoneTitle':"拖放至此即可上傳",
+        'msgPlaceholder':"上傳檔案",
+        "browseLabel":"瀏覽",
+        "msgProcessing":"載入中"
+      });
+    $(document).on('click', '#edit', function (e) {
+      old=$("#contain").html();
+      origin=$("#origin-content").html();
+      $("#contain").html(loading_spinner);
+      $("#contain").html('<textarea class="form-control border border-0" style="height:100%;width:100%;" id="new_content">'+origin.replace(`<i class="bi bi-pencil-square float-end" id="edit" style="cursor:pointer;"></i>`,"")+'</textarea><div class="btn-group w-50 mt-2" style="margin-left:25%;"><button type="button" class="minesubmit btn btn-lg btn-primary fw-bold">保存變更</button><button class="minecancel btn btn-lg btn-secondary fw-bold" type="button">取消</button></div>');
+    });
+    $(document).on('click', '.minesubmit', function (e) {
+        $.ajax({
+          url:"/pedit",
+          type:"post",
+          data:{
+            "content":$("#new_content").val()
+          },
+          success:function(data){
+            $("#contain").html(loading_spinner);
+            $("#contain").load("profile #origin-content");
+            }
+          });
+      });
+    $(document).on('click', '.minecancel', function (e) {
+      $("#contain").html(old);
+      });
+    
+  });
+</script>
+{%endif%}
+</body>
+</html>

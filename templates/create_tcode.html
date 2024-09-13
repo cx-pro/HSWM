@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜創建班級</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+  {%if warn%}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle pt-5">
+    <div class="toast align-items-center show mt-5 fade bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body fw-bold text-light">
+          {{warn}}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="aja('msgs')"></button>
+      </div>
+    </div>
+    </div>
+    {%endif%}
+  <div class="container">
+    <p class="my-5"></p>
+    <h1 class="text-center fw-bold text-primary">新增教師代碼</h1>
+    <p class="my-5"></p>
+    <form method="post" class="mx-auto" style="max-width:25rem;">
+      <p class="my-5"></p>
+      <div class="form-floating">
+        <select class="form-select" name="dep" id="de_s">
+          <option value="" disabled selected>請選擇</option>
+          {%for de in des%}<option value="{{de}}">{{de}}</option>{%endfor%}
+          <option value="other">其他</option>
+        </select>
+        <label for="de_s">選擇教師科別</label>
+      </div>
+      <p class="my-5"></p>
+      <div class="form-floating" id="other">
+        <input type="text" id="otheri" name="other" placeholder=" " class="form-control">
+        <label for="otheri">其他 - 請輸入 如 資處科</label>
+    <p class="my-5"></p>
+      </div>
+      <div class="form-floating">
+        <button type="submit" class="btn btn-primary fw-bold w-100">確定新增</button>
+      </div>
+    </form>
+    <p class="my-5"></p>
+    <div class="mx-auto" style="max-width:25rem;">
+      <h4 class="text-center fw-bold text-primary">已存在班級</h4>
+      <div class="border rounded p-1 overflow-scroll" style="max-height:10rem;">
+        {%for k1,v1 in cls%}
+          <div class="border text-center fw-bold"><span class="text-success fw-bold" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="建立時間">{{v1["year"]}}年&ensp;</span><span class="text-decoration-line-through text-success">&ensp;</span>&ensp;<span data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="班級號">{{v1["class"]}}</span>&ensp;<span class="text-decoration-line-through text-success">&ensp;</span>&ensp;<span class="text-primary fw-bold" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="班級代碼">{{k1}}</span> <span class="text-success">by</span> <span class="text-info fw-bold" data-bs-toggle="tooltip" data-bs-custom-class="custom-tooltip" data-bs-title="創建人">{%if v1["adder"] in Users%}{{Users[v1["adder"]]["fullname"]}}{%else%}{{v1["adder"]}}{%endif%}</span></div>
+        {%endfor%}
+      </div>
+    </div>
+    <p></p>
+  </div>
+  {{footer|safe}}
+<script>
+  $(function(){
+    $("#other").hide()
+    $(document).off('click', '.minecancel').on('click', '.minecancel', function (e) {
+      $("#form").trigger("reset");
+    });
+    $(document).off('click', '.mineset').on('click', '.mineset', function (e) {
+      $(".minecheck").attr("id",$(this).attr("id").slice(1));
+      $.getJSON("/tskn/students{{cls}}?stu="+$(this).attr("id").slice(1),function(result){
+        $("#asistnt").attr("checked",result["result"]);
+      });
+    });
+    
+    $(document).off('click', '.minecheck').on('click', '.minecheck', function (e) {
+      $.ajax({
+        url:"/tskn/students{{cls}}?stu="+$(this).attr("id"),
+        method:"post",
+        data:{"set":$("#asistnt").is(":checked")},
+        success:location.replace(location)
+      });
+      
+    });
+    $("#de_s").change(function(){
+      if($(this).val()=="other"){
+        $("#other").show()
+      }
+    })
+  });
+  
+</script>
+
+  <script>
+    $(()=>{
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+  </script>
+</body>
+</html>

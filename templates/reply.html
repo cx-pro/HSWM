@@ -1,0 +1,135 @@
+<div class="modal fade dd" id="del_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">確認</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <font class="fw-bold fs-3">確認刪除此回覆？</font>
+        <br>
+        <font class="fw-bold text-danger fs-3">此操作無法復原！！</font>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger fw-bold mydelete" id="">確定刪除</button>
+        <button type="button" class="btn btn-secondary mycancel" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade ee" id="edit_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">編輯</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <h3>回覆內容</h3>
+        <textarea id="editcontent" class="form-control" style="height:20vh;"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary fw-bold mineed" id="">儲存編輯</button>
+        <button type="button" class="btn btn-secondary mycancel" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="my-5"></p>
+  {%if data%}
+  <div class="alert alert-info text-center">
+    點擊標題可連結到原文
+  </div>
+  {%for date,l in data%}
+  {%for i in l%}
+    <div class="col">
+      <div class="card">
+      <div class="card-body">
+          <div class="text-start minebtn" style="cursor: pointer;" id='/qa/q{{i["id"]}}'>{{data2[i["id"]]["title"]}}</div>
+          <div class="dropdown">
+            <span class="user-select-none text-center fs-3" style="transform: rotate(270deg);transform-origin: left top 0;float:right;cursor:pointer;" data-bs-toggle="dropdown" aria-expanded="false">...</span>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item report myedit" data-bs-toggle="modal" id='{{i["id"]}}-{{data2[i["id"]]["replys"].index(i)}}' data-bs-target="#edit_modal">編輯</a></li>
+                <li><a class="dropdown-item report text-danger fw-bold mydele" data-bs-toggle="modal" id='d{{i["id"]}}-{{data2[i["id"]]["replys"].index(i)}}' data-bs-target="#del_modal">刪除</a></li>
+              </ul>
+            </div>
+        <p></p>
+          <div class="text-center" id='c{{i["id"]}}-{{data2[i["id"]]["replys"].index(i)}}'>{{i["content"].replace("\n","<br/>")|safe}}</div>
+          <div class="d-flex justify-content-between align-items-center">
+            <small class="text-muted"></small>
+            <small class="text-muted">{{i["date"]}}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  <p></p>
+    {%endfor%}
+  {%endfor%}
+</main>
+<footer class="mt-auto mb-0">
+  <hr>
+  <p class="text-muted fs-5 fw-bold">到最底了</p>
+</footer>
+{%else%}
+<footer class="mt-auto mb-0">
+  <hr>
+  <p class="text-muted fs-5 fw-bold">您尚沒有回答問題</p>
+  <p class="fs-4 text-primary fw-bold" style="cursor:pointer;" onclick="cl('全部')">馬上回答</p>
+</footer>
+{%endif%}
+<script>
+  $(function() {
+    {%if request.args.get('d') %}
+      $(".dd").modal("show")
+      $(".mydelete").attr("id","dd{{request.args.get('d')}}");
+    {%endif%}
+    {%if request.args.get('e') %}
+      $(".ee").modal("show")
+      $("#editcontent").val($("#c{{request.args.get('e')}}").html());
+      $(".mineed").attr("id","{{request.args.get('e')}}");
+    {%endif%}
+    $(".mydele").click(function(e){
+      $(".mydelete").attr("id","d"+$(this).attr("id"));
+    });
+    $(".mydelete").click(function(e){
+      $.ajax({
+        url:"/qa/rdel"+$(this).attr("id").slice(2,$(this).attr("id").indexOf("-"))+"?index="+$(this).attr("id").slice($(this).attr("id").indexOf("-")+1),
+        method:"post",
+        data:{},
+        success:function(){
+          $("#del_modal").modal('hide');
+          $(".modal-backdrop").remove();
+          $(".container").html(loading_spinner);
+          $(".container").load("/qa/myreply")
+        }
+      });
+    });
+    
+    $(".mycancel").click(function(e){
+      $(".mydelete").attr("id","");
+      $("#editcontent").val("");
+    });
+    $(".myedit").click(function(e){
+      $("#editcontent").val($("#c"+$(this).attr("id")).html());
+      $(".mineed").attr("id",$(this).attr("id"));
+    });
+    $(".mineed").click(function(e){
+      if(!$("#editcontent").val()){alert("回覆內容不可為空！！");}
+      $.ajax({
+        url:"/qa/redit"+$(this).attr("id").slice(0,$(this).attr("id").indexOf("-"))+"?index="+$(this).attr("id").slice($(this).attr("id").indexOf("-")+1),
+        method:"post",
+        data:{"content":$("#editcontent").val()},
+        success:function(){
+          $("#edit_modal").modal('hide');
+          $("#editcontent").val("");
+          $(".modal-backdrop").remove();
+          $(".container").html(loading_spinner);
+          $(".container").load("/qa/myreply")
+        }
+      });
+    });
+  });
+</script>

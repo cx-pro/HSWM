@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+  <head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>高中職小幫手｜註冊</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script>
+       function onSubmit(token) {
+          // Example starter JavaScript for disabling form submissions if there are invalid fields
+          // Fetch all the forms we want to apply custom Bootstrap validation styles to
+          var flag=true;
+          var form=document.querySelector("#form");
+          $("#form").addClass("was-validated");
+          if (!form.checkValidity()) {
+            flag=false;
+            grecaptcha.reset();
+          }
+          if(flag){
+            var res=grecaptcha.getResponse();
+            if(res){
+            form.submit();
+            }else{
+              $(".alert_contain").html('<div class="alert alert-danger alert-dismissible fade show" role="alert"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>reCaptcha驗證失敗</div>');
+            }
+          }
+       }
+     </script>
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+      body{
+        height: 100%;
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
+      .form-signin {
+        max-width: 330px;
+        padding: 15px;
+      }
+      
+      .form-signin .form-floating:focus-within {
+        z-index: 2;
+      }
+      
+      .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      
+      .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    </style>
+<!-- <link href="{{url_for('static',filename='sign-in.css')}}" rel="stylesheet"> -->
+  </head>
+  <body class="text-center m-auto">
+    <div id="loader_container"></div>
+<script>
+  $(()=>{
+      const loader=`<div class="z-3 bg-{{session.get('dark','light')}} position-absolute top-0 start-0" style="height:100vh;width:100vw;"><div class="spinner-grow text-primary position-absolute top-50 start-50 translate-middle" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div></div>`
+      $(window).off("beforeunload").on("beforeunload",function(){
+        $("#loader_container").html(loader)
+      })
+  })
+</script>
+  <style>
+    .bs-wizard {margin-top: 40px;}
+
+/*Form Wizard*/
+.bs-wizard {border-bottom: solid 1px #e0e0e0; padding: 0 0 10px 0;}
+.bs-wizard > .bs-wizard-step {padding: 0; position: relative;}
+.bs-wizard > .bs-wizard-step + .bs-wizard-step {}
+.bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
+.bs-wizard > .bs-wizard-step .bs-wizard-info {color: #999; font-size: 14px;}
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot {position: absolute; width: 30px; height: 30px; display: block; background: #0dcaf0; top: 45px; left: 50%; margin-top: -15px; margin-left: -15px; border-radius: 50%;cursor:pointer;} 
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {content: ' '; width: 14px; height: 14px; background: #0d6efd; border-radius: 50px; position: absolute; top: 8px; left: 8px; } 
+.bs-wizard > .bs-wizard-step > .progress {position: relative; border-radius: 0px; height: 8px; box-shadow: none; margin: 20px 0;}
+.bs-wizard > .bs-wizard-step > .progress > .progress-bar {width:0px; box-shadow: none; background: #0dcaf0;}
+.bs-wizard > .bs-wizard-step.complete > .progress > .progress-bar {width:100%;}
+.bs-wizard > .bs-wizard-step.active > .progress > .progress-bar {width:50%;}
+.bs-wizard > .bs-wizard-step:first-child.active > .progress > .progress-bar {width:0%;}
+.bs-wizard > .bs-wizard-step:last-child.active > .progress > .progress-bar {width: 100%;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot {background-color: #f5f5f5;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot:after {opacity: 0;}
+.bs-wizard > .bs-wizard-step:first-child  > .progress {left: 50%; width: 50%;}
+.bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
+.bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }
+/*END Form Wizard*/
+  </style>
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+    *::-webkit-scrollbar {
+      width: .5rem;
+    }
+    *::-webkit-scrollbar-thumb {
+      border: #e9ecef solid .1rem;
+      border-radius: .8rem;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+      background-color: #4285F4;
+    }
+    *::-webkit-scrollbar:horizontal {
+      display: none;
+    }
+/* Hide scrollbar for IE, Edge and Firefox */
+    * {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+</style>
+<main class="form-signin w-100 m-auto">
+    <div>
+      <div class="alert_contain"></div>
+      {%if warn%}
+      {%for value in warn.values()%}
+        <div class="alert alert-warning d-flex align-items-center alert-dismissible fade show" role="alert">{{value}}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+      {%endfor%}
+      {%endif%}
+    </div>
+  <form action="/register3" id="form" class="needs-validation" method="post" novalidate>
+    <div class="mb-4">
+      <a href="/" class="text-muted text-decoration-none">
+          <font class="fw-bold fs-2" style="width:3rem;height:100%;">
+            <font class="text-primary">高</font>
+            <font class="text-primary">中</font>
+            <font class="text-primary">職</font>
+            <font class="text-primary">小</font>
+            <font class="text-primary">幫</font>
+            <font class="text-primary">手</font>
+          </font>
+      </a>
+    </div>
+    <div class="row bs-wizard fw-bold mb-5" style="border-bottom:0;">
+        <div class="col-4 bs-wizard-step complete" id="pro-acc">
+          <div class="text-center bs-wizard-stepnum">登入資料</div>
+          <div class="progress"><div class="progress-bar progress-bar-striped"></div></div>
+          <a class="bs-wizard-dot" id="acc"></a>
+          <div class="bs-wizard-info text-center"></div>
+        </div>
+        
+        <div class="col-4 bs-wizard-step active" id="pro-profile">
+          <div class="text-center bs-wizard-stepnum">身分資料</div>
+          <div class="progress"><div class="progress-bar"></div></div>
+          <a class="bs-wizard-dot" id="profile"></a>
+        </div>
+        
+        <div class="col-4 bs-wizard-step disabled" id="pro-done">
+          <div class="text-center bs-wizard-stepnum">完成</div>
+          <div class="progress"><div class="progress-bar"></div></div>
+          <a class="bs-wizard-dot" id="done"></a>
+        </div>
+      </div>
+    <div class="form-floating">
+      <input type="text" name="code" class="form-control code rounded-0 rounded-top" id="code" placeholder="班級代碼" autocomplete="off">
+      <label for="code">班級代碼</label>
+<!--       <div class="invalid-tooltip">
+        請輸入班級代碼
+      </div> -->
+    </div>
+    <div class="form-floating">
+      <input type="text" name="tcode" class="form-control code rounded-0 rounded-bottom" id="tcode" placeholder="班級代碼" autocomplete="off">
+      <label for="tcode">教師代碼</label>
+<!--       <div class="invalid-tooltip">
+        請輸入班級代碼
+      </div> -->
+    </div>
+    <p></p>
+    <div class="form-floating">
+      <input type="text" name="number" class="form-control rounded-0 rounded-top codeR" id="floatingnumber" placeholder="學號" autocomplete="off" required>
+      <label for="floatingnumber">學號</label>
+      <div class="invalid-tooltip">
+        請輸入學號
+      </div>
+    </div>
+    <div class="form-floating">
+      <input type="password" name="pswd" class="form-control rounded-0 mb-0" id="floatingPassword" placeholder="密碼" autocomplete="off" required>
+      <label for="floatingPassword">密碼</label>
+      <div class="invalid-tooltip">
+        請輸入密碼，<br>密碼用於Google帳戶無法使用時登入備用。
+      </div>
+    </div>
+    <div class="form-floating">
+      <input type="password" name="pswd2" class="form-control rounded-0 rounded-bottom" id="floatingPassword2" placeholder="再次輸入密碼" autocomplete="off" required>
+      <label for="floatingPassword2">再次輸入密碼</label>
+      <div class="invalid-tooltip">
+        請再次輸入密碼，<br>且須和第一次輸入之密碼相同
+      </div>
+    </div>
+<!--     <div class="form-floating">
+      <img src="{{url_for('static',filename="path[7:]")}}" style="height:5rem;margin-bottom: -1px;border-radius: 0;"  class="border form-control" onclick="recap()" id="cap">
+    </div>
+      <div class="form-floating">
+      <input type="text" name="captcha" style="margin-bottom: -1px;border-top-left-radius: 0;border-top-right-radius: 0;" class="form-control" placeholder="圖形驗證碼" autocomplete="off" required>
+      <label for="floatingPassword">圖形驗證碼</label>
+      <div class="invalid-tooltip">
+        請輸入上圖中的驗證碼
+        <br>
+        僅小寫及數字
+      </div>
+    </div> -->
+    <p class="my-5"></p>
+    <input value="完成註冊" class="w-100 btn btn-lg btn-primary g-recaptcha fw-bold" type="submit" data-sitekey="6LeT8uskAAAAALelzHltTtrms9KMT1zK4K_jEewA" data-callback="onSubmit">
+  </form>
+  <p></p>
+  <a href="/login" class="text-decoration-none fw-bold">返回登入</a>
+  <p></p>
+<!--   <div class="alert alert-info p-0">點擊驗證碼圖片可刷新驗證碼</div> -->
+  <div class="text-start">一旦註冊，即表示您同意本網站的<a href="/policy">隱私權條款</a>。並接受以Email方式接收帳戶資訊。</div>
+  <hr>
+</main>
+    <div class="position-fixed top-0 end-0"><label id="darkl" class="theme user-select-none fw-bold fs-3" style="cursor:pointer;"><i class="bi bi-moon-fill" id="dark"></i></label>
+        <label id="lightl" class="theme user-select-none fw-bold fs-3" style="cursor:pointer;"><i class="bi bi-brightness-high-fill" id="light"></i></label></div>
+    <script>
+      loading_spinner='<div class="text-primary position-absolute top-50 d-inline translate-middle" role="status"><a onclick=location.replace("/qa/qas") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+  function ajx(mode){
+    $.ajax({
+      url:"/qa/set_s",
+      method:"post",
+      data:{"mode":mode}
+    });
+  };
+  $(function(){
+    fake_session="{{session['dark']}}";
+    if (fake_session){
+      $("html").attr("data-bs-theme",fake_session);
+    };
+    if ($("html").attr("data-bs-theme")){
+      $("#"+fake_session+"l").hide();
+    };
+    $(document).on('click', '.theme', function (e) {
+      let chld=$(this).children("i").attr("id");
+      let m={"light":"dark","dark":"light"};
+      // alert(chld);
+      ajx(chld);
+      $("html").attr("data-bs-theme",chld)
+      fake_session=chld;
+      $("#"+chld+"l").hide();
+      $("#"+m[chld]+"l").show();
+     });
+  });
+  function recap(){
+    $.ajax({
+      url:"/recap",
+      method:"post",
+      success:function(data){
+        $("#cap").attr("src",data)
+      }
+    });
+  }
+  function ajx(mode){
+    $.ajax({
+      url:"/qa/set_s",
+      method:"post",
+      data:{"mode":mode}
+    });
+  };
+  $(function(){
+    $(".code").change(function(){
+      if(this.value!=""){
+      m={
+        "code":"#tcode",
+        "tcode":"#code"
+      }
+        if(this.id=="tcode"){
+          $(".codeR").hide(500)
+          $(".codeR").val("")
+          $(".codeR").removeAttr("required")
+        }
+      $(this).removeClass("rounded-0")
+      $(m[this.id]).hide(500)
+      $(m[this.id]).val("")
+      }else{
+        $(".code").show(500)
+        $(".codeR").show(500)
+        $(".code").val("")
+        $(".codeR").val("")
+        $(this).addClass("rounded-0")
+        $(".codeR").attr("required","required")
+      }
+      
+    })
+    fake_session="{{session['dark']}}";
+    if (fake_session){
+      $("html").attr("data-bs-theme",fake_session);
+    };
+    if ($("html").attr("data-bs-theme")){
+      $("#"+fake_session+"l").hide();
+    };
+    $(document).on('click', '.theme', function (e) {
+      let chld=$(this).children("i").attr("id");
+      let m={"light":"dark","dark":"light"};
+      // alert(chld);
+      ajx(chld);
+      $("html").attr("data-bs-theme",chld)
+      fake_session=chld;
+      $("#"+chld+"l").hide();
+      $("#"+m[chld]+"l").show();
+     });
+  });
+</script>
+</body>
+</html>

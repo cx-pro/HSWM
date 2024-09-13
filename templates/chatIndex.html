@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.3/socket.io.js"></script>
+    <title>聊天室</title>
+  </head>
+  <body>
+    {{header|safe}}
+    <audio src="/static/audios/new_notification.mp3" id="noti-sound" preload></audio>
+
+
+    <div class="modal fade" id="modal-add-user" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4 shadow">
+          <div class="modal-header p-5 pb-4 border-bottom-0">
+            <h1 class="fw-bold mb-0 fs-2">創建群組</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+    
+          <div class="modal-body p-5 pt-0">
+            <form id="useradd-form">
+              <div class="form-floating mb-3">
+                <input type="text" class="form-control rounded-3" id="floatingInput" name="name" autocomplete="off" placeholder=" " required>
+                <label for="floatingInput" class="fw-bold">聊天室名稱</label>
+              </div>
+              <label for="floatingPassword" class="fw-bold fs-4 mb-1">選擇成員</label>
+                <select class="form-select rounded-3 mb-2 fs-51" name="members" multiple placeholder=" " id="floatingPassword" required>
+                  {%for i in fl%}
+                  {%if not i[0].startswith("g")%}
+                  <option value="{{i[1]}}">{{i[3]}}</option>
+                  {%endif%}
+                  {%endfor%}
+                </select>
+              <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary fw-bold" type="submit">創建</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="modal-add-friend-container">
+      <div class="modal fade" id="modal-add-friend" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content rounded-4 shadow">
+            <div class="modal-header p-5 pb-4 border-bottom-0">
+              <h1 class="fw-bold mb-0 fs-2">新增好友</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+      
+            <div class="modal-body p-5 pt-0">
+              <form id="friendadd-form">
+                <div id="friendUsernameContainer">
+                  <label for="friendUsername" class="fw-bold">對方使用者名稱</label>
+                  <div class="input-group mb-3 rounded-3">
+                    <div class="input-group-text fw-bold user-select-none">@</div>
+                    <input type="text" class="form-control" id="friendUsername" required name="username" autocomplete="off" placeholder="Example">
+                  </div>
+                </div>
+                <label class="fw-bold fs-4 mb-1">建議<span class="cancel-option btn btn-outline-secondary btn-sm fw-bold">取消選取</span></label>
+                  <div class="list-group mb-3 overflow-y-scroll" style="max-height:25vh;">
+                    {%for i,j in cl.items()%}
+                    <div class="list-group-item friend-option user-select-none" style="cursor:pointer;" -data-val="{{i}}">{{j["fullname"]}}</div>
+                    {%endfor%}
+                  </div>
+                <button class="w-100 mb-2 btn btn-lg rounded-3 btn-primary fw-bold" type="submit">新增好友</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    
+    <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-3 border-end border-start p-2 p-md-1 px-3 px-md-3 overflow-y-scroll" id="users-container" style="height:83vh">
+        <div id="inner-user-container">
+          <div class="fs-4 fw-bold ps-2 ps-md-1">
+            <span>聊天室<span class="position-relative ms-2"><span class="position-absolute top-100 start-100 translate-middle badge p-1 text-primary fw-bold user-select-none shadow-sm" style="font-size:.9rem">Beta</span></span></span>
+            <div class="float-end d-flex">
+              <div class="w-50 border shadow fw-bold user-select-none me-2 py-0 px-2 text-center rounded-4 bg-light-subtle" id="add-user" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modal-add-user"><i class="bi bi-pencil-square fs-5"></i></div>
+              <div class="w-50 border shadow fw-bold user-select-none py-0 px-2 text-center rounded-4 bg-light-subtle" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modal-add-friend"><i class="bi bi-person-plus fs-5"></i></div>
+            </div>
+          </div>
+          
+          <div class="mb-3 py-2 border-bottom"></div>
+          {%for i in fl%}
+          <div class="border shadow fw-bold position-relative user-select-none my-0 p-1 px-2 mx-auto text-center mb-3 rounded bg-light-subtle users" -data-id="{{i[0]}}" id="datai{{i[0]}}" style="cursor:pointer;">
+            <a href="#" class="text-decoration-none">
+              <div class="text-start fs-5 text-muted">{%if len(i)>3%}{{i[3]}}{%else%}{{users.get(fl[1],{"fullname":"已移除用戶"})["fullname"]}}{%endif%}</div>
+              <div class="text-end text-muted placeholder-glow" id="ls{{i[0]}}">{%if len(i)>2%}{{i[2]|truncate(10)}}{%else%}<span class="placeholder bg-primary col-6"></span>{%endif%}</div>
+            </a>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary bg-gradient {%if unreadl[i[0]]==0%}d-none{%endif%}"  id="cb{{i[0]}}">
+              <span -data-bid='{{i[1]}}' id="b{{i[0]}}" class="unread">{{unreadl[i[0]]}}</span>
+              <span class="visually-hidden">則未讀訊息</span>
+            </span>
+          </div>
+          {%endfor%}
+            {%if not len(fl)%}
+            <div class="text-center user-select-none d-block d-md-none">
+              <div><a class="text-decoration-none text-success fw-bold" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modal-add-friend">新增好友</a></div>
+            </div>
+            {%endif%}
+        </div>
+      </div>
+      <div class="d-none d-md-block col-12 col-md-9 position-relative border-end px-0 overflow-hidden" id="msg-container">
+        <div class="position-absolute top-50 start-50 translate-middle text-center user-select-none">
+          <div>點選左邊使用者開始聊天</div>
+          <div>或&emsp;<a class="text-decoration-none text-success fw-bold" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#modal-add-friend">新增好友</a></div>
+        </div>
+      </div>
+    </div>
+    </div>
+    {{footer.replace(footer[footer.find("<footer"):footer.find("</footer>")],"")|safe}}
+    <div class="text-center border-top py-2 text-muted fw-bold mx-auto mt-auto mb-0 w-100">&copy; 2022 高中職小幫手</div>
+    <script>
+      $(()=>{
+        if(location.href.indexOf("#") > -1){
+          window.history.pushState({"html":String(document),"pageTitle":document.title},"", location.href.substr(0, location.href.indexOf('#')));
+        }
+        
+        var notify_support='Notification' in window
+        var notifications=[]
+        if (!notify_support) {
+          alert('此瀏覽器不支援通知功能');
+        }else{
+          if (Notification.permission === 'default' || Notification.permission === 'undefined') {
+            Notification.requestPermission(function(permission) {
+              if (permission === 'granted') {
+                notifications.push(new Notification('高中職小幫手', {body: '感謝您啟用通知，您僅會收到聊天室訊息的通知。',icon: '/static/pics/favicon.ico',}));
+              }
+            });
+          }
+        }
+
+
+        var current_uid="{{current_user.id}}"
+        var fln={{fln|safe}}
+        var rl={{rl|safe}}
+        var fus=$(".users")[0]
+        var current_room="{{session.get('current_room')}}"
+        var mq = window.matchMedia( "(max-width: 768px)" );
+        
+        var socket = io();
+        
+        $("#dcontain").remove()
+        $(".cancel-option").fadeOut(0)
+
+        
+        $(window).off("beforeunload").on("beforeunload",function(ev){
+          socket.disconnect()
+        })
+        
+        $(window).off("hashchange").on("hashchange",function(event){
+          if(event.originalEvent.newURL.indexOf("#") > -1 && event.originalEvent.oldURL.indexOf("#s") == -1){return;}
+          if(event.originalEvent.oldURL.indexOf("#s") > -1){
+            if(!$("#settings").hasClass("d-none")){$("#settings").addClass("d-none")}
+            if($("#chatContain").hasClass("d-none")){$("#chatContain").removeClass("d-none")}
+            
+            return
+          }
+          $("#users-container").removeClass("d-none d-md-block")
+          $("#msg-container").removeClass("d-block d-md-block")
+          $("#msg-container").addClass("d-none d-md-block")
+        })
+
+        $(".friend-option").click(function(event){
+          $(".friend-option").removeClass("border border-2 border-primary")
+          $(this).addClass("border border-2 border-primary")
+          if($("#friendUsernameContainer").is(':visible')){
+            $("#friendUsernameContainer").fadeOut(500,function() {
+              $("#friendUsername").val($(event.target).attr("-data-val"))
+            })
+          }else{
+            $("#friendUsername").val($(this).attr("-data-val"))
+          }
+          if($(".cancel-option").not(':visible')){
+            $(".cancel-option").fadeIn()
+          }
+        })
+        
+        $(".cancel-option").click(function(){
+          $(".friend-option").removeClass("border border-2 border-primary")
+          $("#friendUsername").val("")
+          if($("#friendUsernameContainer").not(':visible')){
+            $("#friendUsernameContainer").fadeIn("d-none")
+          }
+          if($(".cancel-option").is(':visible')){
+            $(".cancel-option").fadeOut()
+          }
+        })
+        
+        $("#useradd-form").submit(function(event){
+          event.preventDefault()
+          var data={
+            "name":$("[name=name]").val(),
+            "members":JSON.stringify($("#floatingPassword").val())
+          }
+          $.ajax({
+            url:"/chat/adds?tar=group",
+            method:"post",
+            data:data,
+            success:function() {
+              $("#modal-add-user").modal("hide")
+              location.reload()
+            }
+          })
+        })
+        
+        $("#friendadd-form").submit(function(event){
+          event.preventDefault()
+          var data={}
+          $.map($(this).serializeArray(), function(n, i){
+              data[n['name']] = n['value'];
+          })
+          $.ajax({
+            url:"/chat/adds?tar=friend",
+            method:"post",
+            data:data,
+            success:function() {
+              $("#modal-add-friend").modal("hide")
+              location.reload()
+            }
+          })
+
+        })
+
+        $(document).off("submit","#message-form").on("submit","#message-form",function(e) {
+          e.preventDefault()
+          var data={}
+          $.map($(this).serializeArray(), function(n, i){
+              data[n['name']] = n['value'];
+          })
+          if(data["message"]==""){return}
+          socket.emit('message', {"message":data["message"],"recipient":current_room});
+          $(".messageInput").val("")
+        })
+
+        
+        $(".users").click(function(){
+          if($(this).hasClass("border-primary")){return;}
+          $(".msg-container").html(`
+          <div class="text-primary position-absolute top-50 start-50 translate-middle" id="spinner" role="status"><a onclick=location.replace("/qa/qas") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>`)
+
+        if (!mq.matches) {
+          $(".users").removeClass("border-primary border-2")
+          $(this).addClass("border-primary border-2")
+        }
+
+          $("#b"+$(this).attr("-data-id")).html("0")
+          if(!$("#cb"+$(this).attr("-data-id")).hasClass("d-none")){$("#cb"+$(this).attr("-data-id")).addClass("d-none")}
+          socket.disconnect()
+          $("#msg-container").load("/chat/msg?id="+$(this).attr("-data-id"),function() {
+            document.querySelector(".messages").scrollTo(0, document.querySelector(".messages").scrollHeight);
+          })
+          current_room=$(this).attr("-data-id")
+          socket.connect()
+          $("#users-container").addClass("d-none d-md-block")
+          $("#msg-container").removeClass("d-none d-md-block")
+          $("#msg-container").addClass("d-block d-md-block")
+        })
+
+        socket.on('unread', function(data) {
+          if(rl.includes(data["recipient"])){
+            if(!$("#datai"+data["recipient"]).hasClass("border-primary")){
+              $("#b"+data["recipient"]).html(parseInt($("#b"+data["recipient"]).html())+1)
+              $("#cb"+data["recipient"]).removeClass("d-none")
+            }
+            var recipient=data["recipient"]
+            $.get("/chat/glm?id="+data["recipient"],function(data){
+              $("#ls"+recipient).html(data["msg"])
+            })
+            document.querySelector("#noti-sound").play()
+            
+            if (Notification.permission === 'default' || Notification.permission === 'undefined') {
+              Notification.requestPermission(function(permission) {
+                if (permission === 'granted') {
+                  notifications.push(new Notification('您有新訊息｜高中職小幫手', {icon: '/static/pics/favicon.ico'}));
+                }
+              });
+            }else{
+              notifications.push(new Notification('您有新訊息｜高中職小幫手', {icon: '/static/pics/favicon.ico'}));
+            }
+          }
+        })
+
+
+      
+        socket.on('message', function(data) {
+            var row = document.createElement('div');
+            var div = document.createElement('div');
+            $(row).addClass("d-flex mt-3")
+            $(div).css("width","max-content")
+            $(div).css("max-width","50%")
+            if(data["sender"]!=current_uid){
+              $(div).addClass("ms-3 rounded-4 py-1 px-3 bg-primary text-light shadow")
+              var avacon=document.createElement('div');
+              var ava=document.createElement('img');
+              $(avacon).attr("oncontextmenu","return false;")
+              $(avacon).addClass("p-0 user-select-none")
+              $(ava).addClass("object-fit-contain rounded-circle")
+              $(ava).css("width","2rem")
+              $(ava).attr("src",data["avatar"])
+              $(avacon).append(ava)
+              $(row).append(avacon)
+            }else{
+              $(row).addClass("justify-content-end")
+              $(div).addClass("ms-3 rounded-4 py-1 px-3 bg-primary me-3 text-light shadow")
+            }
+          
+            if($(".msg-date").last().html()!=data["date"]){
+              var date_div=document.createElement('div');
+              $(date_div).addClass("text-center fs-6 my-3 msg-date user-select-none")
+              $(date_div).html(data["date"])
+              $(".messages").append(date_div)
+            }
+            if($(".msg-time").last().html()!=data["time"]){
+              var date_div=document.createElement('div');
+              $(date_div).addClass("text-center fs-6 my-3 msg-time user-select-none")
+              $(date_div).html(data["time"])
+              $(".messages").append(date_div)
+            }
+          
+            $(div).html(data["msg"]);
+            $(row).append(div)
+           $(".messages").append(row)
+            $("#ls"+data["recipient"]).html(data["msg"])
+            document.querySelector(".messages").scrollTo(0, document.querySelector(".messages").scrollHeight); 
+        });
+
+        
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜訂餐統計</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+
+  <div class="container">
+    {{sech|safe}}
+    <div class="container">
+      {%if rmax!=0%}
+      <div class="fs-5">本次投票最高票為 <span class="text-success fw-bold mx-4">{{" ".join(rml)}}</span> <div>得票 <span class="text-primary fw-bold ms-3">{{rmax}}</span></div></div>
+      {%else%}
+      <div class="fs-5">本次投票暫無得票</div>
+      {%endif%}
+      <div class="fs-3 mt-5">本日菜單(手動上傳)</div>
+      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-label="Slide 1" aria-current="true" ></button>
+          {%for i in menu_list%}
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{menu_list.index(i)}}" aria-label="Slide {{menu_list.index(i)+1}}"></button>
+          {%endfor%}
+        </div>
+        <div class="carousel-inner">
+          {%for i in menu_list%}
+          <div class="carousel-item{%if menu_list.index(i)==0%} active{%endif%}">
+            <img src="/static/menu_images/{{i}}" class="d-block w-100">
+          </div>
+          {%endfor%}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      var ic1=`<i class="bi bi-list fs-1"></i>`
+      var ic2=`<i class="bi bi-x-lg fs-2"></i>`
+      $("#mynav").click(function(){
+        $(this).fadeOut(200,function(){
+          if($("#mynav").html()==ic1){
+            $("#mynav").html(ic2)
+          }else{
+            $("#mynav").html(ic1)
+          }
+        })
+        $(this).fadeIn(200)
+      })
+      $("header").remove()
+      $("footer").remove()
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+  </script>
+</body>
+</html>

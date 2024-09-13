@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜問答</title>
+</head>
+<body>
+  {{header|safe}}
+  <header class="w-100 border-bottom p-1 d-block d-md-none">
+    
+    <div class="ms-auto me-0 float-end">
+      <button class="btn btn-outline-primary ms-auto me-0 btn-lg fw-bold" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptionsLabel" id="sidebartoggler">工具</button>
+      <div class="offcanvas offcanvas-end w-100" data-bs-backdrop="static" tabindex="-1" id="offcanvasWithBothOptions" aria-labelledby="staticBackdropLabel" style="height:100vh;">
+        <div class="offcanvas-header">
+          <h1 class="text-primary" id="offcanvasWithBothOptionsLabel">工具</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body text-center overflow-y-scroll">
+        <hr>
+          <button class="mb-0 my-auto fs-5 fw-bold text-decoration-none border btn btn-outline-primary rounded mx-auto p-0 border-2 border-primary" onclick="cl('/qa/describe')" style="width:8rem;height:2.1rem;" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close">相關說明</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold text-decoration-none minea border mx-auto rounded btn btn-outline-primary p-0 border-2 border-primary" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample2" aria-expanded="false" aria-controls="collapseWidthExample2" style="width:8rem;height:2.1rem">問題搜尋</button>
+        <div class="collapse collapse-horizontal" id="collapseWidthExample2">
+          <div class="card card-body">
+            <div class="text-start">
+              <button class="text-start p-0 m-0 btn border-0 bg-opacity-0 sub" id="2" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close"><i class="bi bi-search text-muted fs-4"></i></button></div>
+              <input type="search" name="search" id="search2" class="form-control search" placeholder="按下Enter或上方放大鏡查詢" autocomplete="off">
+          </div>
+        </div>
+      <p></p>
+      {%if current_user.is_authenticated%}
+      <button class="mb-0 my-auto fs-5 fw-bold mx-auto btn btn-outline-primary text-decoration-none border rounded p-0 border-2  border-primary" onclick="cl('/qa/add')" style="width:8rem;height:2.1rem" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close">線上發問</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-wrap text-decoration-none border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/mys')" style="width:8rem;height:2.1rem;" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close">我的問題</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/myreply')" style="width:8rem;height:2.1rem;" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close">我的回覆</button>
+      {%if current_user.is_teacher%}
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/mysq')" style="width:8rem;height:2.1rem;" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close">學生問題</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/mysr')" style="width:8rem;height:2.1rem;" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close">學生回覆</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/reported')" style="width:8rem;height:2.1rem;" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close">檢舉檢視</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/rate')" style="width:8rem;height:2.1rem;" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-label="Close">積分系統</button>
+      {%endif%}
+      {%else%}
+      <a class="mb-0 my-auto mx-auto fs-5 fw-bold text-primary text-decoration-none p-0" href="/login?next=/qa/qas" id="searchbtn" style="width:4rem;"><button class="mb-0 my-auto mx-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none border rounded p-0 border-2 border-primary" style="width:8rem;height:2.1rem;">登&emsp;&emsp;入</button></a>
+      {%endif%}
+        <hr>
+        </div>
+      </div>
+    </div>
+    
+      <button class="btn btn-outline-primary me-0 btn-lg fw-bold float-start" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions2" aria-controls="offcanvasWithBothOptionsLabel2" id="sidebartoggler">分類</button>
+    <div class="offcanvas offcanvas-start w-100" data-bs-backdrop="static" tabindex="-1" id="offcanvasWithBothOptions2" aria-labelledby="staticBackdropLabel" style="height:100vh;">
+          <div class="offcanvas-header">
+            <h1 class="text-primary" id="offcanvasWithBothOptionsLabel2">分類</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body text-center overflow-y-scroll">
+          <hr>
+            
+      {%for i in classes%}
+      <div>
+        <button onclick="cl('{{i.replace('&emsp;','')}}')" class="mx-auto fs-5 p-0 fw-bold border-primary btn btn-outline-primary border-2" style="height:2.1rem;min-width:8rem;max-width:95%" data-bs-dismiss="offcanvas" data-bs-target="#offcanvasWithBothOptions2">{{i|safe}}</button>
+      </div>
+      <p></p>
+      {%endfor%}
+          <hr>
+          </div>
+        </div>
+    <div class="mx-auto p-1 text-center d-flex justify-content-center">
+<!--       <img src="{{url_for('static',filename='pics/search.svg')}}" draggable="false" width="32" height="32" class="user-select-none text-start p-0 m-0 btn border-0 bg-opacity-0 sub float-end" id="3"> -->
+      <input type="search" name="search" id="search3" class="form-control search float-none float-sm-start rounded-pill" placeholder="按下Enter查詢" autocomplete="off">
+      
+    </div>
+    
+  </header>
+
+
+  
+  <div class="d-flex flex-row align-items-center w-100 mt-0 p-0 mx-0 row">
+    <div class="text-center user-select-none text-muted text-decoration-none border-end m-0 p-1 d-none d-md-block col-0 col-sm-2" style="height:70vh;">
+      <h2>分類</h2>
+      <p class="my-5"></p>
+      {%for i in classes%}
+      <div>
+        <button onclick="cl('{{i.replace('&emsp;','')}}')" class="mx-auto fs-5 p-0 fw-bold border-primary btn btn-outline-primary border-2" style="height:2.1rem;min-width:8rem;max-width:95%">{{i}}</button>
+      </div>
+      <p></p>
+      {%endfor%}
+    </div>
+    <div class="container text-center overflow-scroll col col-md-8 mx-auto me-0" style="height:70vh;"></div>
+    
+    
+    
+    <div class="text-center user-select-none text-muted text-decoration-none border-start m-0 p-1 overflow-scroll d-none d-md-block col-0 col-sm-2" style="height:70vh;">
+      <h2>工具</h2>
+      <p class="my-5"></p>
+      <button class="mb-0 my-auto fs-5 fw-bold text-decoration-none border btn btn-outline-primary rounded mx-auto p-0 border-2 border-primary" onclick="cl('/qa/describe')" style="width:8rem;height:2.1rem;">相關說明</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold text-decoration-none minea border mx-auto rounded btn btn-outline-primary p-0 border-2 border-primary" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample1" aria-expanded="false" aria-controls="collapseWidthExample1" style="width:8rem;height:2.1rem">問題搜尋</button>
+        <div class="collapse collapse-horizontal" id="collapseWidthExample1">
+          <div class="card card-body">
+            <div class="text-start">
+              <button class="text-start p-0 m-0 btn border-0 bg-opacity-0 sub" id="1"><i class="bi bi-search text-muted fs-4"></i></button></div>
+              <input type="search" name="search" class="form-control search" id="search1" placeholder="按下Enter或上方放大鏡查詢" autocomplete="off">
+          </div>
+        </div>
+      <p></p>
+      {%if current_user.is_authenticated%}
+      <button class="mb-0 my-auto fs-5 fw-bold mx-auto btn btn-outline-primary text-decoration-none border rounded p-0 border-2  border-primary" onclick="cl('/qa/add')" style="width:8rem;height:2.1rem">線上發問</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-wrap text-decoration-none border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/mys')" style="width:8rem;height:2.1rem;">我的問題</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/myreply')" style="width:8rem;height:2.1rem;">我的回覆</button>
+      {%if current_user.is_teacher%}
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/mysq')" style="width:8rem;height:2.1rem;">學生問題</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/mysr')" style="width:8rem;height:2.1rem;">學生回覆</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/reported')" style="width:8rem;height:2.1rem;">檢舉檢視</button>
+      <p></p>
+      <button class="mb-0 my-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none text-wrap border rounded p-0 border-2 mx-auto border-primary" onclick="cl('/qa/rate')" style="width:8rem;height:2.1rem;">積分系統</button>
+      {%endif%}
+      {%else%}
+      <a class="mb-0 my-auto mx-auto fs-5 fw-bold text-primary text-decoration-none p-0" href="/login?next=/qa/qas" id="searchbtn" style="width:4rem;"><button class="mb-0 my-auto mx-auto fs-5 fw-bold btn btn-outline-primary text-decoration-none border rounded p-0 border-2 border-primary" style="width:8rem;height:2.1rem;">登&emsp;&emsp;入</button></a>
+      {%endif%}
+    </div>
+  </div>
+  {{footer|safe}}
+</body>
+<script>
+  var defa="{%if request.args.get('defa')%}{{request.args.get('defa')}}{%else%}全部{%endif%}";
+  var loading_spinner='<div class="text-primary position-absolute top-50 d-inline translate-middle" role="status"><a onclick=location.replace("/qa/qas") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+  $.get("/qa/qas",function(data){last=data;})
+  function cl(url){
+    $(".container").html(loading_spinner);
+    $(".container").load(url);
+    defa="全部";
+    window.history.pushState({}, document.title, "/qa/qas");
+    };
+  $(function() {
+    $(".container").html(loading_spinner);
+    $(".container").load(defa);
+    defa="全部";
+    window.history.pushState({}, document.title, "/qa/qas");
+    $(document).off('click', '.sub').on('click', '.sub', function (e) {
+        var ID=this.id
+        $.ajax({
+          url:"/qa/search",
+          type:"post",
+          data:{"search":$("#search"+ID).val()},
+          complete:function(data){$("#search"+ID).val("")},
+          success:function(data){
+            $(".container").html(loading_spinner);
+            $(".container").html(data);
+            $("#collapseWidthExample"+ID).addClass("collapsing");
+            $("#collapseWidthExample"+ID).removeClass("show");
+            $("#searchbtn").removeClass("collapsed");
+            $("#collapseWidthExample"+ID).removeClass("collapsing");
+            }
+          });
+    })
+    $(document).off('keypress', '.search').on('keypress', '.search', function (e) {
+      if (!e) e = window.event;
+      var keyCode = e.code || e.key;
+      if (keyCode == 'Enter'){
+        $('#offcanvasWithBothOptions').offcanvas('hide');
+        var ID=this.id.slice(-1)
+        $.ajax({
+          url:"/qa/search",
+          type:"post",
+          data:{"search":$(this).val()},
+          complete:function(data){$("#search"+ID).val("")},
+          success:function(data){
+            $(".container").html(loading_spinner);
+            $(".container").html(data);
+            $("#collapseWidthExample"+ID).addClass("collapsing");
+            $("#collapseWidthExample"+ID).removeClass("show");
+            $("#searchbtn").removeClass("collapsed");
+            $("#collapseWidthExample"+ID).removeClass("collapsing");
+            }
+          });
+        }
+      });
+    
+    $(document).off('click', '.minebtn').on('click', '.minebtn', function (e) {
+      last =$(".container").html();
+      $(".container").html(loading_spinner);
+      $(".container").load($(this).attr("id"));
+//       if ($(this).attr("id").includes("#")){
+//         console.log($("#rrr"+$(this).attr("id").slice($(this).attr("id").search("#")+1)).offset());
+//         $('html, .container').animate({
+//     scrollTop: 0
+// }, 'fast');}
+      
+      });
+    $(document).off('click', '.mineback').on('click', '.mineback', function (e) {
+      $(".container").html(loading_spinner);
+      if (last){$(".container").html(last);}
+      delete last;
+      });
+    // $(document).off('click', '.minesubmit').on('click', '.minesubmit', function (e) {
+    //     $.ajax({
+    //       url:"/qa/add",
+    //       type:"post",
+    //       data:$('#qadd_form').serializeArray()
+    //       });
+    //   });
+    $(document).off('click', '.mineedit').on('click', '.mineedit', function (e) {
+      $.ajax({
+          url:"/qa/e"+$(this).attr("id"),
+          type:"post",
+          data:{
+            "title":$("#title").val(),
+            "content":$("#content").val(),
+            "cls":$("#cls").val(),
+          },
+          success:function(data){
+            $(".container").html(loading_spinner);
+            $(".container").html(data);
+            }
+          });
+        });
+    $(document).off('click', '.minedelete').on('click', '.minedelete', function (e) {
+      $.ajax({
+          url:"/qa/d"+$(this).attr("id"),
+          type:"post",
+          data:{},
+          success:function(data){
+            $("#exampleModal").modal('hide');
+            $(".container").html(loading_spinner);
+            $(".container").html(data);
+            $("#collapseWidthExample").addClass("collapsing");
+            $("#collapseWidthExample").removeClass("show");
+            $("#searchbtn").removeClass("collapsed");
+            $("#collapseWidthExample").removeClass("collapsing");
+            }
+          });
+      });
+    $(document).off('click', '.minereply').on('click', '.minereply', function (e) {
+      if (!$("#reply").val()){alert('未填寫回覆！')};
+      var idhere=$(this).attr("id");
+      $.ajax({
+        url:"/qa/reply"+idhere,
+        type:"post",
+        data:{
+          "reply":$("#reply").val()
+          },
+        success:function(data){
+          $(".container").empty()
+          $(".container").html(loading_spinner);
+          $(".container").load("/qa/q"+idhere);
+          $("#staticBackdrop").modal('hide');
+          $(".modal-backdrop").remove();
+          }
+        });
+      });
+    });
+</script>
+</html>

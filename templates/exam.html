@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜考試</title>
+</head>
+<body>
+  {{header|safe}}
+  {%if request.args.get("msg")%}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle pt-5">
+    <div class="toast align-items-center show mt-5 fade bg-primary text-light" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{request.args.get("msg")}}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="aja('msg')"></button>
+      </div>
+    </div>
+    </div>
+  {%endif%}
+  <div class="container text-center mt-5">
+    {%for k,v in data.items()%}
+    <a href="{{v["link"]}}" class="btn btn-outline-primary fw-bold fs-5" style="min-width:20rem;">
+    {{v["title"]}}
+    </a>
+    {%endfor%}
+  </div>
+  {{footer|safe}}
+</body>
+</html>

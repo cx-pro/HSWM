@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="900"/>
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜刪除確認</title>
+    <style>
+      *{
+        text-align:center;
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        text-align:center;
+      }
+    </style>
+</head>
+<body>
+    {{header|safe}}
+    <h1>確認刪除此作業？</h1>
+    <form action="/tskn/del{{id}}?class={{cls}}&key={{key}}" method="post">
+      <p class="my-5"></p>
+    <div class="btn-group" style="width:40rem;max-width:95vw;">
+      <button type="submit" class="btn btn-lg btn-danger fw-bold">確定</button><button type="button" onclick="history.back()" class="btn btn-lg btn-secondary fw-bold">返回</button>
+    </div>
+    </form>
+{{footer|safe}}
+</body>
+</html>

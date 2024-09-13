@@ -1,0 +1,249 @@
+<html>
+<head>
+<title>計時器</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/static/dependences/hackertimer/HackTimer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+<style>
+  /* Hide scrollbar for Chrome, Safari and Opera */
+    *::-webkit-scrollbar {
+      width: .5rem;
+    }
+    *::-webkit-scrollbar-thumb {
+      border: #e9ecef solid .1rem;
+      border-radius: .8rem;
+      -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+      background-color: #4285F4;
+    }
+    *::-webkit-scrollbar:horizontal {
+      display: none;
+    }
+/* Hide scrollbar for IE, Edge and Firefox */
+    * {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+</style>
+</head>
+<body>
+  <div class="mt-5">
+    <hr>
+    <h4 class="text-center fw-bold">全體控制列</h4>
+    <p></p>
+    <div class="container pb-3 pt-2 border rounded-4 shadow-lg">
+      <div class="btn-group">
+        <button data-target="*" class="btn btn-primary func-start">全體開始</button>
+        <button data-target="*" class="btn btn-secondary func-stop">全體暫停</button>
+        <button data-target="*" class="btn btn-success func-restart">全體歸零</button>  
+      </div>
+      <div class="input-group mt-1 fw-bold">
+        <div class="form-control-lg border text-center bg-secondary-subtle user-select-none">固定編號</div>
+        <input type="text" class="form-control" id="new_name_f" data-bs-placement="bottom" placeholder="如 a01~a36 的 a" data-bs-toggle="tooltip" data-bs-title="如 a01~a36 的 a" data-bs-custom-class="custom-tooltip">
+        <div class="form-control-lg border text-center bg-secondary-subtle user-select-none">浮動編號範圍</div>
+        <input type="number" class="form-control" id="new_id_s" data-bs-placement="bottom" placeholder="起始值 僅接受數字 如 a01~a36 的 01" data-bs-toggle="tooltip" data-bs-title="起始值 僅接受數字 如 a01~a36 的 01" onchange="$('#new_id_e').val(parseInt(this.value)+35)" data-bs-custom-class="custom-tooltip">
+        <div class="form-control-lg border text-center bg-secondary-subtle user-select-none">~</div>
+        <input type="number" class="form-control" id="new_id_e" data-bs-placement="bottom" placeholder="結束值 僅接受數字 如 a01~a36 的 36" data-bs-toggle="tooltip" data-bs-title="結束值 僅接受數字 如 a01~a36 的 36" data-bs-custom-class="custom-tooltip">
+        <button class="btn btn-outline-primary func-set-name">設定</button>
+      </div>
+      <div class="input-group mt-1 fw-bold">
+        <div class="form-control-lg border text-center bg-secondary-subtle user-select-none">結束時間</div>
+        <input type="number" min="0" class="form-control" id="nma" value="40" data-bs-placement="bottom">
+        <div class="form-control-lg border text-center bg-secondary-subtle user-select-none">分</div>
+        <input type="number" max="59" min="0" class="form-control" value="00" id="nsa" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-title="0~59秒" data-bs-custom-class="custom-tooltip">
+        <div class="form-control-lg border text-center bg-secondary-subtle user-select-none">秒</div>
+        <button data-target="*" class="btn btn-outline-primary func-set">設定</button>
+      </div>
+    </div>
+    <hr class="mb-5">
+  <div class="row p-0 m-0">
+    {%for i in range(1,37)%}
+      <div class="col-2 my-1 p-2 border border-dark {%if (i)%2==0 %}bg-info-subtle{%else%}bg-warning-subtle{%endif%}">
+        <div>
+          <input type="text" class="form-control border-0 p-0 overflow-visible fs-1 float-start w-50 text-center name-tag" id="name{{i}}">
+          <div class="py-3 fs-1 fw-bold col-6 float-end text-end me-0 mt-0"><span id="m{{i}}" class="timer-m">00</span>:<span id="s{{i}}" class="timer-s">00</span></div>
+        </div>
+        <div class="btn-group">
+          <button data-target="{{i}}" id="start{{i}}" class="btn btn-sm btn-primary func-start" onclick="$(this).addClass('d-none');$('#stop{{i}}').removeClass('d-none');">開始</button>
+          <button data-target="{{i}}" id="stop{{i}}" class="btn btn-sm d-none rounded-start btn-secondary func-stop" onclick="$(this).addClass('d-none');$('#start{{i}}').removeClass('d-none');">暫停</button>
+          <button data-target="{{i}}" class="btn btn-sm btn-success func-restart">歸零</button>
+          <div class="dropdown">
+            <button data-target="-1" class="btn btn-sm btn-outline-info rounded-end rounded-start-0" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">設定</button>
+            <div class="dropdown-menu p-3" style="width: 25rem;max-width:80vw;">
+              <div>結束時間</div>
+              <div class="input-group mt-1">
+                <input type="number" min="0" class="form-control" value="40" id="nm{{i}}">
+                <div class="form-control-lg border text-center bg-secondary-subtle user-select-none">分</div>
+                <input type="number" max="59" min="0" class="form-control" value="00" id="ns{{i}}" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-title="0~59秒" data-bs-custom-class="custom-tooltip">
+                <div class="form-control-lg border text-center bg-secondary-subtle user-select-none">秒</div>
+                <button data-target="{{i}}" class="btn btn-outline-primary func-set">設定</button>
+              </div>
+            </div>
+          </div>    
+        </div>
+      </div>
+    {%endfor%}
+  </div>
+  </div>
+
+<div id="pin"></div>
+<script>
+  $(()=>{
+    window.addEventListener('beforeunload', function(e) {
+        e.preventDefault();
+        e.returnValue = '';
+      });
+    {%for o in ["m","m0"]%}
+    var {{o}}={
+      {%for i in range(1,37)%}
+        m{{i}}:00,
+        s{{i}}:00{%if not i==36%},{%endif%}
+      {%endfor%}
+    }
+    {%endfor%}
+    var timer_map={}
+    var end_time={
+      {%for i in range(1,37)%}
+        m{{i}}:40,
+        s{{i}}:00{%if not i==36%},{%endif%}
+      {%endfor%}
+    }
+    var timer=[
+      {%for i in range(1,37)%}
+      function(){
+        timer_map[{{i}}]=setInterval(()=>{
+        
+        if(m["m{{i}}"]==end_time["m{{i}}"] && m["s{{i}}"]+1>end_time["s{{i}}"]){
+          $("#stop{{i}}").click()
+        }else{
+          if(m["s{{i}}"]==59 && m["m{{i}}"]+1<=end_time["m{{i}}"]){
+            m["s{{i}}"]=-1
+            m["m{{i}}"]++
+          }
+          m["s{{i}}"]++
+          $("#m{{i}}").html("0".repeat(2-m["m{{i}}"].toString().length)+m["m{{i}}"].toString())
+          $("#s{{i}}").html("0".repeat(2-m["s{{i}}"].toString().length)+m["s{{i}}"].toString())
+    
+        }
+      },1000)}
+  {%if not i==36%},{%endif%}
+      {%endfor%}
+    ]
+
+  
+    $(".func-start").click(function(){
+      if($(this).attr("data-target")=="*"){
+        $(".func-start").each(function(){
+          if(!$(this).hasClass("d-none")&&$(this).attr("data-target")!="*"){
+            $(this).click()}})
+        $("#pin").get(0).scrollIntoView({behavior: 'smooth'});
+          return
+          }
+      timer[$(this).attr("data-target")-1]()
+    })
+
+  
+    $(".func-stop").click(function(){
+      if($(this).attr("data-target")=="*"){
+        $(".func-stop").each(function(){
+          if(!$(this).hasClass("d-none")&&$(this).attr("data-target")!="*"){
+            $(this).click()}})
+          return
+          }
+      clearInterval(timer_map[$(this).attr("data-target")])
+    })
+
+  
+    $(".func-restart").click(function(){
+      if($(this).attr("data-target")=="*"){
+        for(let i=1;i<37;i++){
+          m["m"+i]=m0["m"+i]
+          m["s"+i]=m0["s"+i]
+          $("#m"+i).html("0".repeat(Math.max(0,2-m["m"+i].toString().length))+m["m"+i])
+          $("#s"+i).html("0".repeat(Math.max(0,2-m["s"+i].toString().length))+m["s"+i])
+        }
+        return
+      }
+      var mt="m"+$(this).attr("data-target")
+      var st="s"+$(this).attr("data-target")
+      m[mt]=m0[mt]
+      m[st]=m0[st]
+      $("#m"+$(this).attr("data-target")).html("0".repeat(Math.max(0,2-m[mt].toString().length))+m[mt])
+      $("#s"+$(this).attr("data-target")).html("0".repeat(Math.max(0,2-m[st].toString().length))+m[st])
+    })
+
+  
+    $(".func-set-name").click(function(){
+      var fixedId=$("#new_name_f").val()
+      var nms=$("#new_id_s").val()
+      var nme=$("#new_id_e").val()
+      var nmsi=parseInt(nms)
+      var nmei=parseInt(nme)
+      var di=nme.length
+      if(!(nms && nme)){alert("請輸入起始值與結束值");return}
+      var numbers=[]
+      for(i=nmsi;i<=nmei;i++){
+        var il=i.toString().length
+        numbers.push("0".repeat(di-il)+i.toString())
+      }
+      $(".name-tag").each(function(){$(this).val("")})
+      for(let i=1;i<nmei-nmsi+2;i++){
+        $("#name"+i).val(fixedId+numbers[i-1])
+      }
+    })
+
+  
+    $(".func-set").click(function(){
+      if($(this).attr("data-target")=="*"){
+        var nm=$("#nma").val()
+        var ns=$("#nsa").val()
+        if(!(nm>=0 && ns<60 && ns>=0) || ((ns == ""|| ns==0) && (nm==0 || nm==""))){alert("時間不得設定為 00:00\n且\n秒數不得超過 59");return}
+        if(nm == ""){nm=0}
+        if(ns == ""){ns=0}
+        for(let i=1;i<37;i++){
+          end_time["m"+i]=nm
+          end_time["s"+i]=ns
+        }
+        alert("結束時間: "+"0".repeat(Math.max(0,2-nm.toString().length))+nm+":"+"0".repeat(Math.max(0,2-ns.toString().length))+ns+"\n設定完成")
+        return
+      }
+      var nm=$("#nm"+$(this).attr("data-target")).val()
+      var ns=$("#ns"+$(this).attr("data-target")).val()
+      if(!(nm>=0 && ns<60 && ns>=0) || ((ns == ""|| ns==0) && (nm==0 || nm==""))){alert("時間不得設定為 00:00\n且\n秒數不得超過 59");return}
+        if(nm == ""){nm=0}
+        if(ns == ""){ns=0}
+        end_time["m"+$(this).attr("data-target")]=nm
+        end_time["s"+$(this).attr("data-target")]=ns
+        $("#nm"+$(this).attr("data-target")).val("")
+        $("#ns"+$(this).attr("data-target")).val("")
+      alert("結束時間: "+"0".repeat(Math.max(0,2-nm.toString().length))+nm+":"+"0".repeat(Math.max(0,2-ns.toString().length))+ns+"\n設定完成")
+    })
+  })
+</script>
+<style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  .danger-tooltip {
+    --bs-tooltip-bg: var(--bs-danger);
+    font-weight:bold;
+  }
+  .warning-tooltip {
+    --bs-tooltip-bg: var(--bs-warning);
+    font-weight:bold;
+  }
+  .success-tooltip {
+    --bs-tooltip-bg: var(--bs-success);
+    font-weight:bold;
+  }
+</style>
+<script>
+    $(()=>{
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    })
+</script>
+</body>
+</html>

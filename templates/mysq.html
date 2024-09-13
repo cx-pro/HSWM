@@ -1,0 +1,42 @@
+<main>
+<!--   <div class="text-end user-select-none"><span class="border border-2 rounded p-auto fw-bold fs-6 bg-light-subtle">排序方式：最新</span></div> -->
+  <div class="album py-5">
+    <div class="container">
+      <div class="row row-cols-1 g-1">
+
+        {% if data %}
+          {%for key,value in data.items()%}
+              <div class="col">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <div class="d-flex flex-row justify-content-between">
+                      <span class="text-start">{{value["title"]}}</span>
+                      <span class="text-muted text-end">{{users[value["user"]]["fullname"]}}</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted">{{value["cls"]}}</small>
+                        <button type="button" id="/qa/q{{key}}" class="btn btn-sm btn-outline-secondary minebtn" style="width:25%;">檢視</button>
+                      <small class="text-muted">{{value["date"]}}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p></p>
+          {%endfor%}
+        {%else%}
+          <p class="fw-bold fs-2">問題中查無您尋找的關鍵字。</p>
+          <div class="fs-4 text-center">
+建議您嘗試：
+            <div class="fw-bold">不搜尋整串句子</div>
+            而是搜尋 「程式設計」、「國文第一課」等
+            <div>「<span class="fw-bold">關鍵字</span>」。</div>
+          </div>
+        {%endif%}
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="mt-auto mb-0">
+  <hr>
+  <p class="text-muted fs-5 fw-bold">到最底了</p>
+</footer>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜線上抽籤</title>
+</head>
+<body>
+{{header|safe}}
+  <div class="container text-center mx-auto">
+    <div class="row mt-5">
+    <div class="col-5">
+      <div class="form-floating">
+      <input type="number" class="form-control" style="width:20rem;" placeholder=" " id="numl">
+        <label for="numl">最低</label>
+      </div>
+    </div>
+    <div class="col-2 text-center">~</div>
+    <div class="col-5">
+      <div class="form-floating">
+        <input type="number" class="form-control" style="width:20rem;" placeholder=" " id="numh">
+        <label for="numh">最高</label>
+      </div>
+    </div>
+    </div>
+  </div>
+{{footer|safe}}
+</body>
+</html>

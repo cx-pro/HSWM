@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜訂餐統計</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .w-20{width:20%;}
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+
+  <div class="container">
+    {{sech|safe}}
+    <div class="container mt-5">
+      <h3>總計表</h3>
+      <table class="table table-hover">
+        <caption class="fw-bold">總計: <span id="summary" class="border rounded text-success p-1"></span>(輸入所有單價後自動計算)</caption>
+        <thead>
+          <tr>
+            <th>品名</th>
+            <th>數量</th>
+            <th>單價</th>
+            <th class="border-start">小計(輸入單價自動計算)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%for k,v in summary.items()%}
+          <tr>
+            <td class="w-25">{{k}}</td>
+            <td id="c{{k}}" class="w-25">{{v}}</td>
+            <td class="w-25"><input type="number" class="form-control unp" min="1" -caculate-target="{{k}}" auto-target="{{k}}"></td>
+            <td id="{{k}}" class="border-start w-25 text-success fw-bold sum-sm"></td>
+          </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+      <h3 class="mt-5">個別點單</h3>
+      {%for k in stk%}
+      <table class="table table-hover">
+        <thead>
+          <tr><td colspan="4" class="fs-4">{{k}}號</td></tr>
+          <tr class="border-bottom border-3">
+            <th>品名</th>
+            <th>數量</th>
+            <th>單價</th>
+            <th class="border-start border-1">小計(輸入單價自動計算)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%for k1,v1 in data[k].items()%}
+          <tr>
+            <td class="w-25">{{k1}}</td>
+            <td id="cn{{k}}{{k1}}" class="w-25">{{v1}}</td>
+            <td class="w-25"><input type="number" class="form-control unpn" min="1" -sum-target="{{k}}" auto-target="{{k1}}" -caculate-target="{{k}}{{k1}}"></td>
+            <td id="n{{k}}{{k1}}" class="border-start w-25 text-success fw-bold sum{{k}}"></td>
+          </tr>
+          {%endfor%}
+        </tbody>
+        <caption>{{k}}號小計: <span id="sum{{k}}" class="border rounded p-1 text-success fw-bold"></span>(輸入所有單價後自動計算)</caption>
+      </table>
+      {%endfor%}
+    </div>
+  </div>
+  <div class="py-5"></div>
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      var ic1=`<i class="bi bi-list fs-1"></i>`
+      var ic2=`<i class="bi bi-x-lg fs-2"></i>`
+      $(".unp").on("keyup change",function(){
+        var target=$(this).attr("-caculate-target")
+        var tv=this.value
+        $("#"+target).html(parseInt(this.value)*parseInt($("#c"+target).html()))
+        var sum=0
+        $(".sum-sm").each(function(){
+          sum+=parseInt($(this).html())
+        })
+        $("#summary").html(sum)
+        $(".unpn").each(function(){
+          if($(this).attr("auto-target")==target){$(this).val(tv);$(this).change()}
+        })
+      })
+      $(".unpn").on("keyup change",function(){
+        var target=$(this).attr("-caculate-target")
+        var tv=this.value
+        var atarget=$(this).attr("auto-target")
+        $("#n"+target).html(parseInt(this.value)*parseInt($("#cn"+target).html()))
+        var sum=0
+        $(".sum"+$(this).attr("-sum-target")).each(function(){
+          sum+=parseInt($(this).html())
+        })
+        $("#sum"+$(this).attr("-sum-target")).html(sum)
+        $(".unp").each(function(){
+          if($(this).attr("auto-target")==atarget){$(this).val(tv);$(this).change()}
+        })
+      })
+      
+      $("#mynav").click(function(){
+        $(this).fadeOut(200,function(){
+          if($("#mynav").html()==ic1){
+            $("#mynav").html(ic2)
+          }else{
+            $("#mynav").html(ic1)
+          }
+        })
+        $(this).fadeIn(200)
+      })
+      $("header").remove()
+      $("footer").remove()
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+  </script>
+</body>
+</html>

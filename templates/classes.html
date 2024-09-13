@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜選擇班級</title>
+</head>
+<body>
+      {{header|safe}}
+<div class="container">
+  <h1>您指導的班級</h1>
+  <div>
+    {%for class in classes%}
+      <div class="{{class}} text-center mt-5">
+        <a href="class{{class}}" class="btn btn-lg btn-outline-primary" style="width:20rem;max-width:95vw;">{{class}}</a>
+      </div>
+    {%endfor%}
+  </div>
+</div>
+  <div class="my-5"></div>
+  {%if current_user.is_teacher%}
+  <div class="mt-auto mb-0 text-center fw-bold">
+      找不到您需要的班級?&emsp;<a href="/clsm/" class="fs-6 text-decoration-none user-select-none text-primary fw-bold">前往加入</a>
+  </div>
+  <div class="my-3"></div>
+  {%endif%}
+{{footer|safe}}
+</body>
+</html>

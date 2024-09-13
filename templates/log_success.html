@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+  <head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>高中職小幫手｜登入</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+      body{
+        height: 100%;
+        padding-top: 40px;
+        padding-bottom: 40px;
+      }
+      .form-signin {
+        max-width: 330px;
+        padding: 15px;
+      }
+      
+      .form-signin .form-floating:focus-within {
+        z-index: 2;
+      }
+      
+      .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      
+      .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    </style>
+<!-- <link href="{{url_for('static',filename='sign-in.css')}}" rel="stylesheet"> -->
+  </head>
+  <body class="text-center m-auto">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<main class="form-signin w-100 m-auto">
+    <div class="alert alert-success text-center">
+      <h1>{{t1}}</h1>
+      <h2>{{t2}}</h2>
+    </div>
+</main>
+<script>
+  function recap(){
+    $.ajax({
+      url:"/recap",
+      method:"post",
+      success:function(data){
+        $("#cap").attr("src",data)
+      }
+    });
+  }
+  function ajx(mode){
+    $.ajax({
+      url:"/qa/set_s",
+      method:"post",
+      data:{"mode":mode}
+    });
+  };
+  $(function(){
+    fake_session="{{session['dark']}}";
+    if (fake_session){
+      $("html").attr("data-bs-theme",fake_session);
+    };
+    if ($("html").attr("data-bs-theme")){
+      $("#"+fake_session+"l").hide();
+    };
+    $(document).on('click', '.theme', function (e) {
+      let chld=$(this).children("img").attr("id");
+      let m={"light":"dark","dark":"light"};
+      // alert(chld);
+      ajx(chld);
+      $("html").attr("data-bs-theme",chld)
+      fake_session=chld;
+      $("#"+chld+"l").hide();
+      $("#"+m[chld]+"l").show();
+     });
+  });
+</script>
+</body>
+</html>

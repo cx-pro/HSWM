@@ -1,0 +1,47 @@
+<main>
+<!--   <div class="text-end user-select-none"><span class="border border-2 rounded p-auto fw-bold fs-6 bg-light-subtle">排序方式：最新</span></div> -->
+  <div class="album py-5">
+    <div class="container">
+      <div class="row row-cols-1 g-1">
+
+        {% if data %}
+          {%for key,i in data.items()%}
+            {%for value in i%}
+              <div class="col">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                      
+                    <div class="fw-bold">
+                      <strong class="float-start fs-5">描述:{{value["content"]}}</strong><small class="text-muted float-end">{{users[value["user"]]["fullname"]}}</small>
+                    </div>
+                    <p class="my-5"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted"></small>
+                      <div class="btn-group" style="width:25%;">
+                        <button type="button" id="/qa/q{%if '-' in key%}{{key[:key.find('-')]+'#'+key[key.find('-')+1:]}}{%else%}{{key}}{%endif%}" class="btn btn-sm btn-outline-secondary minebtn">檢視受檢舉內容</button>
+                      </div>
+                      <small class="text-muted">{{value["date"]}}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p></p>
+            {%endfor%}
+          {%endfor%}
+        {%else%}
+          <p class="fw-bold fs-2">問題中查無您尋找的關鍵字。</p>
+          <div class="fs-4 text-center">
+建議您嘗試：
+            <div class="fw-bold">不搜尋整串句子</div>
+            而是搜尋 「程式設計」、「國文第一課」等
+            <div>「<span class="fw-bold">關鍵字</span>」。</div>
+          </div>
+        {%endif%}
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="mt-auto mb-0">
+  <hr>
+  <p class="text-muted fs-5 fw-bold">到最底了</p>
+</footer>

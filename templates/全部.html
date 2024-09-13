@@ -1,0 +1,73 @@
+<div class="float-end d-flex">
+  <div class="fs-4 me-2" id="sort_mode" style="cursor:pointer;"><i class="bi bi-sort-up" id="sort-up"></i></div>
+  <div class="fs-4 me-2" id="sort_mode" style="cursor:pointer;"><i class="bi bi-sort-up" id="sort-up"></i></div>
+</div>
+<main>
+<!--   <div class="text-end user-select-none"><span class="border border-2 rounded p-auto fw-bold fs-6 bg-light-subtle">排序方式：最新</span></div> -->
+  <div class="py-5">
+    <div class="container">
+      <div class="row" id="content-row">
+        {% if data %}
+          {%for key,value in data.items()%}
+              <div class="col-12 columns mb-3">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <div class="fw-bold">
+                      <font class="float-start fs-5">{{value["title"]}}</font><small class="text-muted float-end">{{value["cls"]}}</small>
+                    </div>
+                    <p class="my-5"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted"></small>
+                        <button type="button" id="/qa/q{{key}}" class="btn btn-sm btn-outline-secondary minebtn" style="width:25%;">檢視</button>
+                      <small class="text-muted">{{value["date"]}}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          {%endfor%}
+        {%else%}
+          <p class="fw-bold fs-2">問題中查無您尋找的關鍵字。</p>
+          <div class="fs-4 text-center">
+建議您嘗試：
+            <div class="fw-bold">不搜尋整串句子</div>
+            而是搜尋 「程式設計」、「國文第一課」等
+            <div>「<span class="fw-bold">關鍵字</span>」。</div>
+          </div>
+        {%endif%}
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+  $(()=>{
+    var m={
+      "grid":`<i class="bi bi-collection" id="coll"></i>`,
+      "coll":`<i class="bi bi-grid" id="grid"></i>`
+    }
+    var m2={
+      "sort-up":`<i class="bi bi-sort-up-alt" id="sort-up-alt"></i>`,
+      "sort-up-alt":`<i class="bi bi-sort-up" id="sort-up"></i>`
+    }
+    $("#view_mode").click(()=>{
+      var mid=$("#view_mode i").attr("id")
+      $("#view_mode").html(m[mid])
+      if(mid=="grid"){
+        $(".columns").removeClass("col-12")
+        $(".columns").addClass("col-6")
+      }else{
+        $(".columns").removeClass("col-6")
+        $(".columns").addClass("col-12")
+      }
+    })
+    $("#sort_mode").click(()=>{
+      var mid=$("#sort_mode i").attr("id")
+      $("#sort_mode").html(m2[mid])
+      var a=$("#content-row .columns").toArray().reverse()
+      $("#content-row").html("")
+      a.forEach(function(elem){
+        $("#content-row").append($(elem))
+      })
+      
+    })
+  })
+</script>

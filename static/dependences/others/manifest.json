@@ -1,0 +1,17 @@
+{
+  "name": "高中職小幫手",
+  "short_name": "高中職小幫手",
+  "start_url": "/",
+  "id":"/",
+  "display": "fullscreen",
+  "background_color": "#fff",
+  "description": "傾向交流的學務助手。",
+  "lang": "zh-Hant-TW",
+  "icons": [
+    {
+      "src": "/static/pics/new_logo1.png",
+      "sizes": "316x316",
+      "type": "image/png"
+    }
+  ]
+}

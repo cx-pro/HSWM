@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜檢視資料</title>
+</head>
+<body>
+  {{header|safe}}
+    <div class="container">
+      <div class="container">
+        <ol class="breadcrumb user-select-none" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+          <li class="breadcrumb-item"><a href="/adm/db?db={{request.args.get('db')}}" class="text-primary text-decoration-none fw-bold">{{request.args.get("db")[-request.args.get("db")[::-1].find("/"):]}}</a></li>
+          {%if request.args.get("table")%}
+          <li class="breadcrumb-item active">{{request.args.get("table")}}</li>
+          {%endif%}
+        </ol>
+        
+        
+        {%if not err%}
+        {%if rowc>0%}
+        <div class="text-primary fw-bold fs-4">本次指令影響{{rowc}}列資料</div>
+        {%endif%}
+      <div class="text-start mt-5">
+        <a class="btn btn-outline-primary btn-lg fw-bold rounded-bottom-0 border-bottom-0" style="width:20rem;" href="{%if request.args.get('table') %}/adm/db?db={{request.args.get('db')}}{%else%}/adm/files?p=static/jsons/dbs/{%endif%}">返回</a>
+      </div>
+          <div class="row row-cols-{{len(description)}} border border-primary border-bottom-0 rounded-end-2 rounded-bottom-0 p-2 w-100 mx-auto">
+          {%for i in description%}
+            <div class="col text-center fs-4 text-break fw-bold">{{i}}</div>
+          {%endfor%}
+          </div>
+        <div class="rounded rounded-2 border rounded-top-0 border-top-0 border-primary p-2 overflow-y-scroll w-100 mb-3" id="contain" style="height:60vh">
+          {%if not "table" in request.args and not "select" in sql.lower()%}
+          {%for i in data%}
+          <a href="{{request.full_path}}&table={{i[0]}}" class="btn btn-outline-primary text-center fw-bold text-decoration-none btn-lg col-12 col-xxl-3 text-nowrap text-truncate" style="height:6vh;">{{i[0]}}</a>
+          {%endfor%}
+          {%else%}
+          {%for i in data%}
+          <div class="row row-cols-{{len(i)}}">
+            {%for j in i%}
+              <div class="col border text-break {%if request.args.get('db')[-request.args.get('db')[::-1].find('/'):]=='console.db'%}{%if not (i.index(j)==0 or i.index(j)==5 or i.index(j)==1)%}{%if j=='GET' or str(j).startswith('2')%}text-success fw-bold{%else%}{%if str(j).startswith('3')%}text-warning fw-bold{%else%}{%if j=='POST' or isinstance(j,int)%}text-danger fw-bold{%endif%}{%endif%}{%endif%}{%endif%}{%endif%}">{{j}}</div>
+            {%endfor%}
+          </div>
+          {%endfor%}
+          {%endif%}
+        </div>
+        {%else%}
+        <div class="text-danger fw-bold text-center fs-3">存取指令錯誤!!</div>
+        <div class="border rounded p-2 border-warning mb-5">
+          {{err}}
+        </div>
+        
+        {%endif%}
+        
+        <footer class="py-3 mx-auto mt-auto mb-5 fw-bold px-2 border rounded border-primary shadow" style="width:95%;">
+          <form method="post">
+            <div class="text-end">
+            <button type="submit" class="btn btn-outline-success col-2 col-md-1 text-center sub_msg mb-2" data-input-target="#mi2"><i class="bi bi-send fs-5"></i></button>
+            </div>
+            <div class="form-floating border-1 bg-light-subtle">
+              <textarea class="form-control col-10 col-md-11 border-primary bg-light-subtle messageInput" name="cmd" placeholder="在此輸入訊息..." style="--bs-border-opacity: .8;min-height:10rem;" type="text" autocomplete="off">{{sql}}</textarea>
+              <label for="mi2">資料庫指令</label>
+            </div>
+          </form>
+        </footer>
+      </div>
+    </div>
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      document.querySelector("#contain").scrollTo(0, document.querySelector("#contain").scrollHeight);
+    })
+  </script>
+</body>
+</html>

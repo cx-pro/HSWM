@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜設定</title>
+    <style>
+      img{
+        user-select: none;
+      }
+    </style>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+      function submit3(){
+        if(!$("#fi").val()){alert("此欄位不可為空！");return;}
+        else{
+          $.ajax({
+            url:"/verify",
+            method:"post",
+            data:{"fullname":$("#fi").val()},
+            success:location.replace(location)
+          });
+        }
+      }
+      function cn(){
+        old=$("#contain").html();
+        $("#contain").html("<input type='text' class='form-control' autofocus id='fi' value='"+$("#contain").html().replace(`<i class="bi bi-pencil-square float-end float-end mineedit float-end mineedit" onclick="cn()" style="cursor:pointer"></i>`,"")+`' required>
+        <i class="bi bi-x-lg float-end minecheck fs-4" onclick="$('#contain').html(old)" style="cursor:pointer"></i>
+        <i class="bi bi-check-lg float-end minecheck fs-4" onclick="submit3()" style="cursor:pointer"></i>`);
+      }
+      function check_ver(){
+        var form=document.querySelector("#form2");
+        $("#form2").addClass("was-validated");
+        if(!$("#veri").val()){
+          return
+        }
+        $.ajax({
+          url:"/verify",
+          method:"post",
+          data:{"verify":$("#veri").val()},
+          success:function(){location.replace(location)},
+          error:function(data){
+            if(data.responseJSON.text){alert(data.responseJSON.text)}else{alert("驗證碼錯誤");}
+          }
+        })
+      };
+      function onSubmit2(){
+        var form=document.querySelector("#form2");
+          $("#form2").addClass("was-validated");
+          if (!form.checkValidity()) {
+          }else{
+            $.ajax({
+              url:"/verify",
+              method:"post",
+              data:{
+                "old":$("#password").val(),
+                "new":$("#np").val(),
+                "new2":$("#np2").val()
+              },
+              success:function(){
+                alert("密碼變更成功，請重新登入")
+                location.replace("/login");
+              },
+              error:function(data){
+                if(data.responseJSON.text){alert(data.responseJSON.text)}else{alert("電子郵件格式錯誤或已被使用");}
+              }
+            })
+          }
+      };
+       function onSubmit(token) {
+          var form=document.querySelector("#form");
+          $("#form").addClass("was-validated");
+          if (!form.checkValidity()) {
+            grecaptcha.reset();
+          }else{
+            var res=grecaptcha.getResponse();
+            if(res){
+              $.ajax({
+                url:"/verify",
+                method:"post",
+                data:{"email":$("#email").val()},
+                success:function(){
+                  var ap=`<form id="form2" onkeydown="return event.key != 'Enter';"><div class="input-group"><button type="button" onclick='check_ver()' class="btn btn-outline-danger" id="email-confirm">確定變更</button><div class="form-floating"><input type="text" name="veri" autocomplete="off" id="veri" class="form-control border-primary border-start-0" placeholder=" " required><label for="veri">送至您新信箱的6碼驗證碼</label><div class="invalid-tooltip">請輸入6碼驗證碼</div></div></div></form>`;
+                  $('#verify-contain').html(ap);
+                  time=60;
+                  $("#verify").html("60秒後重試");
+                  $("#verify").attr("disabled","disabled");
+                  timer=setInterval(function(){
+                    if (time-1==0){
+                      delete time;
+                      $("#verify").removeAttr("disabled");
+                      $("#verify").html("驗證");
+                      clearInterval(timer)
+                      delete timer
+                      grecaptcha.reset();
+                    }else{
+                    time-=1
+                    $("#verify").html(time+"秒後重試");}
+                  },1000)
+                },
+                error:function(data){
+                  if(data.responseJSON.text){alert(data.responseJSON.text)}else{alert("電子郵件格式錯誤或已被使用");}
+                  grecaptcha.reset();
+                }
+              });
+            }else{
+              $(".alert_contain").html('<div class="alert alert-danger alert-dismissible fade show" role="alert"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>reCaptcha驗證失敗</div>');
+            }
+          }
+       }
+</script>
+</head>
+<body>
+  {{header|safe}}
+    {%if session.get("msgs")%}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle pt-5">
+    {%for msg in session.get("msgs")%}
+    <div class="toast align-items-center show mt-5 fade" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{msg}}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="aja('msgs')"></button>
+      </div>
+    </div>
+    {%endfor%}
+    </div>
+    {%endif%}
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">變更Email</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="form-contain">
+            <form id="form" onkeydown="return event.key != 'Enter';">
+              <div class="input-group">
+              <div class="form-floating">
+                <input type="email" name="email" autocomplete="off" id="email" class="form-control border-primary" placeholder=" " required>
+                <label for="email">欲變更之Email</label>
+                <div class="invalid-tooltip">
+                  請輸入Email，且須含有@
+                </div>
+              </div>
+                <button type="button" id="verify" class="btn btn-outline-primary border-start-0 g-recaptcha" data-sitekey="6LeT8uskAAAAALelzHltTtrms9KMT1zK4K_jEewA" data-callback="onSubmit">驗證</button>
+              </div>
+            </form>
+            <div id="verify-contain"></div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" data-bs-dismiss="modal">關閉</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">變更密碼</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div id="form-contain2">
+            <form id="form2" onkeydown="return event.key != 'Enter';">
+              <div class="">
+              <div class="form-floating">
+                <input type="password" name="password" autocomplete="off" id="password" class="form-control rounded-bottom-0 border border-primary" placeholder=" " required>
+                <label for="password">原密碼</label>
+                <div class="invalid-tooltip">
+                  請輸入原密碼
+                </div>
+              </div>
+              <div class="form-floating">
+                <input type="password" name="np" autocomplete="off" id="np" class="form-control rounded-0 border-primary" placeholder=" " required>
+                <label for="np">新密碼</label>
+                <div class="invalid-tooltip">
+                  請輸入新密碼
+                </div>
+              </div>
+              <div class="form-floating">
+                <input type="password" name="np2" autocomplete="off" id="np2" class="form-control rounded-top-0 border-primary" placeholder=" " required>
+                <label for="np2">再次輸入新密碼</label>
+                <div class="invalid-tooltip">
+                  請再次輸入新密碼
+                </div>
+              </div>
+                <p></p>
+                <button type="button" class="btn btn-outline-primary" onclick="onSubmit2()">送出更改</button>
+                <span class="px-0 ms-3"><a href="/help1" class="text-decoration-none text-primary fw-bold">忘記密碼?</a></span>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close" data-bs-dismiss="modal">關閉</button>
+        </div>
+        </div>
+      </div>
+    </div>
+  
+  <div class="container mt-5 d-flex flex-row">
+    <div class="col w-50">
+      <div class="row text-center ms-5 ms-md-0">
+        <div class="col me-5 text-center text-md-end fw-bold">使用者名稱</div>
+        <div class="w-100 d-block d-sm-none"></div>
+        <div class="col me-5 form-control text-start bg-light-subtle shadow d-flex py-0">
+            <div class="input-group-text border-0 bg-light-subtle fw-bold text-start ps-0 border-end rounded-end-0 user-select-none">@</div>
+            <div class="form-control border-0 bg-light-subtle" id="username">{{current_user.id}}</div>
+            <div id="uc-container" class="input-group-text pe-0 text-end bg-light-subtle border-0 float-end"><div class="bi bi-clipboard" id="copy-username" style="cursor:pointer;"></div></div>
+        </div>
+      </div>
+      <p class="my-5"></p>
+      <div class="row text-center ms-5 ms-md-0">
+        <div class="col me-5 text-center text-md-end fw-bold">電子郵件</div>
+        <div class="w-100 d-block d-sm-none"></div>
+        <div class="col me-5 form-control text-start overflow-x-scroll bg-light-subtle shadow">
+          {{email}}
+          <i class="bi bi-pencil-square float-end" data-bs-toggle="modal" data-bs-target="#exampleModal" style="cursor:pointer"></i>
+        </div>
+      </div>
+      <p class="my-5"></p>
+      <div class="row text-center ms-5 ms-md-0">
+        <div class="col me-5 text-center text-md-end fw-bold">密碼</div>
+        <div class="w-100 d-block d-sm-none"></div>
+        <div class="col me-5 form-control text-start bg-light-subtle shadow">
+          <span id="fake-input">{{"*"*8}}</span>
+          <i class="bi bi-pencil-square float-end float-end mineedit" data-bs-toggle="modal" data-bs-target="#exampleModal2"  style="cursor:pointer"></i>
+        </div>
+      </div>
+      <p class="my-5"></p>
+      <div class="row text-center ms-5 ms-md-0" id="contain-container">
+        <div class="col me-5 text-center text-md-end fw-bold">顯示名稱</div>
+        <div class="w-100 d-block d-sm-none"></div>
+        <div id="contain" class="col me-5 form-control text-start bg-light-subtle shadow">{{userinfo["fullname"]}}<i class="bi bi-pencil-square float-end float-end mineedit float-end mineedit" onclick="cn()" style="cursor:pointer"></i></div>
+      </div>
+      <p class="my-5"></p>
+      {%if current_user.is_student or current_user.is_teacher%}
+      <div class="row text-center ms-5 ms-md-0">
+        <div class="col me-5 text-center text-md-end fw-bold">
+        <span class="position-relative badge rounded-pill bg-primary">
+          全新
+          <span class="visually-hidden">unread messages</span>
+        </span>
+        行事曆版型</div>
+        <div class="w-100 d-block d-sm-none"></div>
+        <div class="col me-5 img-thumbnail ms-1 text-start row bg-light-subtle shadow">
+          <div class="form-check col">
+            <input class="form-check-input sche_mode" value="sche" {%if current_user.settings%}{%if current_user.settings.get('sche_mode')=='sche'%}checked{%endif%}{%else%}checked{%endif%} type="radio" name="sche_mode" id="sche">
+            <label class="form-check-label" for="sche">週曆</label>
+          </div>
+          <div class="form-check col">
+            <input type="radio" class="form-check-input sche_mode" {%if current_user.settings%}{%if current_user.settings.get('sche_mode')=='cal'%}checked{%endif%}{%endif%} value="cal" name="sche_mode" id="cal">
+            <label class="form-check-label" for="cal">月曆</label><span class="position-relative badge rounded-pill bg-primary">
+          逐項列出!!
+          <span class="visually-hidden">unread messages</span>
+        </span>
+          </div>
+        </div>
+      </div>
+      <p class="my-5"></p>
+      <div class="row text-center ms-5 ms-md-0">
+        <div class="col me-5 text-center text-md-end fw-bold">
+          <span class="position-relative badge rounded-pill bg-primary">
+            全新
+            <span class="visually-hidden">unread messages</span>
+          </span>
+        首頁版面切換</div>
+        <div class="w-100 d-block d-sm-none"></div>
+        <select class="col me-5 text-start form-select pe-2 bg-light-subtle shadow" id="index_mode">
+          <option value="default" {%if current_user.settings%}{%if current_user.settings.get('index_mode')=="default"%}selected{%endif%}{%endif%}>預設</option>
+          <option value="todays" {%if current_user.settings%}{%if current_user.settings.get('index_mode')=="todays"%}selected{%endif%}{%endif%}>最近工作事項</option>
+          <option value="both" {%if current_user.settings%}{%if current_user.settings.get('index_mode')=="both"%}selected{%endif%}{%endif%}>混合最近工作事項</option>
+          <option value="calendar" {%if current_user.settings%}{%if current_user.settings.get('index_mode')=="calendar"%}selected{%endif%}{%endif%}>個人月曆</option>
+        </select>
+      </div>
+      {%endif%}
+      <hr>
+      {%if current_user.role==None%}
+      <p class="my-5"></p>
+      <div class="row text-center ms-5 ms-md-0">
+        <div class="col me-5 text-center text-md-end fw-bold">身分代碼</div>
+        <div class="w-100 d-block d-sm-none"></div>
+        <form class="col me-5 text-start p-0 input-group" method="post" action="/settings">
+          <input type="text" name="role" class="form-control border-primary rounded-0 rounded-start" placeholder="請輸入..." id="" autocomplete="off"><button type="submit" class="fw-bold rounded-0 rounded-end float-end btn btn-outline-primary">送出</button>
+        </form>
+      </div>
+      </div>
+      {%endif%}
+      {%if current_user.is_teacher%}
+      <p class="my-5"></p>
+      <div class="row text-center ms-5 ms-md-0">
+        <div class="col me-5 text-center text-md-end fw-bold">指導班級的代碼</div>
+        <div class="w-100 d-block d-sm-none"></div>
+        <form class="col me-5 text-start p-0 input-group" method="post" action="/settings">
+          <input type="text" name="classes" class="form-control border-primary rounded-0 rounded-start" placeholder="請輸入..." id="" autocomplete="off"><button type="submit" class="fw-bold rounded-0 rounded-end float-end btn btn-outline-primary">送出</button>
+        </form>
+      </div>
+        <p class="my-5"></p>
+      <div class="row text-center ms-1 ms-md-0">
+        <div class="text-center text-success"><span class="text-decoration-line-through">&emsp;</span>&emsp;或是&emsp;<span class="text-decoration-line-through">&emsp;</span></div>
+        <p></p>
+        <div class="mx-auto px-auto"><a href="/clsm/create_class" style="cursor:pointer" class="fs-6 text-decoration-none user-select-none text-primary text-center mx-auto fw-bold p-0">新增班級</a></div>
+      </div>
+      <p class="my-5"></p>
+      {%endif%}
+    </div>
+  </div>
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+  </script>
+  <script>
+    $(()=>{
+      $(".sche_mode").click(function(){
+        $.ajax({
+          url:location,
+          method:"post",
+          data:{"mode":$(this).val()},
+          success:function(){setTimeout(location.reload(),1500)}
+        })
+      })
+      $(document).off("click","#copy-username").on("click","#copy-username",function(){
+        navigator.clipboard.writeText($("#username").html());
+        $("#uc-container").html(`<div class="bi bi-clipboard-check-fill text-primary" id="copied-username"></div>`)
+        var exampleEl = document.getElementById('copied-username')
+        var tooltip = new bootstrap.Tooltip(exampleEl, {placement:"right",customClass:"primary-tooltip",title:"已複製",trigger:"manual"})
+        tooltip.show()
+        tooltip.toggleEnabled()
+        setTimeout(function() {
+        $("#uc-container").html(`<div class="bi bi-clipboard" id="copy-username" style="cursor:pointer;"></div>`)
+        $(".primary-tooltip").fadeOut(500,function(){$(".primary-tooltip").remove()})
+        },3000)
+      })
+      $("#index_mode").change(function(){
+        $.ajax({
+          url:location,
+          method:"post",
+          data:{"index_mode":$(this).val()},
+          success:function(){setTimeout(location.reload(),1500)}
+        })
+      })
+    })
+  </script>
+</body>
+</html>

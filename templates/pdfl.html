@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+  <meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+  <meta charset="UTF-8">
+  <title>高中職小幫手｜數位獎狀檢視</title>
+  <style>
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  {{header|safe}}
+  <div class="container">
+    {%if not c%}
+    <a href="./certificate" class="btn btn-primary fw-bold" style="max-width:25rem;min-width:10rem;">新增</a>
+    <p></p>
+    <div class="mb-3 fs-5">
+      <div>
+        <span class="user-select-none badge text-bg-primary rounded-pill shadow-sm me-1">本次匿名序號</span>
+        <i class="bi bi-caret-right-fill me-1"></i>
+        <span id="certi_id"
+        class="user-select-all text-bg-light shadow badge border border-light-subtle">{{current_user.certi_id}}</span>
+      </div>
+      <div class="mt-2 fs-6 small text-warning fw-bold">
+        <i class="bi bi-info-circle-fill me-1 text-success"></i><span class="link-underline-success text-decoration-underline">請妥善保存此序號，往後須使用此序號存取以下獎狀</span>
+      </div>
+    </div>
+    <div>
+      <div class="">
+        <div class="row text-center fw-bold fs-5">
+          <div class="col-4">建立時間</div>
+          <div class="col-4">檔案名稱</div>
+          <div class="col-4">操作按鈕</div>
+        </div>
+      </div>
+      <hr>
+      {%for key,value in data.items()%}
+      <div class="mb-2">
+        <div class="row py-1 text-center">
+          <div class="col-4"><span class="badge text-bg-primary rounded-pill">{{value['time']}}</span></div>
+          <div class="col-4 text-truncate">{{value["filename"]}}</div>
+          <div class="col-4">
+            <span class="btn-group">
+              <a href='/pdfs/{{value["filename"]}}' target="_blank"
+                class="btn btn-sm fw-bold btn-outline-primary rounded-pill rounded-end-0"><i
+                  class="bi bi-eye-fill ps-1"></i></a>
+              <a href="./dc?id={{key}}"
+                class="btn btn-sm fw-bold btn-outline-danger rounded-pill rounded-start-0"><i
+                  class="bi bi-trash3 pe-1"></i></a>
+            </span>
+          </div>
+        </div>
+      </div>
+      <hr>
+      {%endfor%}
+    </div>
+    {%else%}
+    <h1 class="text-center mt-5">查無獎狀資料</h1>
+    <div class="text-center my-5"><a href="./certificate" class="btn btn-primary fw-bold mx-auto"
+        style="max-width:25rem;min-width:10rem;">新增</a></div>
+    <div class="text-center text-success fw-bold mb-2">曾匿名產生獎狀嗎？</div>
+    <div class="row justify-content-center mx-3">
+      <div class="col-12 col-md-6">
+        <form method="post" class="input-group">
+          <input type="text" name="uid" id="uid-input" class="form-control" placeholder="輸入序號" required autocomplete="off">
+          <button type="submit" class="btn btn-outline-primary fw-bold">取得獎狀</button>
+        </form>
+      </div>
+    </div>
+    {%endif%}
+  </div>
+  {{footer|safe}}
+</body>
+
+</html>

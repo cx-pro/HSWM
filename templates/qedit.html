@@ -1,0 +1,118 @@
+<div class="position-absolute top-50 start-50 translate-middle z-3">
+{%for i in warn%}
+  <div class="alert alert-warning text-center fw-bold alert-dismissible fade show">
+          {{i}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{%endfor%}
+</div>
+<main>
+  <form class="container text-center" method="post" action="{{request.path}}" id="qedit_form" enctype="multipart/form-data">
+    <p class="my-5"></p>
+    <div class="form-floating" style="width:50%;margin-left:25%;">
+       <input required type="text" name="title" class="form-control text-center" placeholder=" " id="title" value="{{data["title"]}}">
+      <label for="title">標題</label>
+    </div>
+    <p><hr></p>
+    <div class="d-flex flex-row flex-row-reverse">
+      <small class="text-start fs-6">{{data["date"]}}</small>
+      &emsp;
+      <small class="text-start fs-6">{{data["author"]}}</small>
+    </div>
+    <p class="my-5"></p>
+    <div class="form-floating" style="width:50%;margin-left:25%;">
+      <textarea name="content" class="form-control" id="content" placeholder=" " required style="height:20vh;;">{{data["content"]}}</textarea>
+      <label for="content">問題內容</label>
+    </div>
+    <p class="my-5"></p>
+    
+    <div class="form-floating clsc" style="width:50%;margin-left:25%;">
+      <select name="cls" id="cls" class="form-select" placeholder=" " required>
+        {% for i in classes%}
+        <option value="{{i}}" {%if data["cls"]==i%}selected{%endif%}>{{i}}</option>
+        {%endfor%}
+        <option value="other">其他</option>
+      </select>
+      <label for="cls">科目／類別</label>
+      <div class="invalid-tooltip">
+        請選擇類別
+      </div>
+    </div>
+    <p class="my-5"></p>
+    <div class="form-floating fade otherc" style="width:50%;margin-left:25%;">
+      <input type="text" class="form-control" name="other" id="other" placeholder=" ">
+      <label for="other">科目／類別 - 其他</label>
+      <div class="invalid-tooltip">
+        請填寫其他
+      </div>
+    </div>
+    {%if data["files"]%}
+    <div class="fs-4 img-thumbnail row m-1 mt-5 overflow-y-scroll" style="height:40vh;" id="qf{{id}}">
+      {%for i in data["files"]%}
+      <div class="col img-thumbnail">
+        <button class="btn-close fs-6 float-end bg-danger dele" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-title="刪除" data-bs-custom-class="danger-tooltip" type="button" id="{{i}}"></button>
+          <a href="/{{i}}" class="text-decoration-none fw-bold text-primary">{{get_filename(i)}}</a>
+          {%if i in filem%}
+          <div><img src="/{{i}}" class="w-100 float-end text-end"></div>
+          {%endif%}
+      </div>
+      <div class="w-100 my-3"></div>
+      {%endfor%}
+    </div>
+    {%endif%}
+    <p class="my-5"></p>
+    <div class="fs-6">
+      <input class="form-control tfile fs-6" name="uploaded_files" type="file" multiple>
+    </div>
+    <p class="my-5"></p>
+    <div class="btn-group" stlye="width:50%;margin-left:25%;">
+      <button type="button" class="btn btn-lg btn-primary minesubmit2" id="{{id}}">儲存</button>
+      <button type="button" class="btn btn-lg btn-secondary mineback" id="{{id}}">返回</button>
+    </div>
+  </form>
+</main>
+<script>
+    $(()=>{
+      $(".tfile").fileinput({
+          'showUpload': false,
+          'dropZoneTitle':"拖放至此即可上傳",
+          'msgPlaceholder':"上傳檔案",
+          "browseLabel":"瀏覽",
+          "removeLabel":"清空",
+          "msgProcessing":"載入中"
+      });
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+      $(".dele").click(function(){
+        $.ajax({
+          url:"/qa/e{{id}}",
+          method:"post",
+          data:{"delete_file":this.id},
+          success:function(){setTimeout(location.replace("/qa/qas?defa=/qa/e{{id}}"),1500)}
+        })
+      })
+      $("#cls").change(function(){
+        if(this.value=="other"){
+          $(".otherc").addClass("show")
+          $("#other").attr('required', 'required');
+        }else{
+          $(".otherc").removeClass("show")
+          $("#other").removeAttr('required');
+        }
+      })
+      $(document).off('click', '.minesubmit2').on('click', '.minesubmit2', function (e) {
+        var flag=true;
+          var form=document.querySelector("#qedit_form");
+          if (!form.checkValidity()) {
+            $(form).addClass("was-validated");
+            flag=false;
+            $(".container").animate({ scrollTop: 0}, 500);
+          }
+        if(flag){
+          $(form).submit()
+        }
+      })
+    })
+</script>

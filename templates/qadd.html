@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜新增問題</title>
+</head>
+<body>
+    <p class="my-5"></p>
+  <main class="minecontainer">
+    {%if msg%}
+      {%for i in msg%}
+        <div class="alert alert-warning text-center fw-bold alert-dismissible fade show">
+          {{i}}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {%endfor%}
+    {%endif%}
+    <form id="qadd_form" action="/qa/add" method="post" enctype="multipart/form-data">
+    <div class="form-floating mx-auto" style="width:20rem;max-width:80%;margin-left:25%;">
+      <input type="text" class="form-control" name="title" id="title" placeholder=" " required>
+      <label for="title">標題</label>
+      <div class="invalid-tooltip">
+        請填寫標題
+      </div>
+    </div>
+    <p class="my-5"></p>
+    <div class="form-floating mx-auto" style="width:20rem;max-width:80%;margin-left:25%;">
+      <textarea class="form-control" name="content" id="content" placeholder=" " style="height:20%;" required></textarea>
+      <label for="content">內容</label>
+      <div class="invalid-tooltip">
+        請填寫內容
+      </div>
+    </div>
+    <p class="my-5"></p>
+    <div class="form-floating mx-auto" style="width:20rem;max-width:80%;margin-left:25%;">
+      <input type="date" class="form-control" name="title" id="date" placeholder=" " readonly value="{{get_today('%Y-%m-%d')}}">
+      <label for="date">日期</label>
+    </div>
+    <p class="my-5"></p>
+    <div class="form-floating clsc mx-auto" style="width:20rem;max-width:80%;margin-left:25%;">
+      <select name="cls" id="cls" class="form-select" placeholder=" " required>
+        <option selected disabled></option>
+        {% for i in classes%}
+        <option value="{{i}}">{{i}}</option>
+        {%endfor%}
+        <option value="other">其他</option>
+      </select>
+      <label for="cls">科目／類別</label>
+      <div class="invalid-tooltip">
+        請選擇類別
+      </div>
+    </div>
+      <p></p>
+      <div class="list-group mx-auto" style="width:20rem;max-width:80%;margin-left:25%;">
+        <div class="list-group-item fw-bold fs-4 user-select-none text-primary">可見性</div>
+        <div class="list-group-item fw-bold fs-6 user-select-none text-success">未填寫則公開可見</div>
+        {%if current_user.is_student%}
+        <div class="list-group-item user-select-none" id="{{current_user.clas}}">
+          <div class="form-check fs-5">
+            <input class="form-check-input" type="checkbox" name="restricted" value="{{current_user.clas}}" id="flexCheckDefault{{current_user.clas}}">
+            <label class="form-check-label w-100" for="flexCheckDefault{{current_user.clas}}">
+              {{current_user.clas}}
+            </label>
+          </div>
+        </div>
+        {%endif%}
+        {%if current_user.is_teacher%}
+          {% for i in current_user.classes%}
+          <div class="list-group-item user-select-none" id="{{i}}">
+            <div class="form-check fs-5">
+              <input class="form-check-input" type="checkbox" name="restricted" value="{{i}}" id="flexCheckDefault{{i}}">
+              <label class="form-check-label w-100" for="flexCheckDefault{{i}}">
+                {{i}}
+              </label>
+            </div>
+          </div>
+          {%endfor%}
+        {%endif%}
+    </div>
+    <p class="my-5 otherc"></p>
+    <div class="form-floating otherc mx-auto" style="width:20rem;max-width:80%;margin-left:25%;">
+      <input type="text" class="form-control" name="other" autocomplete="off" id="other" placeholder=" ">
+      <label for="other">科目／類別 - 其他</label>
+      <div class="invalid-tooltip">
+        請填寫其他
+      </div>
+    </div>
+    <p class="my-5"></p>
+    <div class="checkbox fs-5">
+      <label>
+        <input type="checkbox" name="anonymous" id="anonymous" value="True"
+        data-bs-toggle="tooltip" data-bs-placement="bottom"
+        data-bs-custom-class="warning-tooltip" data-bs-html="true"
+        data-bs-title="注意！匿名發問雖不顯示發問者名稱，但仍會留下發問紀錄。<br/>且貴班教師皆可看見您是此問題發布者。"> 匿名發問
+      </label>
+    </div>
+    <hr>
+      <div class="fs-4 bg-primary-subtle mb-3">附檔</div>
+      <input type="file" id="qfile" class="user-select-none" multiple placeholder="選擇檔案" name="qfiles">
+    <hr>
+    <p class="my-5"></p>
+    <button type="button" class="btn btn-lg btn-primary minesubmit2">
+      送出問題
+    </button>
+    </form>
+  </main>
+  <script>
+    $(()=>{
+      $(".otherc").hide()
+      $("#qfile").fileinput({
+        'showUpload': false,
+        "showRemove":false,
+        'dropZoneTitle':"拖放至此即可上傳",
+        'msgPlaceholder':"上傳檔案",
+        "browseLabel":"瀏覽",
+        "msgProcessing":"載入中"
+      });
+      $("#cls").change(function(){
+        if(this.value=="other"){
+          $(".otherc").show()
+          $("#other").attr('required', 'required');
+        }else{
+          $(".otherc").hide()
+          $("#other").removeAttr('required');
+        }
+      })
+      $(document).off('click', '.minesubmit2').on('click', '.minesubmit2', function (e) {
+        var flag=true;
+          var form=document.querySelector("#qadd_form");
+          if (!form.checkValidity()) {
+            $(form).addClass("was-validated");
+            flag=false;
+            $(".container").animate({ scrollTop: 0}, 500);
+          }
+        if(flag){
+          $(form).submit()
+        }
+      })
+      $(document).off('click', '.fake_label').on('click', '.fake_label', function (e) {
+        if(!$("#flexCheckDefault"+this.id).prop("checked")){
+          $("#flexCheckDefault"+this.id).prop("checked",true)
+        }else{
+          $("#flexCheckDefault"+this.id).prop("checked",false)
+        }
+      })
+      
+    })
+  </script>
+
+<script>
+    $(()=>{
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+</script>
+
+</body>
+</html>

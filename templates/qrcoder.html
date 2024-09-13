@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜獎狀檢視</title>
+  <script>
+    function autoResize(){
+      $("#ifw").width($("#ifw").contents().width());
+    }
+  </script>
+</head>
+<body>
+    {{header|safe}}
+  <div class="text-center mt-5">
+    <button class="btn btn-info" id="pbtn" style="width: 20rem;max-width:95vw;"><i class="bi bi-printer"></i></button>
+  </div>
+  <div class="text-center fs-5 fw-bold mt-3">
+      本 QRCode 可供師生使用
+      <div>使用相機掃描後，可不登入直接使用行事曆功能。</div>
+  </div>
+  <iframe src="{{link}}" class="text-center mx-auto min-vh-100" id="ifw" onLoad="autoResize();"0>
+    您的瀏覽器不支援Iframe功能。
+    建議更新瀏覽器
+    或
+    <a href="{{link}}">直接檢視</a>
+  </iframe>
+{{footer|safe}}
+  <script>
+    $(()=>{
+      $("#pbtn").click(function(){
+        var newWin=window.open('','列印視窗');
+        newWin.document.open();
+        newWin.document.write(`<html style="height: 100%;"><head><meta name="viewport" content="width=device-width, minimum-scale=0.1"><title>399.png (410×410)</title></head><body style="margin: 0px; background: #0e0e0e; height: 100%"><img style="display: block;-webkit-user-select: none;margin: auto;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;" src="https://hswm.up.railway.app/static/qrcode/399.png"></body></html>`);
+        newWin.document.close();
+        newWin.onload=function(){newWin.print()}
+        setTimeout(function(){newWin.close();},1000);
+      })
+    })
+  </script>
+</body>
+</html>

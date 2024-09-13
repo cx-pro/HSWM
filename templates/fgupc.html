@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜忘記密碼及問題回報</title>
+    <style>
+      .fs{
+        padding:0.5% 0 0.5% 0;
+        width: 83.33%;
+        margin-left:8.335%;
+        
+      }
+      .fsl{
+       text-align:center;
+        padding: 1%;
+      }
+      body{
+        background-color: rgba(150, 150, 150, .6);
+        background-blend-mode: multiply;
+        background-image: url("static/pics/fgupcb.jpg");
+        background-size: cover;
+      }
+      legend{
+        font-weight:bold;
+      }
+    </style>
+<!--     <script>
+      function swch(mode){
+        if(mode==1){
+          let ob3=document.getElementById('hd3');
+          let btn3=document.getElementById('bbt3');
+          if(ob3.style.display=='block'){
+            ob3.style.display='none';
+            bbt3.style.borderBottom='#000 solid 1.5px';
+          }
+          let ob2=document.getElementById('hd2');
+          let btn2=document.getElementById('bbt2');
+          if(ob2.style.display=='block'){
+            ob2.style.display='none';
+            bbt2.style.borderBottom='#000 solid 1.5px';
+          }
+          let ob=document.getElementById('hd').style;
+          let btn=document.getElementById('bbt');
+          if(ob.display=='none'){
+            ob.display='block';
+            bbt.style.borderBottom=0;
+          }else{
+            ob.display='none';
+            document.getElementById('hdt').innerHTML="";
+            bbt.style.borderBottom='#000 solid 1.5px';
+          }
+        }else{
+          if (mode==2) {
+            let ob3=document.getElementById('hd3');
+            let btn3=document.getElementById('bbt3');
+            if(ob3.style.display=='block'){
+              ob3.style.display='none';
+              bbt3.style.borderBottom='#000 solid 1.5px';
+            }
+            let ob=document.getElementById('hd');
+            let btn=document.getElementById('bbt');
+            if (ob.style.display!='none') {
+              ob.style.display='none';
+              document.getElementById('hdt').value="";
+              bbt.style.borderBottom='#000 solid 1.5px';
+            }
+            let ob2=document.getElementById('hd2');
+            let btn2=document.getElementById('bbt2');
+            if(ob2.style.display=='none'){
+              ob2.style.display='block';
+              bbt2.style.borderBottom=0;
+            }else{
+              ob2.style.display='none';
+              bbt2.style.borderBottom='#000 solid 1.5px';
+            }
+          } else {
+            let ob2=document.getElementById('hd2');
+            let btn2=document.getElementById('bbt2');
+            if(ob2.style.display=='block'){
+              ob2.style.display='none';
+              bbt2.style.borderBottom='#000 solid 1.5px';
+            }
+            let ob=document.getElementById('hd');
+            let btn=document.getElementById('bbt');
+            if (ob.style.display!='none') {
+              ob.style.display='none';
+              document.getElementById('hdt').value="";
+              bbt.style.borderBottom='#000 solid 1.5px';
+            }
+            let ob3=document.getElementById('hd3');
+            let btn3=document.getElementById('bbt3');
+            if(ob3.style.display=='none'){
+              ob3.style.display='block';
+              bbt3.style.borderBottom=0;
+            }else{
+              ob3.style.display='none';
+              bbt3.style.borderBottom='#000 solid 1.5px';
+            }
+          }
+        }
+        }
+        
+      
+      
+    </script> -->
+</head>
+<body>
+    {{header|safe}}
+<div class="container img-thumbnail mb-2 rounded rounded-2 p-2 text-center fs-4">
+<fieldset class="fs">
+  <legend class="fsl">Email</legend>
+  {{email}}
+</fieldset>
+<fieldset class="fs">
+  <legend class="fsl">時間</legend>
+  {{data["time"]}}
+</fieldset>
+<fieldset class="fs">
+  <legend class="fsl">內容</legend>
+  <div class="form-control fs-4">{{data["請求內容"]|safe}}</div>
+</fieldset>
+<fieldset class="fs">
+  <legend class="fsl">狀態</legend>
+  {{data["stat"]}}
+</fieldset>
+<fieldset class="fs">
+  <legend class="fsl">動作</legend>
+  <div class="d-flex flex-row" style="width:100%;">
+  <div class="dropup" style="width:100%;">
+  <button class="btn btn-lg btn-outline-success dropdown-toggle rounded-end-0" style="width:100%;" data-bs-toggle="dropdown" aria-expanded="false" id="bbt" data-bs-auto-close="outside"><i class="bi bi-reply-fill"></i></button>
+  <form action="./fgupr?email={{email}}" method="post">
+  <ul class="dropdown-menu" style="width:300%;height:50vh;">
+    <li>
+      <div class="form-floating">
+        <textarea id="hdt" name="reply" class="form-control" placeholder=" "></textarea>
+        <label for="hdt">輸入回覆...</label>
+      </div>
+      <br>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li><p></p><div class="alert alert-info" style="height:3%;">回覆送出後會直接傳送郵件至申請者信箱，且狀態會自動變更為已完成</div>
+      </li>
+    <li><input type="submit" name="submit" value="送出" class="btn btn-primary" style="margin-left:25%;width:50%;"></li>
+  </ul>
+  </form>
+</div>
+  <div class="dropup" style="width:100%;">
+    <button class="btn btn-lg btn-outline-danger dropdown-toggle rounded-start-0 rounded-end-0" data-bs-toggle="dropdown" aria-expanded="false" id="bbt2"  style="width:100%;" data-bs-auto-close="outside"><i class="bi bi-trash3"></i></button>
+    <form action="./fgupr?email={{email}}" method="post">
+      <ul class="dropdown-menu m-0 text-center" style="width:100%;height:30vh;margin-right:100%;">
+        <li><h1>確認刪除?</h1></li>
+        <li><input type="submit" name="submit" value="確認" class="btn btn-lg btn-danger"></li>
+      </ul>
+    </form>
+  </div>
+  <div class="dropup" style="width:100%;">
+    <button class="btn btn-lg btn-outline-primary dropdown-toggle rounded-start-0" data-bs-toggle="dropdown" aria-expanded="false" id="bbt3" style="width:100%;" data-bs-display="static" data-bs-auto-close="outside"><i class="bi bi-bookmark"></i></button>
+    <form action="./fgupr?email={{email}}" method="post" class="dropdown-menu" style="width:100%;height:30vh;">
+          <select name="stat" class="form-select" id="stat">
+            <option value="0" selected disabled>請選擇狀態</option>
+            <option value="processing">處理中</option>
+            <option value="pending">等待中</option>
+            <option value="solved">已完成</option>
+          </select>
+      <p></p>
+          <input type="submit" name="submit" value="確認變更" class="btn btn-lg btn-primary" style="margin-left:25%;width:50%;">
+      
+    
+  </form>
+  </div>
+  </div>
+</fieldset>
+</div>
+{{footer|safe}}
+
+<script>
+  $(function(){
+    $("header").addClass("bg-light-subtle");
+    $("footer").addClass("bg-light-subtle");
+  })
+</script>
+</body>
+</html>

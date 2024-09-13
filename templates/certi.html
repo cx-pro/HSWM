@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<head>
+  <meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+  <meta charset="UTF-8">
+  <title>高中職小幫手｜創建數位獎狀</title>
+  <style>
+    @keyframes warnin {
+      0% {
+        transform: translateX(-25%)
+      }
+
+      100% {
+        transform: translateX(25%)
+      }
+    }
+
+    .warn {
+      animation: warnin 40s infinite;
+      margin-left: 25%;
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+  {{header|safe}}
+  <marquee direction="right"><span class="text-success">本功能預設僅高雄高商師生使用。<span
+        class="text-muted fw-bold">非常抱歉。</span></span></marquee>
+  <marquee direction="right" class="text-danger">若為匿名用戶，將紀錄此裝置之IP位址。</marquee>
+  <div class="container">
+    <!--     <div class="back"><img src=".static/pics/pdf_back.jpg" style="width:210mm;height:297mm;border:#000 solid 1px;"></div> -->
+    <div class="img-thumbnailpb-0 border-primary-subtle">
+      <form action="./certificate" method="post" class="mb-0" enctype="multipart/form-data">
+        <div class="row text-center fs-5 fw-bold g-0 gap-2 p-1 justify-content-center mb-3">
+          <div class="col-12 col-md-2 mb-3 mb-sm-1 rounded shadow-sm">
+            <div class="bg-primary-subtle border-bottom rounded-top">科別</div>
+            <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center rounded-bottom"><input type="text"
+                name="科別" class="form-control input-fields" value="{{value['科別']}}" autocomplete="off" required></div>
+          </div>
+
+          <div class="col-12 col-md-2 mb-3 mb-sm-1 rounded shadow-sm">
+            <div class="bg-primary-subtle border-bottom rounded-top">年</div>
+            <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center rounded-bottom"><input type="text"
+                name="年" class="form-control input-fields" value="{{value['年']}}" autocomplete="off" required></div>
+          </div>
+
+          <div class="col-12 col-md-2 mb-3 mb-sm-1 rounded shadow-sm">
+            <div class="bg-primary-subtle border-bottom rounded-top">班</div>
+            <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center rounded-bottom"><input type="text"
+                name="班" class="form-control input-fields" value="{{value['班']}}" autocomplete="off" required></div>
+          </div>
+
+          <div class="col-12 col-md-2 mb-3 mb-sm-1 rounded shadow-sm">
+            <div class="bg-primary-subtle border-bottom rounded-top">學生</div>
+            <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center rounded-bottom"><input type="text"
+                name="學生" class="form-control input-fields" value="{{value['學生']}}" autocomplete="off" required></div>
+          </div>
+
+          <div class="col-12 col-md-2 mb-3 mb-sm-1 rounded shadow-sm">
+            <div class="bg-primary-subtle border-bottom rounded-top">獎項</div>
+            <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center rounded-bottom"><input type="text"
+                name="獎項" class="form-control input-fields" value="{{value['獎項']}}" autocomplete="off" required></div>
+          </div>
+
+          <div class="col-12 col-md-2 mb-3 mb-sm-1 rounded shadow-sm">
+            <div class="bg-primary-subtle border-bottom rounded-top">處室簡稱</div>
+            <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center rounded-bottom"><input type="text"
+                name="處室簡稱" class="form-control input-fields" value="{{value['處室簡稱']}}" autocomplete="off" required></div>
+          </div>
+
+          <div class="col-12 col-md-2 mb-3 mb-sm-1 rounded shadow-sm">
+            <div class="bg-primary-subtle border-bottom rounded-top">文號</div>
+            <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center rounded-bottom"><input type="text"
+                name="文號" class="form-control input-fields" value="{{value['文號']}}" autocomplete="off" required></div>
+          </div>
+          
+          <div class="col-12 col-md-2 mb-3 mb-sm-1 rounded shadow-sm">
+            <div class="bg-primary-subtle border-bottom rounded-top">日期</div>
+            <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center rounded-bottom"><input type="date"
+                name="日期" class="form-control input-fields" value="{{value['日期'] or get_today('%Y-%m-%d')}}" autocomplete="off" required></div>
+          </div>
+
+        </div>
+        <div class="row justify-content-center">
+          <div class="col-1">
+            <div class="form-check"{%if not current_user.is_authenticated%} data-bs-toggle="tooltip" data-bs-placement="right" data-bs-custom-class="primary-tooltip" data-bs-title="未登入無法使用底圖"{%endif%}>
+              <input class="form-check-input" type="checkbox" name="no-back" value="True" id="no-back"{%if not current_user.is_authenticated%} checked disabled{%endif%}>
+              <label class="form-check-label user-select-none text-nowrap fw-bold{%if not current_user.is_authenticated%} text-decoration-line-through{%endif%}" for="no-back">
+                產生無底圖版
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <p></p>
+        <input type="file" class="form-control d-none" name="multid" id="multid">
+        <div class="row justify-content-center">
+          <div class="col-9">
+            <div class="btn-group w-100 shadow">
+              <label for="multid" class="btn btn-success fw-bold" id="multidLabel">上傳</label>
+              <a href="/certi/multi_data" target="_blank" type="button"
+                class="btn btn-outline-secondary fw-bold">下載批次檔</a>
+              <button type="submit" class="btn btn-primary fw-bold">送出</button>
+              <button type="reset" class="btn btn-outline-secondary fw-bold">重設</button>
+              <a href="." type="button" class="btn btn-success fw-bold">離開</a>
+            </div>
+          </div>
+        </div>
+        <p></p>
+      </form>
+    </div>
+  {%if current_user.is_authenticated%}
+    <p style="margin-top:30vh;"></p>
+    <h3 style="text-align:center;">預設格式圖如下 </h3>
+  <div>
+    <img src="/static/pdf/d.png" style="width:100%;">
+  </div>
+  {%endif%}
+</div>
+  {{footer|safe}}
+  <script>
+    $(() => {
+      $("#multid").change(function () {
+        if (!$(this).val()) {
+          $("#multidLabel").html("上傳")
+          $(".input-fields").prop('required', true)
+        } else {
+          $("#multidLabel").html($(this).val().slice($(this).val().lastIndexOf("\\") + 1))
+          $(".input-fields").removeProp("required")
+        }
+      })
+    })
+  </script>
+</body>
+
+</html>

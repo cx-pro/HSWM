@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜檔案列表</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+  <div class="d-flex row mx-auto w-100" style="height:68vh;">
+    <div class="col-2 text-center">
+      <div class="fs-2">路徑</div>
+      <hr>
+      <nav aria-label="breadcrumb" class="text-center mx-auto" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item fw-bold">{%if p[:-2]%}<a href="/adm/files" class="text-primary fw-bold text-decoration-none">根目錄</a>{%else%}根目錄{%endif%}</li>
+          {%for i in p[2:]%}
+          {%if p.index(i)<len(p)-2%}
+            <li class="breadcrumb-item">
+              <a href="/adm/files?p={{'/'.join(p[:p.index(i)+1])}}/" class="text-primary fw-bold text-decoration-none">{{i}}</a>
+            </li>
+            {%else%}
+            <li class="breadcrumb-item active fw-bold">
+            {{i}}
+            </li>
+          {%endif%}
+          {%endfor%}
+        </ol>
+      </nav>
+    </div>
+    <div class="col-10 text-center align-items-center border-start border-end" style="height:68vh;">
+      <div class="fs-2">檔案</div>
+      <hr>
+      <div class="overflow-y-scroll p-2 align-items-start text-start row gap-1" style="height:55vh">
+        {%for i in files%}
+        <a href="{%if not i[2].endswith('.db')%}{%if not i[1] %}/file_reader?p={%else%}/adm/{%endif%}{{i[2].replace('//','/')}}{%if i[1] %}/{%endif%}{%else%}/adm/db?db={{i[2].replace('//','/')}}{%endif%}" oncontextmenu = "preventDefault();" class="btn btn-outline-primary fw-bold text-decoration-none btn-lg col-12 col-xxl-3 text-start text-nowrap text-truncate file_folders" style="height:6vh;">{%if i[1] %}<i class="bi bi-folder"></i>{%else%}<i class="bi bi-file-earmark"></i>{%endif%}<span class="ms-1">{{i[0]}}</span></a>
+        {%endfor%}
+      </div>
+    </div>
+  </div>
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      
+      $(document).off("contextmenu", ".file_folders").on("contextmenu", ".file_folders", function (e) {
+       e.preventDefault();
+      });
+      var loading_spinner='<div class="text-primary d-inline" role="status"><a class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    $(".tfile").fileinput({
+        'showUpload': false,
+        "showRemove":false,
+        'dropZoneTitle':"拖放至此即可上傳",
+        'msgPlaceholder':"上傳檔案",
+        "browseLabel":"瀏覽",
+        "msgProcessing":"載入中"
+    });
+    $(".close").click(function(){
+      $("#upload_file").fileinput('clear');
+      $("#upload_file").fileinput('clearFileStack');
+    })
+    })
+  </script>
+</body>
+</html>

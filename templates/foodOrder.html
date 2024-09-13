@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜訂餐統計</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+  <style>
+    /* CSS */
+    .button-57 {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #0d6efd;
+      color: #0d6efd;
+      display: inline-block;
+      font-size: 15px;
+      line-height: 15px;
+      padding: 18px 18px 17px;
+      text-decoration: none;
+      cursor: pointer;
+      background: #fff;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .button-57 span:first-child {
+      position: relative;
+      transition: color 600ms cubic-bezier(0.48, 0, 0.12, 1);
+      z-index: 10;
+    }
+    
+    .button-57 span:last-child {
+      color: white;
+      display: block;
+      position: absolute;
+      bottom: 0;
+      transition: all 500ms cubic-bezier(0.48, 0, 0.12, 1);
+      z-index: 100;
+      opacity: 0;
+      top: 50%;
+      left: 50%;
+      transform: translateY(225%) translateX(-50%);
+      height: 14px;
+      line-height: 13px;
+    }
+    
+    .button-57:after {
+      content: "";
+      position: absolute;
+      bottom: -50%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #0d6efd;
+      transform-origin: bottom center;
+      transition: transform 600ms cubic-bezier(0.48, 0, 0.12, 1);
+      transform: skewY(9.3deg) scaleY(0);
+      z-index: 50;
+    }
+    
+    .button-57:hover:after {
+      transform-origin: bottom center;
+      transform: skewY(9.3deg) scaleY(2);
+    }
+    
+    .button-57:hover span:last-child {
+      transform: translateX(-50%) translateY(-50%);
+      opacity: 1;
+      transition: all 900ms cubic-bezier(0.48, 0, 0.12, 1);
+    }
+  </style>
+  <style>
+    .bs-wizard {margin-top: 40px;}
+
+/*Form Wizard*/
+.bs-wizard {border-bottom: solid 1px #e0e0e0; padding: 0 0 10px 0;}
+.bs-wizard > .bs-wizard-step {padding: 0; position: relative;}
+.bs-wizard > .bs-wizard-step + .bs-wizard-step {}
+.bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
+.bs-wizard > .bs-wizard-step .bs-wizard-info {color: #999; font-size: 14px;}
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot {position: absolute; width: 30px; height: 30px; display: block; background: #0dcaf0; top: 45px; left: 50%; margin-top: -15px; margin-left: -15px; border-radius: 50%;cursor:pointer;} 
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {content: ' '; width: 14px; height: 14px; background: #0d6efd; border-radius: 50px; position: absolute; top: 8px; left: 8px; } 
+.bs-wizard > .bs-wizard-step > .progress {position: relative; border-radius: 0px; height: 8px; box-shadow: none; margin: 20px 0;}
+.bs-wizard > .bs-wizard-step > .progress > .progress-bar {width:0px; box-shadow: none; background: #0dcaf0;}
+.bs-wizard > .bs-wizard-step.complete > .progress > .progress-bar {width:100%;}
+.bs-wizard > .bs-wizard-step.active > .progress > .progress-bar {width:50%;}
+.bs-wizard > .bs-wizard-step:first-child.active > .progress > .progress-bar {width:0%;}
+.bs-wizard > .bs-wizard-step:last-child.active > .progress > .progress-bar {width: 100%;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot {background-color: #f5f5f5;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot:after {opacity: 0;}
+.bs-wizard > .bs-wizard-step:first-child  > .progress {left: 50%; width: 50%;}
+.bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
+.bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }
+/*END Form Wizard*/
+  </style>
+
+  <div class="container mx-auto" id="outer-container">
+    {{sech|safe}}
+    {%if not cut%}
+    <div class="container">
+      <div class="row bs-wizard fw-bold mb-5" style="border-bottom:0;">
+        <div class="col-3 bs-wizard-step active" id="pro-number">
+          <div class="text-center bs-wizard-stepnum">選擇座號</div>
+          <div class="progress"><div class="progress-bar progress-bar-striped"></div></div>
+          <a class="bs-wizard-dot" id="number"></a>
+          <div class="bs-wizard-info text-center"></div>
+        </div>
+        
+        <div class="col-3 bs-wizard-step disabled" id="pro-order">
+          <div class="text-center bs-wizard-stepnum">選擇餐點</div>
+          <div class="progress"><div class="progress-bar"></div></div>
+          <a class="bs-wizard-dot" id="order"></a>
+        </div>
+        
+        <div class="col-3 bs-wizard-step disabled" id="pro-confirm">
+          <div class="text-center bs-wizard-stepnum">確認選項</div>
+          <div class="progress"><div class="progress-bar"></div></div>
+          <a class="bs-wizard-dot" id="confirm"></a>
+        </div>
+        
+        <div class="col-3 bs-wizard-step disabled" id="pro-done">
+          <div class="text-center bs-wizard-stepnum">完成</div>
+          <div class="progress"><div class="progress-bar"></div></div>
+          <a class="bs-wizard-dot" id="done"></a>
+        </div>
+      </div>
+      <div id="f-all">
+        <div id="contain-number" class="contain text-center">
+          <div class="form-floating mx-auto" style="width:20rem;max-width:95vw;">
+            <input id="f-number" type="number" class="form-control" min="1" max="34" placeholder=" ">
+            <label for="f-number">座號</label>
+          </div>
+          <button type="button" class="btn btn-primary mt-3 fw-bold mx-auto disabled" style="width:20rem;max-width:95vw;" id="number-next">下一步</button>
+        </div>
+        <div id="contain-order" class="contain text-center">
+          <datalist id="foods">
+            {%for i in dl%}
+            <option value="{{i}}">
+            {%endfor%}
+          </datalist>
+          <div class="mx-auto p-0 row mb-5 field" style="width:30rem;max-width:95vw;" id="field1">
+            <div class="col-6">
+              <div class="input-group">
+                <button type="button" class="btn btn-sm btn-outline-danger rm-field" id="rm1" rm-data-target="1"><i class="bi bi-x-lg"></i></button>
+                <input type="text" class="form-control form-control-sm m-0 name" list="foods" id="name1">
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="input-group p-0">
+                <button type="button" class="btn btn-sm btn-outline-primary reduce" -data-target="1"><i class="bi bi-dash-lg"></i></button>
+                <input value="1" type="text" class="form-control-sm form-control text-center border-primary amount" id="amount1">
+                <button type="button" class="btn btn-sm btn-outline-primary plus" -data-target="1"><i class="bi bi-plus-lg"></i></button>
+              </div>
+            </div>
+          </div>
+          <button class="button-57 rounded" id="add-field" type="button" style="width:20rem;max-width:95vw;"><i class="bi bi-plus-square-dotted fs-4 m-0 p-0"></i><span class="fs-4 fw-bold">新增一欄</span></button>
+          <div><button type="button" class="btn btn-primary mt-3 fw-bold mx-auto disabled" style="width:20rem;max-width:95vw;" id="order-next">下一步</button></div>
+        </div>
+        <div id="contain-confirm" class="contain text-center">
+          <div class="fs-4 fw-bold text-start"><span id="confirm-number" class="text-success"></span> 號的點單</div>
+          <div class="border rounded rounded-2 p-1 px-2 text-center" id="confirm-item-container">
+            <div class="row m-0 text-center mt-1">
+              <div class="col-6 text-center">品名</div>
+              <div class="col-3 text-center">數量</div>
+              <div class="col-3 text-center">選項</div>
+            </div>
+            <hr>
+            
+          </div>
+          <button type="button" class="btn btn-lg btn-primary fw-bold fs-5 mt-5" id="f-sub">送出</button>
+          <hr>
+          按下送出鍵視同已確認訂單無誤。
+        </div>
+      </div>
+    </div>
+    {%else%}
+    <h1 class="mt-5 text-center fw-bold text-success"><marquee direction="right" behavior="alternate">點單時間已結束</marquee></h1>
+    {%endif%}
+  </div>
+  
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      $("header").remove()
+      $("footer").remove()
+      $(".contain").hide()
+      $("#contain-number").show()
+      var order_data=[]
+      var ic1=`<i class="bi bi-list fs-1"></i>`
+      var ic2=`<i class="bi bi-x-lg fs-2"></i>`
+      var add_inter=null
+      var reduce_inter=null
+      var add_id=null
+      var reduce_id=null
+      var item_count=1
+      var item_temp=`<div class="mx-auto p-0 row mb-5 field" style="width:30rem;max-width:95vw;" id="field[==item_count==]">
+            <div class="col-6">
+              <div class="input-group">
+                <button type="button" class="btn btn-sm btn-outline-danger rm-field" id="rm[==item_count==]" rm-data-target='[==item_count==]'><i class="bi bi-x-lg"></i></button>
+                <input type="text" class="form-control form-control-sm m-0 name" list="foods" id="name[==item_count==]">
+              </div>
+            </div>
+            <div class="col-5">
+              <div class="input-group p-0">
+                <button type="button" class="btn btn-sm btn-outline-primary reduce" -data-target="1"><i class="bi bi-dash-lg"></i></button>
+                <input value="1" type="text" class="form-control form-control-sm text-center border-primary amount" id="amount[==item_count==]">
+                <button type="button" class="btn btn-sm btn-outline-primary plus" -data-target="1"><i class="bi bi-plus-lg"></i></button>
+              </div>
+            </div>
+          </div>`
+      var cart_item_temp=`
+            
+            <div class="row m-0 text-center">
+              <div class="col-6 text-center overflow-x-scroll">[==name==]</div>
+              <div class="col-3 text-center">[==count==]</div>
+              <div class="col-3 text-center"><div class="rm-cart fs-4 text-danger" style="cursor:pointer;" -rm-target="[==rm_target==]"><i class="bi bi-trash3"></i></div></div>
+            </div>
+            <hr>`
+      
+      $(document).off('click', ".plus").on('click', ".plus", function (e) {
+        var target=$(this).siblings("[type=text]")[0]
+        var ov=parseInt($(target).val())
+        $(target).val(ov+1)
+      })
+
+      $(document).ready(function() {
+        $(window).keydown(function(event){
+          if(event.keyCode == 13) {
+            event.preventDefault();
+            return false;
+          }
+        });
+      });
+    
+      $(document).off('click', ".rm-field").on('click', ".rm-field", function (e) {
+        $("#field"+$(this).attr("rm-data-target")).remove()
+        if($("#contain-order").children(".field").length<=0&&!$('#order-next').hasClass('disabled')){
+          $('#order-next').addClass('disabled')}
+      })
+      
+      $(document).off('click', ".rm-cart").on('click', ".rm-cart", function (e) {
+        $("#rm"+$(this).attr("-rm-target")).click()
+        $("#order-next").click()
+      })
+      
+      $(document).off('click', ".reduce").on('click', ".reduce", function (e) {
+        var target=$(this).siblings("[type=text]")[0]
+        var ov=parseInt($(target).val())
+        if(ov-1>0){
+          $(target).val(ov-1)
+        }
+      })
+      
+      $("#add-field").click(function(){
+        item_count=parseInt(item_count)+1
+        $(this).before(item_temp.replace("[==item_count==]",item_count).replace("[==item_count==]",item_count).replace("[==item_count==]",item_count).replace("[==item_count==]",item_count).replace("[==item_count==]",item_count))
+      })
+      
+      $(".bs-wizard-dot").click(function(){
+        var m=["number","order","confirm","done"]
+        if(!$(this).hasClass("disabled")){
+          var indm=m.indexOf(this.id)
+          $(".contain").fadeOut(200)
+          if(indm==0){
+            $("#contain-number").fadeIn(200)
+          }else{
+            $("#"+m[m.indexOf(this.id)-1]+"-next").click()
+          }
+        }
+      })
+      
+      $("#number-next").click(function(){
+        $("#pro-number").removeClass("active")
+        $("#pro-number").addClass("complete")
+        $("#pro-order").removeClass("disabled")
+        $("#pro-order").addClass("active")
+        $("#contain-number").fadeOut(200)
+        $("#contain-order").fadeIn(200)
+      })
+      
+      $("#order-next").click(function(){
+        $("#pro-order").removeClass("active")
+        $("#pro-order").addClass("complete")
+        $("#pro-confirm").removeClass("disabled")
+        $("#pro-confirm").addClass("active")
+        $("#contain-order").fadeOut(200)
+        $("#contain-confirm").fadeIn(200)
+
+        $("#confirm-number").html($("#f-number").val())
+        $("#confirm-item-container").html(`
+            <div class="row m-0 text-center mt-1">
+              <div class="col-6 text-center">品名</div>
+              <div class="col-3 text-center">數量</div>
+              <div class="col-3 text-center">選項</div>
+            </div>
+            <hr>`)
+        order_data={}
+        $(".name").each(function(ind,elem){
+          $("#confirm-item-container").append(cart_item_temp.replace("[==name==]",this.value).replace("[==count==]",$("#amount"+this.id.slice(4)).val()).replace("[==rm_target==]",this.id.slice(4)))
+          order_data[this.value]=parseInt($("#amount"+this.id.slice(4)).val())
+        })
+      })
+      
+      $(document).off('keyup', ".name").on('keyup', ".name", function (e) {
+        if(this.value!=''){
+          $('#order-next').removeClass('disabled')
+        }else{
+          $('#order-next').addClass('disabled')
+        }
+      })
+      
+      $("#f-number").on('keyup change', function (e) {
+        if(this.value!='' && this.value<=34 && this.value>0){
+          $('#number-next').removeClass('disabled')
+        }else{
+          $('#number-next').addClass('disabled')
+        }
+      })
+      
+      $("#mynav").click(function(){
+        $(this).fadeOut(200,function(){
+          if($("#mynav").html()==ic1){
+            $("#mynav").html(ic2)
+          }else{
+            $("#mynav").html(ic1)
+          }
+        })
+        $(this).fadeIn(200)
+      })
+
+      $("#f-sub").click(function(){
+        $.ajax({
+          url:"/food/order?id="+$("#f-number").val(),
+          method:"post",
+          data:order_data,
+          success:function(data){$("#outer-container").html(data)},
+          error:function(){alert("傳送資料時發生錯誤，非常抱歉，請重試。")}
+            })
+        })
+      
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+  </script>
+</body>
+</html>

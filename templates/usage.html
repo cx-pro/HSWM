@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+  <div class="col-6 text-break"></div>
+  <style>
+    * {
+      scroll-behavior: smooth;
+    }
+  </style>
+  <title>使用說明</title>
+</head>
+
+<body>
+  {{header|safe}}
+  <div class="d-block d-md-none col-12 text-center p-1 py-3 border-top shadow-sm rounded-top position-fixed bottom-0 bg-light-subtle">
+    <select id="content-list" class="form-select shadow-sm" onchange="location.href='#'+$(this).val()">
+      <option value="" selected disabled>【目錄】</option>
+      <option value="首頁">首頁</option>
+      <option value="登入">登入</option>
+      <option value="註冊">註冊</option>
+      <option value="設定">設定</option>
+      <option value="電子郵件變更">｜電子郵件變更</option>
+      <option value="密碼變更">｜密碼變更</option>
+      <option value="其他設定">｜其他設定</option>
+      <option value="個人檔案">個人檔案</option>
+      <option value="變更簡介">｜變更簡介</option>
+      <option value="行事曆系統">行事曆系統</option>
+      <option value="學生端">｜學生端</option>
+      <option value="教師端">｜教師端</option>
+      <option value="獎狀產生">獎狀產生</option>
+      <option value="批次產生">｜批次產生</option>
+      <option value="單次產生">｜單次產生</option>
+      <option value="問答系統">問答系統</option>
+      <option value="問答系統主介面">｜問答系統主介面</option>
+      <option value="新增問題">｜新增問題</option>
+      <option value="工具列">｜工具列</option>
+      <option value="我的問題">｜我的問題</option>
+      <option value="我的回覆">｜我的回覆</option>
+      <option value="檢舉不當內容">｜檢舉不當內容</option>
+      <option value="通知">通知</option>
+      <option value="通知中心">｜通知中心</option>
+      
+      <option value="" disabled><hr></option>
+      <option value="" disabled></option>
+
+      <option value="其他說明">其他說明</option>
+      <option value="發生錯誤處理流程">｜發生錯誤處理流程</option>
+    </select>
+  </div>
+  <div class="m-0 mx-auto p-0 row gap-1">
+    <div class="d-none d-md-block col-md-2 text-center p-1 py-3 border-end">
+      <h5>目錄</h5>
+      <hr>
+      <div class="text-start ms-md-5 ms-2">
+        <div><a href="#首頁" class="text-muted mb-2 text-decoration-none scrol fst-italic">首頁</a></div>
+        <div><a href="#登入" class="text-muted mb-2 text-decoration-none scrol fst-italic">登入</a></div>
+        <div><a href="#註冊" class="text-muted mb-2 text-decoration-none scrol fst-italic">註冊</a></div>
+        <div><a href="#設定" class="text-muted mb-2 text-decoration-none scrol fst-italic">設定</a></div>
+        <div><a href="#電子郵件變更"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜電子郵件變更</a></div>
+        <div><a href="#密碼變更"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜密碼變更</a></div>
+        <div><a href="#其他設定"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜其他設定</a></div>
+        <div><a href="#個人檔案" class="text-muted mb-2 text-decoration-none scrol fst-italic">個人檔案</a></div>
+        <div><a href="#變更簡介"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜變更簡介</a></div>
+        <div><a href="#行事曆系統" class="text-muted mb-2 text-decoration-none scrol fst-italic">行事曆系統</a></div>
+        <div><a href="#學生端"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜學生端</a></div>
+        <div><a href="#教師端"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜教師端</a></div>
+        <div><a href="#獎狀產生" class="text-muted mb-2 text-decoration-none scrol fst-italic">獎狀產生</a></div>
+        <div><a href="#批次產生"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜批次產生</a></div>
+        <div><a href="#單次產生"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜單次產生</a></div>
+        <div><a href="#問答系統" class="text-muted mb-2 text-decoration-none scrol fst-italic">問答系統</a></div>
+        <div><a href="#問答系統主介面"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜問答系統主介面</a></div>
+        <div><a href="#新增問題"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜新增問題</a></div>
+        <div><a href="#工具列"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜工具列</a></div>
+        <div><a href="#我的問題"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜我的問題</a></div>
+        <div><a href="#我的回覆"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜我的回覆</a></div>
+        <div><a href="#檢舉不當內容"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜檢舉不當內容</a></div>
+        <div><a href="#通知" class="text-muted mb-2 text-decoration-none scrol fst-italic">通知</a></div>
+        <div><a href="#通知中心"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜通知中心</a></div>
+        <div class="text-center pe-2 pe-md-5">
+          <hr class="">
+        </div>
+        <div><a href="#其他說明" class="text-muted mb-2 text-decoration-none scrol fst-italic">其他說明</a></div>
+        <div><a href="#發生錯誤處理流程"
+            class="text-muted mb-2 text-decoration-none scrol ms-md-3 text-start text-md-center">｜發生錯誤處理流程</a></div>
+
+      </div>
+
+    </div>
+    <div class="col-12 col-md-10 overflow-y-scroll row" id="contain" style="max-height:100vh;">
+      <div class="col-12 mx-auto row">
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="首頁">首頁</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image112.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">頁面截圖</div>
+
+        <img src="/static/usage_images/image99.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊右上角九個方塊(選單鈕) 開啟選單<br>點按「登入／註冊」開始登入流程。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="登入">登入</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image29.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「前往註冊」以開始註冊。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="註冊">註冊</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image158.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">輸入正確的相關資訊後，點按下一步。</div>
+
+        <img src="/static/usage_images/img_5.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">
+          步驟2<br><br>請檢查信箱<br>會有一封驗證信，內有需於下一步驟輸入之信箱驗證碼。<br>若未收到，請在下一步檢查輸入的信箱是否正確，<br>也請檢查垃圾郵件夾。</div>
+
+        <img src="/static/usage_images/image149.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">
+          步驟2<br><br>可在此檢視是否輸入錯誤的電子信箱，<br>班級代碼與教師代碼擇一輸入或不輸入，<br>並輸入信箱驗證碼、全名以及學號(若已輸入教師代碼則不會顯示學號欄)。</div>
+
+        <img src="/static/usage_images/image150.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">步驟2<br><br>上述輸入之範例。</div>
+
+        <img src="/static/usage_images/image76.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">步驟2<br><br>若有需要，請完成非機器人驗證。</div>
+
+        <div class="col-12">
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image142.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">另外，登入或註冊時可以選擇以Gogole繼續操作。</div>
+
+        <img src="/static/usage_images/image125.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點選欲使用的Google帳戶，即可直接登入，或跳過電子信箱驗證的步驟直接註冊。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="設定">設定</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image5.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">
+          頁面截圖<br><br>使用記住我等方式保持登入的使用者，<br>因此處資訊之變更有危害使用者帳號安全之疑慮，<br>將被重新導向至首頁。<br>若遇此情況但仍需操作者，請重新登入。</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="電子郵件變更">電子郵件變更</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image98.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下電子郵件旁的鉛筆圖示，<br>變更綁定之電子信箱。</div>
+
+        <img src="/static/usage_images/image171.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">輸入欲綁定的新電子信箱，並按下驗證鍵，<br>送出驗證信(驗證信將會送至新信箱)。<br>輸入驗證信中驗證碼後按下確定變更即可完成更改。</div>
+
+        <img src="/static/usage_images/image46.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">更改完成後，會寄送復原通知信至原信箱。<br>供使用者復原信箱帳號。</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="密碼變更">密碼變更</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image159.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下密碼旁的鉛筆圖示，變更密碼。<br>若您不記得原密碼，請使用選單中的「登入協助」功能。</div>
+
+        <img src="/static/usage_images/image64.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">輸入欄位提示之相關資訊。</div>
+
+        <img src="/static/usage_images/image73.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">若輸入有誤，則會跳出提示，如圖。</div>
+
+        <img src="/static/usage_images/image8.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">成功修改後，會提示使用者重新登入，並強制登出所有使用該帳號的用戶。</div>
+
+        <img src="/static/usage_images/image110.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">登出後會自動導向至登入頁面。</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="其他設定">其他設定</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image68.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">首頁模式<br>此設定可以調整此帳號的首頁版型。<br>1. 預設 - 使用預設的首頁。<br>2. 最近工作事項 -
+          顯示昨、今、明，共三日的作業、考試事項。<br>3. 混合 - 在預設的首業附加顯示最近工作事項。</div>
+        <div class="col-12 mt-5"></div>
+        <div class="col-4 text-center">1. 預設</div>
+        <div class="col-4 text-center">2. 最近工作事項</div>
+        <div class="col-4 text-center">3. 混合</div>
+        <img src="/static/usage_images/index_2.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <img src="/static/usage_images/index_1.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <img src="/static/usage_images/index_3.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <div class="col-12 mt-5"></div>
+
+        <img src="/static/usage_images/image164.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">行事曆版型<br>可以修改進入行事曆時預設顯示的版型，<br>分為週曆與月曆</div>
+
+        <div class="col-12 mt-5"></div>
+        <div class="col-6 text-center">1. 週曆</div>
+        <div class="col-6 text-center">2. 月曆</div>
+        <img src="/static/usage_images/image59.png" class="img-thumbnail border-primary mb-2 p-1 col-6" />
+        <img src="/static/usage_images/image106.png" class="img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-12 mt-5"></div>
+
+        <img src="/static/usage_images/image36.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">身分代碼<br><br>若您沒有在註冊時輸入班級代碼或教師代碼，<br>可以在此處輸入。</div>
+
+        <div class="col-12 mt-5"></div>
+
+        <img src="/static/usage_images/image35.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">輸入並按下送出後若代碼正確無誤，<br>會跳出提示顯示您的新身分。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="個人檔案">個人檔案</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/img_6.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">頁面截圖<br><br>可在此上傳自訂頭像和自訂簡介</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="變更簡介">變更簡介</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image89.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下簡介欄右上角的鉛筆圖示，開啟編輯模式。</div>
+
+        <img src="/static/usage_images/image82.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">編輯模式啟用範例<br><br>只需要輸入欲變更為的內容，<br>並按下「保存變更」，即可儲存。<br>若欲取消，請按「取消」。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="行事曆系統">行事曆系統</div>
+          <hr>
+        </div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="學生端">學生端</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image25.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">學生點擊右上角選單鍵後，<br>按此按鈕可以進入行事曆系統</div>
+
+        <img src="/static/usage_images/image59.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">學生端行事曆首頁，預設版型為週曆。</div>
+
+        <img src="/static/usage_images/image85.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">「週曆」版型<br><br>按下「切換顯示方式」，<br>可以暫時切換行事曆的顯示方式。<br>重整頁面或重新進入系統時，<br>將會回歸預設。</div>
+
+        <img src="/static/usage_images/image106.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">「月曆」版型<br><br>點擊「切換顯示方式」時，<br>版型會在「週曆」與「月曆」間切換，<br>循環往復。</div>
+
+        <div class="col-12 mt-5"></div>
+        <img src="/static/usage_images/image74.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <img src="/static/usage_images/image102.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <img src="/static/usage_images/image_7.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <div class="col-4 text-break">在月曆版型中的導航列，<br>按下「前一月」按鍵，<br>會將月曆顯示的日期切換至顯示中月份的前一月。</div>
+        <div class="col-4 text-break">在月曆版型中的導航列，<br>按下「本月」按鍵，<br>會將月曆顯示的日期切換至系統當下日期。</div>
+        <div class="col-4 text-break">在月曆版型中的導航列，<br>按下「後一月」按鍵，<br>會將月曆顯示的日期切換至顯示中月份的後一月。</div>
+        <div class="col-12 mt-5"></div>
+
+        <img src="/static/usage_images/image12.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「班級成員」按鍵，<br>可以檢視自己班級已加入此系統的成員。</div>
+
+        <img src="/static/usage_images/image10.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">班級成員範例，<br>成員以學號由小至大排序。</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="教師端">教師端</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image118.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">教師點擊右上角選單鍵後，<br>按此按鈕可以進入行事曆事項指派系統。<br>班級被教師指派為小老師的學生<br>也能透過此按鍵進入指派系統。</div>
+
+        <img src="/static/usage_images/image3.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">進入後，教師可以選擇要指派事項的班級。<br>小老師則會被直接導向至該班級的指派系統。<br>教師也可以透過下方的「前往加入」連結，<br>加入指導的班級。
+        </div>
+
+        <img src="/static/usage_images/image155.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">教師可以點擊上方的「班級成員」，檢視該班級的成員。<br>也可對想指派為小老師的學生，<br>按下「身分設定」，調整其身分。</div>
+
+        <img src="/static/usage_images/image140.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「身分設定」後，會跳出一個小視窗。</div>
+
+        <img src="/static/usage_images/image79.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">在此視窗內可以選擇將該學生的身分提升為小老師，<br>或是降為普通學生。<br>修改完成後，請按下「確認變更」以儲存此設定。<br>或按下「取消」放棄此次設定。
+        </div>
+
+        <img src="/static/usage_images/image15.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">教師可以點擊上方的「新增工作」，開始指派作業。</div>
+
+        <img src="/static/usage_images/image101.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">新增作業介面<br>填寫所有欄位後，按下「確認新增」即可新增作業。<br>可以不用上傳檔案</div>
+
+        <img src="/static/usage_images/image16.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">下方檔案上傳處，可以用拖拉方式新增檔案。</div>
+
+        <img src="/static/usage_images/image111.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">也可以按下旁邊的「瀏覽」鍵以清單方式新增檔案。</div>
+
+        <img src="/static/usage_images/image4.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">新增欲上傳的檔案後，<br>檔案會顯示在拖拉上傳區。</div>
+
+        <img src="/static/usage_images/image172.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">若為圖片檔，可以點按其右下角的「放大鏡」按鈕檢視圖片。</div>
+
+        <img src="/static/usage_images/image161.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">上圖「放大鏡」按鈕</div>
+
+        <img src="/static/usage_images/image123.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下放大鏡後的介面範例</div>
+
+        <img src="/static/usage_images/image129.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">
+          按下「確定新增」會一併上傳選擇之檔案。<br>作業新增之後，回跳轉到編輯頁面，供使用者再次檢視作業內容，<br>若發現錯誤也可在此修改。<br>下方會列出之前上傳的圖片。</div>
+
+        <img src="/static/usage_images/image26.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下檔案清單處的刪除檔案，則會直接移除該檔案。</div>
+
+        <img src="/static/usage_images/image58.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">編輯時也可以額外新增檔案</div>
+
+        <img src="/static/usage_images/image156.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「送出更改」鍵保存變更。</div>
+
+        <img src="/static/usage_images/image91.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「送出更改」鍵後，會刷新頁面，<br>可以看見檔案清單新增了剛才的圖片。</div>
+
+        <img src="/static/usage_images/image62.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">編輯時，按下旁邊的「刪除」鍵，會跳轉到確認的頁面。</div>
+
+        <img src="/static/usage_images/image40.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「確定」鍵，此作業將被<font class="text-danger fw-bold">永久刪除</font>。</div>
+
+        <img src="/static/usage_images/image69.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">編輯後，會回到行事曆，可以在查看有作業的時間，<br>上方也會顯示日期，<br>切換成月曆模式也能看到。</div>
+
+        <img src="/static/usage_images/image175.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">若修改時間，行事曆也會即時反應。</div>
+
+        <img src="/static/usage_images/image157.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">上文對照<br>可看見調整節數後，<br>檢視作業的按紐移動到了第九節的欄位。</div>
+
+        <div class="col-12">
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image108.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">
+          若昨、今、明三天內有作業事項，<br>使用「最近工作事項」以及「混合」的用戶，<br>會在首頁顯示提醒，可直接看到最近的作業等。<br><br>不必一次次點開行事曆查看，<br>點擊標題也可查看該作業的詳細內容。<br><br>教師身分的用戶則可看到被指派作業的班級。
+        </div>
+
+        <img src="/static/usage_images/image33.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">也可以按下作業旁的勾選欄，標示為已完成，<br>系統會幫您紀錄。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="獎狀產生">獎狀產生</div>
+          <hr>
+        </div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="批次產生">批次產生</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image137.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下選單鍵後，教師身分可看見「獎狀產生」功能。</div>
+
+        <img src="/static/usage_images/image43.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下上圖按鍵後，會跳轉到產生系統的首頁，<br>在此處會顯示使用者之前生成且未刪除的獎狀。<br>若無，則會顯示「查無獎狀資料」。</div>
+
+        <img src="/static/usage_images/image42.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「新增」鍵後，會跳轉到輸入獎狀資料的頁面。</div>
+
+        <img src="/static/usage_images/image65.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">下方會有獎狀範例格式。</div>
+
+        <img src="/static/usage_images/image96.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以下載開放格式的.ods檔案，以一次產生多張獎狀。</div>
+
+        <img src="/static/usage_images/image11.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">下載下來的檔案，會叫做「example.ods」。</div>
+
+        <img src="/static/usage_images/image138.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">一般來說，可以在「下載』資料夾中找到。</div>
+
+        <img src="/static/usage_images/image7.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">
+          開啟檔案後，只需要依照最上方欄位提示輸入資料即可，<br>不過，第一列(標題列)的資料會被忽略，<br>故請不要在該列輸入資料。<br>也請勿修改下方資料表名稱，<br>會導致您的檔案因格式不符被退回。</div>
+
+        <img src="/static/usage_images/image57.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">(批次檔)資料輸入完成後，按下獎狀生成器的「上傳」，選擇檔案。</div>
+
+        <img src="/static/usage_images/image52.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">選擇檔案後，會顯示您選擇檔案的名稱，<br>供您檢查。</div>
+
+        <img src="/static/usage_images/image113.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下送出就會開始生成獎狀。<br>不過若資料量過大，<br>有可能會花費更多的時間，請耐心等候。</div>
+
+        <img src="/static/usage_images/image174.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">批次生成結束後，則會將使用者導向至獎狀清單，<br>清單會新增方才生成的獎狀。</div>
+
+        <img src="/static/usage_images/image39.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下欲開啟獎狀旁按鈕列的「開啟」鍵，會跳轉到該獎狀的檢視頁面。<br>手機使用者則會直接下載該獎狀。</div>
+
+        <img src="/static/usage_images/image103.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">電腦版檢視範例。</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="單次產生">單次產生</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image60.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">只要依照上方提示輸入欄位，<br>再按下送出就會依據輸入的資料產生一張獎狀。</div>
+
+        <img src="/static/usage_images/image168.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">單次產生完成後，會直接導向到該獎狀的檢視畫面。<br>可以按下左上方的按鈕，回到獎狀清單。</div>
+
+        <img src="/static/usage_images/image104.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">回到獎狀清單後，可以看見多了一張方才生成的獎狀。</div>
+
+        <div class="col-12">
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image14.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下獎狀旁的「刪除」鈕，會跳轉到確認頁。</div>
+
+        <img src="/static/usage_images/image126.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下確認之後，該獎狀將被<font class="text-danger fw-bold">永久刪除</font>。</div>
+
+        <img src="/static/usage_images/image55.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以看見，剛才選擇的獎狀已被刪除。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="問答系統">問答系統</div>
+          <hr>
+        </div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="問答系統主介面">問答系統主介面</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image81.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">左方可以看見問題分類，<br>會顯示所有已存在的科目別。</div>
+
+        <img src="/static/usage_images/image93.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以按下檢視欄右上角的切換檢視按鈕，<br>切換檢視方式<br>目前有一列一問題以及一列兩問題的檢視方式。</div>
+
+        <img src="/static/usage_images/image77.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">一列兩問題檢視方式範例。</div>
+
+        <img src="/static/usage_images/image167.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以透過此分類欄切換查看不同科目的問題</div>
+
+        <img src="/static/usage_images/image23.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊分類後，會自動篩選出該科目的所有問題。<br>本範例點擊的是自然科。</div>
+
+        <img src="/static/usage_images/image28.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">此按鈕可以查看相關說明</div>
+
+        <img src="/static/usage_images/image86.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">此頁面提供了各問題卡的文字說明、搜尋的範例以及「我的回覆」(用戶在問題下的留言)相關說明。</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="新增問題">新增問題</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image134.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點此按鈕可以發布新問題(登入可見)</div>
+
+        <img src="/static/usage_images/image154.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">發問頁面範例</div>
+
+        <img src="/static/usage_images/image38.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">選擇科目別</div>
+
+        <img src="/static/usage_images/image9.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">變更可見性(選用)<br>教師能選擇自己教導的班級，學生則是只能限定為自己班級。</div>
+
+        <img src="/static/usage_images/image124.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">勾選此欄可隱藏問題中的作者姓名。<br>注意，資料仍有紀錄發布者身分。</div>
+
+        <img src="/static/usage_images/image162.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以拖曳方式附加檔案至此問題，<br>也可按下右下角「瀏覽按鍵」，從檔案總管中選擇檔案。</div>
+
+        <img src="/static/usage_images/image70.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">若快速選單中找不到您需要的科目，請選擇其他。</div>
+
+        <img src="/static/usage_images/image18.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">若選擇的科目為其他，會新增一欄位，用於新增科目別。<br>只需要輸入您原欲使用的科別即可。</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="工具列">工具列</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image84.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下右方「問題搜尋」鍵會跳出搜尋欄</div>
+
+        <img src="/static/usage_images/image66.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">在欄位中輸入關鍵字，並按下[Enter]或上方放大鏡，<br>即可搜尋含有關鍵字的問題。</div>
+
+
+        <img src="/static/usage_images/image128.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">經過關鍵字篩選後的問題列表。</div>
+
+        <div class="col-12">
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image147.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下檢視按鈕，會跳轉到檢視該問題詳細內容的頁面。</div>
+
+        <img src="/static/usage_images/image152.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">問題的下方會列出使用者附加的圖片。</div>
+
+        <img src="/static/usage_images/image1.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點按檔案名稱，會導向到檢視檔案的頁面，<br>若非瀏覽器支援直接檢視的檔案，則會直接下載。</div>
+
+        <img src="/static/usage_images/image80.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">圖片檢視範例。</div>
+
+        <img src="/static/usage_images/image6.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">在檔案清單下方，會列出此問題所有的回覆。</div>
+
+        <div class="col-12">
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image13.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按「回覆」按鍵則可以回覆問題(登入可用)。</div>
+
+        <img src="/static/usage_images/image41.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊「回覆」按鍵後，輸入想回覆的內容並按下「發送回覆」即可。<br>請注意網路道德，請勿做出違反道德倫理、法律之事。</div>
+
+        <img src="/static/usage_images/image165.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">回覆內容範例</div>
+
+        <img src="/static/usage_images/image146.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">留言範例</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="我的問題">我的問題</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image144.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下右方工具列的「我的問題」按鈕以查看自己提問的問題</div>
+
+        <img src="/static/usage_images/image163.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">「我的問題」清單範例。<br>可在此選擇編輯或刪除問題。</div>
+
+        <img src="/static/usage_images/image24.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「編輯」，會跳轉到問題的編輯頁面。</div>
+
+        <img src="/static/usage_images/image47.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以修改標題、內容、附檔、科目。</div>
+
+        <img src="/static/usage_images/image119.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">下方會列出檔案清單</div>
+
+        <img src="/static/usage_images/image63.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">在檔案清單可以對欲刪除的檔案按「X」，會直接刪除該檔案。</div>
+
+        <img src="/static/usage_images/image122.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">也可追加上傳新檔案。</div>
+
+        <img src="/static/usage_images/image31.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊刪除會跳出確認提示。</div>
+
+        <img src="/static/usage_images/image45.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「確定刪除」後，如提示所說，問題及其下所有的留言將被<font class="text-danger fw-bold">永久刪除</font>。</div>
+
+        <img src="/static/usage_images/image53.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下右方工具列的「我的回覆」按鈕以查看自己的回覆內容</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="我的回覆">我的回覆</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image19.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">「我的回覆」清單範例。</div>
+
+        <img src="/static/usage_images/image21.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可點按右上角擴充選單按鈕選擇編輯或刪除回覆內容</div>
+
+        <img src="/static/usage_images/image95.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊「編輯」後，會跳出編輯小視窗，<br>在欄位中輸入新的內容後，點擊儲存編輯即可]確定變更。</div>
+
+        <img src="/static/usage_images/image83.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">修改範例。</div>
+
+        <img src="/static/usage_images/image34.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可看到回覆已修改為方才填入欄位的資料。</div>
+
+        <img src="/static/usage_images/image30.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下刪除則會跳出「確認刪除」提示視窗。</div>
+
+        <img src="/static/usage_images/image121.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下「確定刪除」後，該回覆將被<font class="text-danger fw-bold">永久刪除</font>。</div>
+
+        <img src="/static/usage_images/image148.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可見剛才所選的回覆已被刪除。</div>
+
+        <img src="/static/usage_images/image54.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">(教師身分)點擊右方工具列「學生問題」，可以看到指導之學生回覆的問題。</div>
+
+        <img src="/static/usage_images/image145.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以看見學生發布的問題，以及問題發布者。</div>
+
+        <img src="/static/usage_images/image173.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">(教師身分)點擊右方工具列「學生回覆」，可以看到指導之學生在問題下的回覆。</div>
+
+        <img src="/static/usage_images/image127.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">「學生回覆」清單</div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="檢舉不當內容">檢舉不當內容</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image160.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按右上角「三個點」(擴充選單)按鈕，可以選擇檢舉標題或內容，<br>問題擁有者的選單則是「編輯」和「刪除」。</div>
+
+        <img src="/static/usage_images/image133.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">檢舉標題範例</div>
+
+        <img src="/static/usage_images/image90.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">檢舉內容範例</div>
+
+        <div class="col-12">
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image130.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按右上角「三個點」(擴充選單)按鈕，可以檢舉留言</div>
+
+        <img src="/static/usage_images/image114.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">填入檢舉原因</div>
+
+        <img src="/static/usage_images/image17.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊右方工具列「檢舉檢視」，可以看到指導之學生受檢舉的問題或回覆。<br>受檢舉內容清單中，會顯示檢舉人對受檢舉內容的描述，<br>也可連結前往受檢舉內容直接查看。
+        </div>
+
+        <img src="/static/usage_images/image120.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊右方工具列「積分系統」，<br>可以針對學生在問題、回答問題的表現給予或扣除積分點。</div>
+
+        <img src="/static/usage_images/image135.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">積分系統介面範例。</div>
+
+        <img src="/static/usage_images/image32.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以切換不同班級，區分各個班級的積分排名。</div>
+
+        <img src="/static/usage_images/image170.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊「操作」按鈕，可以執行給予或扣除積分點的操作。</div>
+
+        <img src="/static/usage_images/image151.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊「加積分」選項，會跳出積分變更小視窗。<br>輸入欲增加或減少積分數後按下送出即可保存變更。<br>原因部分會自動帶入預設說明。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="通知">通知</div>
+          <hr>
+        </div>
+
+        <div class="col-12 fs-5  text-break">以下三種情況，會發布通知至有使用本系統的該班級學生。<br>(若有安裝應用程式並登入，則會推播至行動裝置。)</div>
+        <div class="col-12 mt-2"></div>
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="通知中心">通知中心</div>
+          <hr>
+        </div>
+        <div class="col-4 text-break">1.新增作業時</div>
+        <div class="col-4 text-break">2.修改作業時</div>
+        <div class="col-4 text-break">3.刪除作業時</div>
+        <img src="/static/usage_images/image141.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <img src="/static/usage_images/image48.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <img src="/static/usage_images/image169.png" class="img-thumbnail border-primary mb-2 p-1 col-4" />
+        <div class="col-12 mt-5"></div>
+
+        <img src="/static/usage_images/image88.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">對通知點按滑鼠右鍵(電腦端)，或是按住(行動裝置端)時，會跳出選單，<br>按下選單中「刪除」選項，會跳出確認提示。</div>
+
+        <img src="/static/usage_images/image67.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">按下提示中的「確定」鍵，會<font class="text-danger fw-bold">永久刪除</font>該通知。</div>
+
+        <img src="/static/usage_images/image116.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可見剛才選擇刪除的通知已被刪除。</div>
+
+        <img src="/static/usage_images/image94.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點按右上角的「三條線」(清理通知)按鈕，會跳出提示。</div>
+
+        <img src="/static/usage_images/image97.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊確定鍵，會<font class="text-danger fw-bold">永久刪除</font>所有通知。</div>
+
+        <img src="/static/usage_images/image72.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可見所有通知已被刪除。</div>
+
+        <img src="/static/usage_images/image71.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點按右上角的「齒輪」(設定)按鈕，可以控制通知的接收。</div>
+
+        <img src="/static/usage_images/image22.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以在此控制要接收哪些通知，修改完後，請務必點擊右下方藍勾以保存變更。</div>
+
+        <img src="/static/usage_images/image115.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">
+          點擊下方「Line」圖示，會前往本專題Line官方帳號的連結，若電腦版Lin正在開啟中，<br>則可直接在電腦版加入官方帳號。若未開啟，<br>則會顯示QRCode供使用者以手機Line掃描加入。</div>
+
+        <img src="/static/usage_images/image132.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">官方帳號QRCode</div>
+
+        <img src="/static/usage_images/image166.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">若無法登入，可以在選單處點擊「登入協助」。</div>
+
+        <img src="/static/usage_images/image27.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">點擊「登入協助」後，會跳轉到協助處理頁面。可以根據所需選擇協助方式。</div>
+
+        <div class="col-12">
+          <hr>
+          <div class="fs-3 fw-bold text-center" id="其他說明">其他說明</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image50.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">有人登入時，會傳送通知Email到使用者綁定的信箱。<br>通知使用者帳號已被登入。<br>避免在完全不知情的狀況下有人登入帳號，<br>並執行違法操作。
+        </div>
+
+        <img src="/static/usage_images/image51.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">可以按右上角的「太陽／月亮」 切換主題，<br>目前僅提供「明亮」以及「極黑」主題。</div>
+
+
+        <div class="col-12">
+          <div class="fs-5 fw-bold text-center mt-3" id="發生錯誤處理流程">發生錯誤處理流程</div>
+          <hr>
+        </div>
+
+        <img src="/static/usage_images/image117.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">畫面為問題回報器，在遭遇問題時可以向管理員通報，<br>若未登入，則需要使用者輸入可聯繫的電子信箱。</div>
+
+        <img src="/static/usage_images/image139.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">主要使用情況為，系統提示發生錯誤時，如圖。</div>
+
+        <img src="/static/usage_images/image92.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">系統提示發生錯誤、或用戶發現使用上的問題等等，<br>只需要按下右下角的紙飛機(問題回報鈕)，<br>就可以使用問題回報器通知管理員。</div>
+
+        <img src="/static/usage_images/image78.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-break">回報時，請盡量詳述問題發生時的使用情境，<br>並回報問題發生時間，以便追溯。</div>
+
+        <img src="/static/usage_images/image44.png" class="w-50 img-thumbnail border-primary mb-2 p-1 col-6" />
+        <div class="col-6 text-beak">按下下方的送出鈕送出通報，通報成功時會跳出提示，在提示跳出前，請勿關閉頁面或網路。</div>
+        <div class="col-12 py-5 my-1"></div>
+      </div>
+    </div>
+  </div>
+  {{footer|safe}}
+  <script>
+    $(() => {
+      $("footer").remove()
+      $("img").each(function () { $(this).addClass("img-fluid") })
+
+      // $(".scrol").click(function(){
+      //   $("#contain").stop().animate({
+      //       scrollTop: $($(this).attr("d-target")).offset().top
+      //   },800)
+      // })
+    })
+  </script>
+</body>
+</html>

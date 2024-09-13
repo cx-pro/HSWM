@@ -1,0 +1,27 @@
+<p>&nbsp;</p>
+<div>
+  <form action="/help2" method="post">
+  <fieldset class="form-floating">
+    <input type="email" name="email" id="email" class="form-control" placeholder=" " autocomplete="off">
+    <label for="email" >輸入在本系統使用的電子郵件</label>
+    <br/>
+    <div class="alert alert-warning" style="display:{{warn[0]}};width:50%;margin-left:25%;">電子郵件為空或不存在</div>
+  </fieldset>
+    <p></p>
+    <hr>
+    <p></p>
+    <br>
+  <fieldset class="form-floating">
+    <textarea name="auth" id="auth" class="form-control" rows="5" style="height:30vh;" placeholder=" " autocomplete="off"></textarea>
+    
+    <label for="auth">~~身分證明資料~~
+如全名、班級、科別、教導班級(僅教師)、電子郵件等。</label>
+  </fieldset>
+    <p></p>
+  <div class="alert alert-info text-success fw-bold">由於本類請求有資安風險，故會交由系統管理員審核，請盡量詳細地提供能證明您身分的資訊。</div>
+    <div>
+      <input type="submit" value="送出" class="btn btn-lg btn-primary">
+      <input type="reset" value="重設" class="btn btn-lg btn-secondary">
+    </div>
+  </form>
+</div>

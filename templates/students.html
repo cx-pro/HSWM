@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜班級成員</title>
+</head>
+<body>
+  {{header|safe}}
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">身分設定</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <font class="fw-bold fs-3">請選擇該學生身分</font>
+        <p></p>
+        <div class="form-check form-switch">
+          <form id="form">
+          <input class="form-check-input checks" type="checkbox" name="asistnt" value="True" role="switch" id="asistnt">
+          <label class="form-check-label fw-bold" for="asistnt">選為小老師</label>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary minecancel" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary fw-bold minecheck" id="">確認變更</button>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="container border rounded overflow-x-scroll">
+    <p class="text-primary fs-1">班級{{" "+cls if cls else "成員"}}</p>
+    <table class="table text-start">
+      <tr>
+        <th>編號／學號</th>
+        <th>全名</th>
+        <th>電子郵件</th>
+        <th>個人檔案</th>
+        <th>積分</th>
+        {%if current_user.is_teacher%}
+        <th>操作</th>
+        {%endif%}
+      </tr>
+      {%for k,v in data.items()%}
+      <tr>
+        <td>{{v["number"]}}</td>
+        <td>{{v["fullname"]}}</td>
+        <td>{{emails.get(k,"無")}}</td>
+        <td><a href="/@{{k}}"><button type="button" class="btn btn-outline-primary">前往</button></a></td>
+        <td>{{sp[k]["sum"]}}</td>
+        {%if current_user.is_teacher%}
+        <td><button type="button" class="btn btn-outline-primary mineset" data-bs-toggle="modal" id="S{{k}}" data-bs-target="#exampleModal">身分設定</button></td>
+        {%endif%}
+      </tr>
+      {%endfor%}
+    </table>
+  </div>
+  {{footer|safe}}
+<script>
+  $(function(){
+    $(document).off('click', '.minecancel').on('click', '.minecancel', function (e) {
+      $("#form").trigger("reset");
+    });
+    $(document).off('click', '.mineset').on('click', '.mineset', function (e) {
+      $(".minecheck").attr("id",$(this).attr("id").slice(1));
+      $.getJSON("/tskn/students{{cls}}?stu="+$(this).attr("id").slice(1),function(result){
+        $("#asistnt").attr("checked",result["result"]);
+      });
+    });
+    
+    $(document).off('click', '.minecheck').on('click', '.minecheck', function (e) {
+      $.ajax({
+        url:"/tskn/students{{cls}}?stu="+$(this).attr("id"),
+        method:"post",
+        data:{"set":$("#asistnt").is(":checked")},
+        success:location.replace(location)
+      });
+      
+    });
+    
+  });
+  
+</script>
+</body>
+</html>

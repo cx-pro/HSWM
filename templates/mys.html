@@ -1,0 +1,79 @@
+<div class="modal fade dd" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">確認</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <font class="fw-bold fs-3">確認刪除此問題？</font>
+        <br>
+        <font class="fw-bold text-warning fs-4">此操作會一併移除該問題之留言</font>
+        <br>
+        <font class="fw-bold text-danger fs-3">此操作無法復原！！</font>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger fw-bold minedelete" id="">確定刪除</button>
+        <button type="button" class="btn btn-secondary minecancel" data-bs-dismiss="modal">取消</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="album py-5">
+    <div class="container">
+      <div class="row row-cols-1 g-1">
+
+        {% if data %}
+          {%for key,value in data.items()%}
+              <div class="col">
+                <div class="card shadow-sm">
+                  <div class="card-body">
+                    <div class="fw-bold">
+                      <strong class="float-start fs-5">{{value["title"]}}</strong><small class="text-muted float-end">{{value["cls"]}}</small>
+                    </div>
+                    <p class="my-5"></p>
+                    <div class="d-flex justify-content-between align-items-center">
+                      <small class="text-muted"></small>
+                      <div class="btn-group">
+                        <button type="button" id="/qa/e{{key}}" class="btn btn-outline-primary minebtn" style="width:25%;">編輯</button>
+                        <button type="button" id="/qa/q{{key}}" class="btn btn-outline-secondary minebtn" style="width:25%;">檢視</button>
+                        <button type="button" id="d{{key}}" data-bs-toggle="modal" data-bs-target="#exampleModal" class="btn btn-outline-danger minedele" style="width:25%;">刪除</button>
+                      </div>
+                      <small class="text-muted">{{value["date"]}}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p></p>
+          {%endfor%}
+        {%else%}
+          <p class="fw-bold fs-2">您尚沒有發問過。</p>
+          <div class="fs-4 text-center text-primary fw-bold" style="cursor:pointer;" onclick="cl('/qa/add')">
+            馬上發問
+          </div>
+        {%endif%}
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="mt-auto mb-0">
+  <hr>
+  <p class="text-muted fs-5 fw-bold">到最底了</p>
+</footer>
+<script>
+  $(function() {
+    {%if request.args.get("d")%}
+      $(".dd").modal("show")
+    
+      $(".minedelete").attr("id","{{request.args.get("d")}}");
+    {%endif%}
+    $(".minedele").click(function(e){
+      $(".minedelete").attr("id",$(this).attr("id").slice(1));
+    });
+    $(".minecancel").click(function(e){
+      $(".minedelete").attr("id","");
+    });
+  });
+</script>

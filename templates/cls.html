@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜班級行事曆</title>
+</head>
+<body>
+  {{header|safe}}
+  <div class="container text-center">
+    <form method="post" class="mx-auto text-center">
+      <input type="hidden" name="role" value="tch">
+      <button type="submit" class="btn btn-lg btn-outline-primary mt-5" style="width:20rem;max-width:95vw;">我要派作業</button>
+    </form>
+    <form method="post" class="mx-auto text-center">
+      <input type="hidden" name="role" value="stu">
+      <button type="submit" class="btn btn-lg btn-outline-primary mt-5" style="width:20rem;max-width:95vw;">我要看作業</button>
+    </form>
+  </div>
+  {{footer|safe}}
+</body>
+</html>

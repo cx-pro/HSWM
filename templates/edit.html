@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="900"/>
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜作業編輯</title>
+    <style>
+      *{
+        text-align:center;
+        margin:0;
+        padding:0;
+      }
+      @keyframes foot {
+        0%
+        {
+        transform:translateX(-25%)  
+        }
+        100%
+        {
+          transform:translateX(25%)  
+        }
+      }
+      .warn{
+        animation:foot 40s infinite;
+      }
+      
+    </style>
+</head>
+<body>
+    {{header|safe}}
+  
+  {%if message%}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle pt-5">
+    <div class="toast align-items-center show mt-5 fade bg-warning fw-bold text-light" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{message}}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="aja('msg')"></button>
+      </div>
+    </div>
+    </div>
+  {%endif%}
+  <div class="alert alert-warning mx-auto text-start" style="width:50rem;max-width:80%">為維護學生權益，表單送出後，指派時間會<font class="fw-bold">變更為現在時間</font>。<br>編輯後若未自動刷新，請重整頁面，以看到更改後的內容。<br><font class="text-primary fw-bold">送出新增後會傳送通知至應用程式</font></div>
+    <p></p>
+  <marquee direction="right" class="text-center" scrollamount="2"><div class="alert m-0 p-0 p-2 alert-info" style="max-width:25rem">本頁面每15分鐘自動刷新，請注意。</div></marquee>
+    <p></p>
+  <div class="container p-1" style="margin-bottom:25rem">
+      {%for key,value in items%}
+    <div class="text-start mt-5" id="{{id}}-{{key}}">
+      <div class="btn-group">
+        <input type='button' class="btn btn-lg btn-primary fw-bold" onclick="location.replace('./edit?id={{id}}&class={{cls}}')" value="重整頁面">
+        <input type="button" class="btn btn-lg btn-secondary fw-bold" value="返回行程表" onclick="location.replace('./class{{cls}}')">
+      </div>
+    </div>
+    <div class="border rounded p-2">
+    <div class="w-100 text-start fw-bold fs-5 text-primary">{{int(key)+1}}.</div>
+      <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="index" value="{{key}}" id="{{cls}}-{{id}}-{{key}}" readonly>
+    <div class="row text-center fs-5 fw-bold g-0 p-1 justify-content-around">
+      <div class="col text-center px-auto">
+        <div class="bg-primary-subtle border-bottom">指派時間</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center"><input type="datetime-local" class="form-control border" name="start_time" value="{{value['start_time'].replace(' ','T')}}" readonly style="width:95%;"></div>
+      </div>
+      <div class="w-100 d-block d-sm-none"></div>
+      <div class="col text-center px-auto">
+        <div class="bg-primary-subtle border-bottom">截止時間</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center">
+          <input type="date" name="end_date" class="form-control border border-bottom-0 border-2 rounded-0 rounded-top" min="{{value['start_time'][:-6]}}" value="{{value['end_date']}}" style="width:95%;">
+          <select name="end_time" id="end_time" class="form-select border border-2 border-top-0 rounded-0 rounded-bottom" style="width:95%;">
+            <option value="none">請選擇節數</option>
+            <option value="早自習" {%if value["end_time"]=="早自習"%}selected{%endif%} >早自習</option>
+            <option value="第一節" style="" {%if value["end_time"]=="第一節"%} selected{%endif%}>第一節</option>
+            <option value="第二節" {%if value["end_time"]=="第二節"%} selected{%endif%}>第二節</option>
+            <option value="第三節" {%if value["end_time"]=="第三節"%} selected{%endif%}>第三節</option>
+            <option value="第四節" {%if value["end_time"]=="第四節"%} selected{%endif%}>第四節</option>
+            <option value="午  休" {%if value["end_time"]=="午  休"%} selected{%endif%}>午  休</option>
+            <option value="第五節" {%if value["end_time"]=="第五節"%} selected{%endif%}>第五節</option>
+            <option value="第六節" {%if value["end_time"]=="第六節"%} selected{%endif%}>第六節</option>
+            <option value="第七節"{%if value["end_time"]=="第七節"%} selected{%endif%}>第七節</option>
+            <option value="第八節"{%if value["end_time"]=="第八節"%} selected{%endif%}>第八節</option>
+            <option value="第九節"{%if value["end_time"]=="第九節"%} selected{%endif%}>第九節</option>
+          </select>
+        </div>
+      </div>
+      <div class="w-100 d-block d-sm-none"></div>
+      <div class="col text-center px-auto">
+        <div class="bg-primary-subtle border-bottom">標題</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center"><input type="text" name="title" class="form-control border" value="{{value['title']}}" style="width:95%;"></div>
+      </div>
+      <div class="w-100 d-block d-sm-none"></div>
+      <div class="col text-center px-auto">
+        <div class="bg-primary-subtle border-bottom">內容</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center"><textarea class="form-control border" name="content" style="width:95%;">{{value["content"]}}</textarea></div>
+      </div>
+      <div class="w-100 d-block d-sm-none"></div>
+      <div class="col text-center px-auto">
+        <div class="bg-primary-subtle border-bottom">指派者</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center form-control">{{Users[value.get('tasker','Unauthorized')]['fullname']}}</div>
+      </div>
+    </div>
+        <div class="row g-0 justify-content-around text-center">
+          <div class="col p-2 border-top btn-group"><input type="submit" value="送出更改" class="btn btn-lg btn-primary fw-bold"><a href="./del{{id}}?class={{cls}}&key={{key}}" class="btn btn-lg btn-danger fw-bold">刪除</a></div>
+        </div>
+      <div class="bg-primary-subtle {%if not value.get('files')%}d-none{%endif%} text-center p-1 fw-bold fs-4">檔案清單</div>
+    <div class="row row-cols-2 justify-content-around p-2">
+      {%for i in value["files"]%}
+        <div class="col img-thumbnail overflow-scroll">
+          <button class="btn-close float-end bg-danger dele" data-bs-placement="bottom" data-bs-toggle="tooltip" data-bs-title="刪除" 
+        data-bs-custom-class="danger-tooltip" type="button" id="{{cls}}-{{id}}-{{key}}@{{i}}"></button>
+          <a href="/{{i}}" class="text-decoration-none fw-bold text-primary">{{get_filename(i)}}</a>
+          {%if i in filem%}
+          <div><img src="/{{i}}" class="w-100 float-end text-end"></div>
+          {%endif%}
+      </div>
+      <div class="w-100"></div>
+      {%endfor%}
+    </div>
+        
+  <input class="form-control tfile" name="uploaded_files" type="file" multiple>
+      </form>
+    </div>
+    {%endfor%}
+</div>
+  </div>
+{{footer|safe}}
+<script>
+  $(()=>{
+    function round2(num) {
+      return +(Math.round(num + "e+2")  + "e-2");
+      }
+    $(".dele").click(function(){
+      $.ajax({
+        url:location,
+        method:"post",
+        data:{"delete_file":this.id,"index":$("#"+this.id.slice(0,this.id.indexOf("@"))).val()},
+        success:function(){setTimeout(location.reload(),1500)}
+      })
+    })
+    $(".tfile").fileinput({
+        'showUpload': false,
+        "showRemove":false,
+        'dropZoneTitle':"拖放至此即可上傳",
+        'msgPlaceholder':"上傳檔案",
+        "browseLabel":"瀏覽",
+        "msgProcessing":"載入中"
+    });
+  })
+</script>
+</body>
+</html>

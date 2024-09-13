@@ -1,0 +1,56 @@
+<h1 class="ms-5">{{y}}年{{m}}月</h1>
+<div class="btn-group ms-5">
+  <button id="pre" class="btn btn-outline-primary">前一月</button>
+  <button id="now" class="btn btn-outline-primary">本月</button>
+  <button id="next" class="btn btn-outline-primary">後一月</button>
+</div>
+<div class="w-100 d-block d-sm-none"></div>
+<div class="text-light p-1 my-2 mx-auto fw-bold text-center rounded-2 bg-primary">
+  每一格都可以往下捲動喔!!
+  <span class="visually-hidden"></span>
+</div>
+<hr>
+<p></p>
+<div class="container" style="min-height:50vh">
+  <div class="row">
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期一'%}text-success{%endif%}">星期一</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期二'%}text-success{%endif%}">星期二</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期三'%}text-success{%endif%}">星期三</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期四'%}text-success{%endif%}">星期四</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期五'%}text-success{%endif%}">星期五</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期六'%}text-success{%else%}text-danger{%endif%}">星期六</div>
+    <div class="col border p-1 text-center bg-primary-subtle border-primary fw-bold {%if todaya=='星期日'%}text-success{%else%}text-danger{%endif%}">星期日</div>
+  </div>
+<div id="calendar" class="row rounded-3" style="height:100%;">
+  {%for i in tks%}
+  {%if tks.index(i)%7==0%}
+  <div class="w-100"></div>
+  {%endif%}
+  <div class="col border p-1 text-center overflow-y-scroll {%if int(i[0].split('-')[1])!=int(m)%}bg-secondary text-light{%endif%} {%if today==i[0]%}border-success border-2{%endif%}" style="height: 10rem;">
+    <div class="text-start {%if today==i[0]%}text-success fw-bold{%endif%}">{{i[0].split("-")[2]}}</div>
+    {%if len(i)==2%}
+    {%for j in i[1]%}
+    <a href="/tskn/edit?id={{j.split('-')[0]}}&class={{cls}}#{{j}}" class="btn btn-primary p-1 mb-1 fw-bold" style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .78rem;width:95%;">{{task[j]["title"][:5]}}{%if len(task[j]["title"])>5%}...{%endif%}</a>
+    {%endfor%}
+    {%endif%}
+  </div>
+  {%endfor%}
+</div>
+</div>
+<script>
+  $(()=>{
+    var loading_spinner='<div class="text-primary position-absolute top-50 start-50 d-inline translate-middle" role="status"><a onclick=location.replace("/") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+    $("#next").click(function(){
+      $("#contain").html(loading_spinner)
+      $("#contain").load("{{request.path}}?y={%if int(m)+1>12%}{{int(y)+1}}{%else%}{{y}}{%endif%}&m={%if int(m)+1>12%}{{1}}{%else%}{{int(m)+1}}{%endif%}")
+    })
+    $("#pre").click(function(){
+      $("#contain").html(loading_spinner)
+      $("#contain").load("{{request.path}}?y={%if int(m)-1<1%}{{int(y)-1}}{%else%}{{y}}{%endif%}&m={%if int(m)-1<1%}{{12}}{%else%}{{int(m)-1}}{%endif%}")
+    })
+    $("#now").click(function(){
+      $("#contain").html(loading_spinner)
+      $("#contain").load("{{request.path}}?y={{today.split('-')[0]}}&m={{int(today.split('-')[1])}}")
+    })
+  })
+</script>

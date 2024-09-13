@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜班級管理</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+     <script>
+       function onSubmit(token) {
+          // Example starter JavaScript for disabling form submissions if there are invalid fields
+          // Fetch all the forms we want to apply custom Bootstrap validation styles to
+          var flag=true;
+          var form=document.querySelector("#form");
+          if (!form.checkValidity()) {
+            $("#form").addClass("was-validated");
+            flag=false;
+            grecaptcha.reset();
+          }
+          if(flag){
+            var res=grecaptcha.getResponse();
+            if(res){
+            $("#form").submit();
+            }else{
+              $(".alert_contain").html('<div class="alert alert-danger alert-dismissible fade show" role="alert"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>reCaptcha驗證失敗</div>');
+            }
+          }
+       }
+     </script>
+</head>
+<body>
+  {{header|safe}}
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">變更班級號</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="modal-body needs-validation" id="form" method="post" >
+          
+          <div class="form-floating">
+            <input type="text" name="new" class="form-control" style="margin-bottom: -1px;border-bottom-right-radius: 0;border-bottom-left-radius: 0;" id="floatingInput" placeholder="班級號" autocomplete="off" required value="{{cls}}">
+            <label for="floatingInput">班級號</label>
+            <div class="invalid-tooltip">
+              請輸入班級號
+            </div>
+          </div>
+           <input value="保存" class="w-100 btn btn-lg fw-bold btn-primary g-recaptcha" type="submit" data-sitekey="6LeT8uskAAAAALelzHltTtrms9KMT1zK4K_jEewA" data-callback="onSubmit">
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="my-5"></p>
+  <div class="container overflow-scroll">
+    <h1>管理 {{cls}} <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">變更</button></h1>
+    <hr>
+    <p></p>
+    <div class="btn-group">
+          <button class="text-decoration-none btn btn-sm btn-outline-primary fw-bold" id="select_all">全選</button>
+          <button class="text-decoration-none btn btn-sm btn-outline-secondary fw-bold" id="select_all_tch">全選教師</button>
+          <button class="text-decoration-none btn btn-sm btn-outline-info fw-bold" id="select_all_stu">全選學生</button>
+          <button class="text-decoration-none btn btn-sm btn-outline-success fw-bold" id="cancel_target">取消所選</button>
+    </div>
+    <p></p>
+    <div class="row justify-content-around text-center" id="contain">
+      <div class="col-12 col-md-3 border rounded mb-2 p-2" style="width:20rem">
+        <div class="text-center border-bottom border-2 p-1 fw-bold w-100">該班教師</div>
+        <div class="overflow-scroll" style="max-height:10rem;" id="tch_contain">
+          {%for i in tchrs%}
+          <button id="{{i[0]}}" class="text-decoration-none target btn btn-sm btn-outline-primary m-1 w-75 fw-bold">
+            {{i[1]["fullname"]}}
+          </button>
+          {%endfor%}
+        </div>
+      </div>
+      
+      <div class="col-12 col-md-3 border rounded mb-2 p-2" style="width:20rem">
+        <div class="text-center border-bottom border-2 p-1 fw-bold w-100">班級成員</div>
+        <div class="overflow-scroll" style="max-height:10rem;" id="stu_contain">
+          {%for i in stus%}
+          <button id="{{i[0]}}" class="text-decoration-none target btn btn-sm btn-outline-primary m-1 w-75 fw-bold">
+            {{i[1]["fullname"]}}
+          </button>
+          {%endfor%}
+        </div>
+      </div>
+      
+      <div class="col-12 col-md-3 border rounded mb-2" style="width:20rem">
+        <div class="text-center border-bottom border-2 p-1 fw-bold w-100">操作</div>
+        <div class="overflow-scroll" style="max-height:10rem;">
+          <button class="text-decoration-none btn btn-sm btn-outline-primary m-1 w-75 fw-bold" id="profile_view">檢視個人檔案</button>
+<!--           <button class="text-decoration-none btn btn-sm btn-outline-primary m-1 w-75 fw-bold" id="edit_class_name" data-bs-toggle="modal" data-bs-target="#exampleModal">編輯班級名稱</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exampleModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" id="exampleModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="staticBackdropLabel">編輯班級名稱</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" name="new" class="form-control" id="new_name" value="{{cls}}">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">關閉</button>
+          <button type="button" id="new_name_sub" class="btn btn-primary fw-bold">確定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      var target=[]
+      $(".target").click(function(){
+        if(!$(this).hasClass("active")){
+          target.push(this.id)
+          $(this).addClass("active")
+        }else{
+          target.splice(target.indexOf(this.id), 1)
+          $(this).removeClass("active")
+        }
+      })
+      $("#profile_view").click(function(){
+        target.forEach(function(value){
+          window.open("/@"+value, "_blank");
+        })
+      })
+      $("#cancel_target").click(function(){
+        $("#contain .active").each(function(){
+          $(this).removeClass("active")
+        })
+        target=[]
+      })
+      $("#select_all").click(function(){
+        $("#contain .target").each(function(){
+          target.push(this.id)
+          $(this).addClass("active")
+        })
+      })
+      $("#select_all_tch").click(function(){
+        $("#contain .active").each(function(){
+          $(this).removeClass("active")
+        })
+        target=[]
+        $("#tch_contain .target").each(function(){
+          target.push(this.id)
+          $(this).addClass("active")
+        })
+      })
+      $("#select_all_stu").click(function(){
+        $("#contain .active").each(function(){
+          $(this).removeClass("active")
+        })
+        target=[]
+        $("#stu_contain .target").each(function(){
+          target.push(this.id)
+          $(this).addClass("active")
+        })
+      })
+      $("#new_name_sub").click(function(){
+        if($("#new_name").val()==""){
+          $("#toast_container").html(`
+    <div class="toast-container position-fixed top-0 start-50 translate-middle pt-5">
+    <div class="toast align-items-center show mt-5 fade bg-primary text-light" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">請輸入有效名稱，不得為空</div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+    </div>`)
+        }else{
+          $.ajax({
+            url:location,
+            method:"post",
+            data:{"new":$("#new_name").val()},
+            success:function() {location.reload()},
+            error:function(data){
+          $("#toast_container").html(`
+    <div class="toast-container position-fixed top-0 start-50 translate-middle pt-5">
+    <div class="toast align-items-center show mt-5 fade bg-primary text-light" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">`+
+              data.responseText+`</div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+    </div>`)
+            }
+          })
+        }
+      })
+    })
+  </script>
+<div id="toast_container"></div>
+</body>
+</html>

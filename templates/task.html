@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GkWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜作業檢視</title>
+    <style>
+      .table-primary{
+        width:20%;
+      }
+    </style>
+</head>
+<body>
+    {{header|safe}}
+  <div class="container">
+    <div class="alert alert-info w-50 text-center mx-auto fw-bold">以下內容文字僅顯示開頭10字，<br>點擊內容文字可看全部。</div>
+    <a href="/sche/schedule" class="mx-auto text-center text-decoration-none w-50 d-flex align-items-center"><button class="btn btn-lg btn-primary fw-bold w-50 mx-auto mb-5">回到行程表</button></a>
+    
+    <div class="accordion w-100" id="accordionDate">
+      {%set co=namespace(value=-1)%}
+      {%for k,c in content%}
+
+      {% set co.value = co.value + 1  %}
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button class="accordion-button{%if co.value!=0%} collapsed{%endif%} fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{k}}" aria-expanded="{{'true' 
+     if co.value==0 else 'false'}}" aria-controls="collapse{{k}}" id="title{{k}}">
+                {{c["title"]}}
+              </button>
+            </h2>
+            <div id="collapse{{k}}" class="accordion-collapse collapse{%if co.value==0%} show{%endif%}" data-bs-parent="#accordionDate">
+              <div class="accordion-body user-select-auto">
+                <div class="w-100 d-flex mb-3">
+                  <div class="small p-1 rounded bg-primary text-light fw-bold ms-2">{{c["start_time"]}}</div>
+                  <div class="small p-1 rounded bg-primary text-light fw-bold ms-2" id="end_date{{k}}">{{c["end_date"]}}</div>
+                  <div class="small p-1 rounded bg-primary text-light fw-bold ms-2" id="end_time{{k}}">{{c["end_time"]}}</div>
+                  <div class="small p-1 rounded bg-primary text-light fw-bold ms-2">{%if "tasker" in c%}{{Users[c["tasker"]]["fullname"]}}{%else%}個人記事{%endif%}</div>
+                </div>
+                <pre class="text-start ms-3 fs-5" id="content{{k}}">{{c["content"]|safe}}</pre>
+                {%if c["files"]%}
+                <div class="">
+                  <h3>附檔</h3>
+                  <hr>
+                  {%for fp in c["files"]%}
+                    {%if not fp in filem%}
+                    <a href="/{{fp}}"><i class="bi bi-file-earmark fs-3"></i></a>
+                    {%endif%}
+                  {%endfor%}
+                </div>
+                <div id="carouselPics" class="carousel slide mx-auto" style="max-width:50%;" data-bs-ride="carousel">
+
+                  <div class="carousel-indicators">
+                    {%set c2=namespace(value=-1)%}
+                    {%for img in c["files"]%}
+                      {%if img in filem%}
+                        {% set c2.value = c2.value + 1  %}
+                        <button type="button" data-bs-target="#carouselPics" data-bs-slide-to="{{c2.value}}" {%if c2.value==0%} class="active" aria-current="true"{%endif%}></button>
+                      {%endif%}
+                    {%endfor%}
+                  </div>
+                  <div class="carousel-inner">
+                    {%set c2=namespace(value=-1)%}
+                    {%for img in c["files"]%}
+                      {%if img in filem%}
+                        {% set c2.value = c2.value + 1  %}
+
+                        <div class="carousel-item {%if c2.value==0%}active{%endif%}">
+                          <img src="/{{img}}" class="d-block w-100">
+                        </div>
+                      {%endif%}
+                    {%endfor%}
+                  </div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselPics" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">上一張</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselPics" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">下一張</span>
+                  </button>
+                </div>
+                {%endif%}
+              </div>
+            </div>
+          </div>
+      {%endfor%}
+
+    </div>
+  </div>
+{{footer|safe}}
+</body>
+</html>

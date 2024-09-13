@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  </head>
+  <title>高中職小幫手｜排程系統</title>
+</head>
+<body>
+<div>
+    {{header|safe}}
+  <div>
+    <div class="btn-group my-3">
+      <a href='./add{{next}}' class="btn btn-lg fw-bold btn-outline-success" type='button'>新增工作</a>
+      <a href="/tskn/students{{next}}" class="btn fw-bold btn-lg btn-outline-primary" type="button">班級成員</a>
+      <button type="button" class="btn btn-outline-info fw-bold btn-lg" id="switch">切換為<span id="mode">月曆</span></button>
+    </div>
+  <form action="/schqrc" method="post" class="mt-2">
+    <input type="hidden" name="cls" value="{{current_user.clas or next}}">
+    <button type="submit" class="btn btn-outline-success fw-bold btn-lg">產生直連 QR CODE</button>
+  </form>
+  <div style="background-color:skyblue;">
+    <p style="color: #FFF;-webkit-text-stroke: 0.4px #FFF;background-color:skyblue;"> &nbsp;&nbsp;小提示｜tips：若遭遇顯示異常，請嘗試調整視窗大小 ( 電腦使用者 )。</p>
+  </div>
+    <div id="contain">
+      <div id="schedule">
+        <h1 class="ms-5">{{int(get_today("%m"))}}月</h1>
+        <table class="table-responsive align-middle border border-info table table-striped" style="width:100%;text-align:center;">
+          <thead>
+          <tr class="table-primary border border-info fw-bold">
+            <td class="table-primary border border-info">
+              <span style="background-color:green;color:green;">綠</span><span style="color:green;">色</span>標註為今日
+            </td>
+          {%for i,j in l%}<td class="table-primary border border-info" style="color:{{j}};width:12.5%;">{{week_date()[days.index(i)]}}<br>{{i|safe}}</td>{%endfor%}
+          </tr>
+          </thead>
+          <tbody class="table-striped">
+          {%for k,m,o in cls%}
+            <tr class="border border-info">
+              <td class="border border-info fw-bold">{{k|safe}}</td>
+              {%for n,hid in zip(m,o)%}
+              <td class="table-striped border border-info" id='{{n}}'><a style="size:min-content;" href="./edit?id={{n}}&class={{next}}"><button class="btn border border-primary btn-outline-primary" style="--bs-border-opacity: 1.2;width:80%;" {{hid}}>查看事項</button></a></td>
+              {%endfor%}
+            </tr>
+          {%endfor%}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{{footer|safe}}
+<script>
+  $(()=>{
+    var c=0
+    var loading_spinner='<div class="text-primary position-absolute top-50 start-50 d-inline translate-middle" role="status"><a onclick=location.replace("/") class="text-decoration-underline" style="cursor:pointer;"><div class="spinner-border"><span class="visually-hidden">Loading...</span></div></a></div>';
+    {%if current_user.settings%}
+    {%if current_user.settings.get("sche_mode")=="cal"%}
+      c=1
+      $("#contain").html(loading_spinner)
+      $("#contain").load("/tskn/calendar"+"{{request.path[request.path.find('class')+5:]}}")
+      $("#mode").html("週曆")
+    {%endif%}
+    {%endif%}
+    $("#switch").click(function(){
+      $("#contain").html(loading_spinner)
+    if(c==0){
+      c++
+      $("#contain").load("/tskn/calendar"+"{{request.path[request.path.find('class')+5:]}}")
+      $("#mode").html("週曆")
+    }else{
+      c=0
+    $("#contain").load(location+" #schedule")
+      $("#mode").html("月曆")
+      }
+    })
+  })
+</script>
+</body>
+</html>

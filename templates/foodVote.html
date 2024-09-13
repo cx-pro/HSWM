@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜訂餐統計</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+  <style>
+    /* CSS */
+    .button-39 {
+      background-color: #FFFFFF;
+      border: 1px solid rgb(209,213,219);
+      border-radius: .5rem;
+      box-sizing: border-box;
+      color: #111827;
+      font-family: "Inter var",ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+      font-size: .875rem;
+      font-weight: 600;
+      line-height: 1.25rem;
+      padding: .75rem 1rem;
+      text-align: center;
+      text-decoration: none #D1D5DB solid;
+      text-decoration-thickness: auto;
+      box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    
+    .button-39:hover {
+      background-color: rgb(249,250,251);
+    }
+    
+    .button-39:focus {
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+    }
+    
+    .button-39:focus-visible {
+      box-shadow: none;
+    }
+  </style>
+  <style>
+    .bs-wizard {margin-top: 40px;}
+
+/*Form Wizard*/
+.bs-wizard {border-bottom: solid 1px #e0e0e0; padding: 0 0 10px 0;}
+.bs-wizard > .bs-wizard-step {padding: 0; position: relative;}
+.bs-wizard > .bs-wizard-step + .bs-wizard-step {}
+.bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
+.bs-wizard > .bs-wizard-step .bs-wizard-info {color: #999; font-size: 14px;}
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot {position: absolute; width: 30px; height: 30px; display: block; background: #0dcaf0; top: 45px; left: 50%; margin-top: -15px; margin-left: -15px; border-radius: 50%;cursor:pointer;} 
+.bs-wizard > .bs-wizard-step > .bs-wizard-dot:after {content: ' '; width: 14px; height: 14px; background: #0d6efd; border-radius: 50px; position: absolute; top: 8px; left: 8px; } 
+.bs-wizard > .bs-wizard-step > .progress {position: relative; border-radius: 0px; height: 8px; box-shadow: none; margin: 20px 0;}
+.bs-wizard > .bs-wizard-step > .progress > .progress-bar {width:0px; box-shadow: none; background: #0dcaf0;}
+.bs-wizard > .bs-wizard-step.complete > .progress > .progress-bar {width:100%;}
+.bs-wizard > .bs-wizard-step.active > .progress > .progress-bar {width:50%;}
+.bs-wizard > .bs-wizard-step:first-child.active > .progress > .progress-bar {width:0%;}
+.bs-wizard > .bs-wizard-step:last-child.active > .progress > .progress-bar {width: 100%;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot {background-color: #f5f5f5;}
+.bs-wizard > .bs-wizard-step.disabled > .bs-wizard-dot:after {opacity: 0;}
+.bs-wizard > .bs-wizard-step:first-child  > .progress {left: 50%; width: 50%;}
+.bs-wizard > .bs-wizard-step:last-child  > .progress {width: 50%;}
+.bs-wizard > .bs-wizard-step.disabled a.bs-wizard-dot{ pointer-events: none; }
+/*END Form Wizard*/
+  </style>
+  {%if not settings["vote_cut"]%}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">新增投票選項</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-floating">
+          <input type="text" class="form-control" id="name" placeholder=" ">
+          <label for="name">選項內容</label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" id="add-option">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+  {%endif%}
+  <div class="container" id="outer-container">
+    {{sech|safe}}
+    {%if not settings["vote_cut"]%}
+    <div class="container">
+      <div class="fs-3 text-center fw-bold">{{settings.get("title")}}</div>
+      <div class="row bs-wizard fw-bold mb-5" style="border-bottom:0;">
+        <div class="col-4 bs-wizard-step active" id="pro-number">
+          <div class="text-center bs-wizard-stepnum">選擇座號</div>
+          <div class="progress"><div class="progress-bar progress-bar-striped"></div></div>
+          <a class="bs-wizard-dot" id="number"></a>
+          <div class="bs-wizard-info text-center"></div>
+        </div>
+        
+        <div class="col-4 bs-wizard-step disabled" id="pro-vote">
+          <div class="text-center bs-wizard-stepnum">投票</div>
+          <div class="progress"><div class="progress-bar"></div></div>
+          <a class="bs-wizard-dot" id="vote"></a>
+        </div>
+        
+        <div class="col-4 bs-wizard-step disabled" id="pro-done">
+          <div class="text-center bs-wizard-stepnum">完成</div>
+          <div class="progress"><div class="progress-bar"></div></div>
+          <a class="bs-wizard-dot" id="done"></a>
+        </div>
+      </div>
+      
+      <div id="contain-number" class="contain text-center">
+        <div class="form-floating mx-auto" style="width:20rem;max-width:95vw;">
+          <input id="f-number" type="number" class="form-control" min="1" max="34" placeholder=" ">
+          <label for="f-number">座號</label>
+        </div>
+        <button type="button" class="btn btn-primary mt-3 fw-bold mx-auto disabled" style="width:20rem;max-width:95vw;" id="number-next">下一步</button>
+      </div>
+      
+      <div class="mt-5 contain mx-auto" id="contain-vote">
+          <div class="row mx-auto gap-2 justify-content-center text-center" id="options-contain">
+            {%for i in data%}
+            <label class="col-12 button-39 col-xl-2 user-select-none rounded-3 border shadow py-3" for="vote{{i}}" style="cursor:pointer;">
+            <input class="form-check-input pe-none" type="radio" name="vote" id="vote{{i}}" value="{{i}}">
+              <span class="fs-5">{{i}}</span>
+            <div class="text-end float-end opacity-50">{{len(result[i])}}</div>
+            </label>
+            {%endfor%}
+            <label class="col-12 button-39 col-md-2 user-select-none rounded-3 border shadow py-3" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              <i class="bi bi-plus-square-dotted fs-4"></i>
+            </label>
+          </div>
+          <div class="mx-auto text-center mt-5">
+            <button class="shadow-lg border border-secondary fw-bold px-5 btn btn-light disabled" id="vote-sub" type="button">送出</button>
+          </div>
+      </div>
+    </div>
+  </div>
+  {%else%}
+  <h1 class="mt-5 text-center fw-bold text-success"><marquee direction="right" behavior="alternate">投票時間已結束</marquee></h1>
+  <p class="py-5"></p>
+  {%endif%}
+  {{footer|safe}}
+  <script>
+    $(()=>{
+      var ic1=`<i class="bi bi-list fs-1"></i>`
+      var ic2=`<i class="bi bi-x-lg fs-2"></i>`
+      $("#mynav").click(function(){
+        $(this).fadeOut(200,function(){
+          if($("#mynav").html()==ic1){
+            $("#mynav").html(ic2)
+          }else{
+            $("#mynav").html(ic1)
+          }
+        })
+        $(this).fadeIn(200)
+      })
+      $("header").remove()
+      $("footer").remove()
+      $(".contain").hide()
+      $("#contain-number").show()
+      $("#f-number").on('keyup change click', function (e) {
+        $("#number-next").html("下一步")
+        if(this.value!='' && this.value<=34 && this.value>0){
+          $('#number-next').removeClass('disabled')
+        }else{
+          $('#number-next').addClass('disabled')
+        }
+      })
+
+      $(".bs-wizard-dot").click(function(){
+        var m=["number","vote","done"]
+        if(!$(this).hasClass("disabled")){
+          var indm=m.indexOf(this.id)
+          $(".contain").fadeOut(200)
+          if(indm==0){
+            $("#contain-number").fadeIn(200)
+          }else{
+            $("#"+m[m.indexOf(this.id)-1]+"-next").click()
+          }
+        }
+      })
+      
+      $("input[name='vote']").change(function(){
+        if(this.value){
+          if($("#vote-sub").hasClass("disabled")){
+            $("#vote-sub").removeClass("disabled")
+          }
+        }else{
+          if(!$("#vote-sub").hasClass("disabled")){
+            $("#vote-sub").addClass("disabled")
+          }
+        }
+      })
+      
+      $("#vote-sub").click(function(){
+        $.ajax({
+          url:location,
+          method:"post",
+          data:{"name":$("input[name=vote]:checked").val(),"num":$("#f-number").val()},
+          success:function(data){
+            $("#outer-container").html(data)  
+          }
+        })
+      })
+      
+      $("#number-next").click(function(){
+        $.ajax({
+          url:location,
+          method:"post",
+          data:{"checknum":$("#f-number").val()},
+          success:function(data){
+            if(data=="F"){
+              $("#pro-number").removeClass("active")
+              $("#pro-number").addClass("complete")
+              $("#pro-vote").removeClass("disabled")
+              $("#pro-vote").addClass("active")
+              $("#contain-number").fadeOut(200)
+              $("#contain-vote").fadeIn(200)
+            }else{
+              $("#number-next").html("此座號已投票")
+              $("#number-next").addClass("disabled")
+              setTimeout(function(){
+              $("#number-next").removeClass("disabled")
+                $("#number-next").html("下一步")
+              },3000)
+            }
+          }
+        })
+      })
+
+      $("#add-option").click(function(){
+        var nval=$("#name").val()
+        if(!nval){return}
+        $.ajax({
+          url:location,
+          method:"post",
+          data:{"name":nval},
+          success:function(){
+            $("#name").val("")
+            $("#exampleModal").modal("hide")
+            $("#options-contain").load("/food/vote #options-contain")
+          }
+        })
+      })
+
+      
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+      const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+      const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    })
+  </script>
+</body>
+</html>

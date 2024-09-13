@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.2/jsoneditor.min.css" integrity="sha512-brXxIa/fpMfluh8HUWyrNssKy/H0oRzA0HhmipgfVwbXPamMUTZn1jEsvoGGwJYCRpSx4idujdul4vFwWgPROA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.2/jsoneditor.min.js" integrity="sha512-jhDajNRbXZ4gJ8SVzcuWTHbgSX66Dh98CwmAkhBHWVuEYVgY8G35rbZuRlQwrOcwEB6z5aYzxUptsSjgTGlCbA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜檢視資料</title>
+</head>
+<body>
+  {{header|safe}}
+  <style>
+  .custom-tooltip {
+    --bs-tooltip-bg: var(--bs-primary);
+    font-weight:bold;
+  }
+  </style>
+  {%if request.args.get("p").endswith(".json")%}
+  <div class="container overflow-y-scroll">
+      <a class="btn btn-outline-primary fw-bold fs-5 text-decoration-none" href="{{request.referrer}}"><i class="bi bi-arrow-return-left"></i></a>
+    <div class="btn-group my-3 ms-3">
+      <button type="button" class="btn btn-outline-danger fs-5 fw-bold edit">啟用編輯</button>
+      <button type="button" class="btn btn-outline-success fs-5 fw-bold send disabled">保存</button>
+    </div>
+    <div class="container">
+      <div id="editor_holder" class="rounded rounded-2" style="height:60vh"></div>
+    </div>
+  </div>
+  <script>
+    $(()=>{
+        const container = document.getElementById("editor_holder")
+        const options = {mode:"view"}
+        const editor = new JSONEditor(container, options)
+
+        // set json
+        const initialJson = {{data|safe}}
+        editor.set(initialJson)
+        $('.jsoneditor').addClass('rounded border border-2 border-primary');
+        $('.jsoneditor-tree').addClass('rounded');
+        $('.jsoneditor-menu').addClass('rounded-top');
+        $(".send").click(function(){
+          $.ajax({
+            url:"/wfile",
+            method:"post",
+            data:{"data":JSON.stringify(editor.get()),"file":"{{request.args.get('p')|safe}}"},
+            success:function(){history.back()}
+          })
+        })
+        $(".edit").click(function(){
+          if($(this).html()=="啟用編輯"){
+            editor.setMode("tree")
+            $(this).html("取消編輯")
+            $(this).removeClass("btn-outline-danger")
+            $(this).addClass("btn-outline-info")
+            $(".send").removeClass("disabled")
+          }else{
+            $(this).html("啟用編輯")
+            editor.setMode("view")
+            $(this).addClass("btn-outline-danger")
+            $(this).removeClass("btn-outline-info")
+            $(".send").addClass("disabled")
+          }
+        })
+    })
+  </script>
+  {%else%}
+    <div class="container">
+      <div class="container">
+        <div id="editor_holder" class="rounded rounded-2 border border-primary p-2 overflow-y-scroll" style="height:60vh">
+          <pre>{{data}}</pre>
+        </div>
+      </div>
+      <div class="text-center mt-5">
+        <a class="btn btn-outline-primary btn-lg fw-bold" style="width:20rem;" href="/adm/files">返回檔案櫃</a>
+      </div>
+    </div>
+  {%endif%}
+  {{footer|safe}}
+</body>
+</html>

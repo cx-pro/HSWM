@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜忘記密碼及問題回報</title>
+    <style>
+      body{
+        background-color: rgba(150, 150, 150, .6);
+        background-blend-mode: multiply;
+        background-image: url("static/pics/fgupcb.jpg");
+        background-size: cover;
+      }
+    </style>
+</head>
+<body>
+    {{header|safe}}
+  <div class="container border rounded p-2 bg-light-subtle">
+    <table class="table-responsive align-middle border border-success table table-striped">
+      <tr class="table-primary border border-success">
+        <th class="table-primary">時間</th>
+        <th class="table-primary">請求內容</th>
+        <th class="table-primary">電子信箱</th>
+        <th class="table-primary">狀態</th>
+        <th class="table-primary">動作</th>
+      </tr>
+      {%for email,data in datas%}
+      <tr class="bg-light-subtle border border-success">
+        <td class="td">{{data["time"]}}</td>
+        <td class="td">{{data["請求內容"]}}</td>
+        <td class="td">{{email}}</td>
+        <td class="td">{{data["stat"]}}</td>
+        <td class="td">
+            <a href="/fgupr?email={{email}}"><button class="btn btn-success">開啟</button></a>
+        </td>
+      </tr>
+      {%endfor%}
+    </table>
+  </div>
+{{footer|safe}}
+<script>
+  $(function(){
+    $("header").addClass("bg-light-subtle");
+    $("footer").addClass("bg-light-subtle");
+  })
+</script>
+</body>
+</html>

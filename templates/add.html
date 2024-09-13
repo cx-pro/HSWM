@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="refresh" content="900"/>
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜作業新增</title>
+    <style>
+      @keyframes move {
+        0%
+        {
+        transform:translateX(5%)  
+        }
+        100%
+        {
+          transform:translateX(100%)  
+        }
+      }
+      .warn{
+        animation:move 35s infinite;
+      }
+    </style>
+<!--   <script>
+    function typeInTextarea(newText, el = document.activeElement) {
+      const start = el.selectionStart
+      const end = el.selectionEnd
+      const text = el.value
+      const before = text.substring(0, start)
+      const after  = text.substring(end, text.length)
+      el.value = (before + newText + after)
+      el.selectionStart = el.selectionEnd = start + newText.length
+      el.focus()
+    }
+  </script> -->
+</head>
+<body>
+    {{header|safe}}
+  {%if message%}
+    <div class="toast-container position-fixed top-0 start-50 translate-middle pt-5">
+    <div class="toast align-items-center show mt-5 fade bg-warning fw-bold text-light" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body">
+          {{message}}
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="aja('msg')"></button>
+      </div>
+    </div>
+    </div>
+  {%endif%}
+  <div class="alert alert-warning mx-auto text-start" style="width:50rem;max-width:80%">為維護學生權益，指派時間固定為現在時間，且作業指派者無法更改<br><font class="text-primary fw-bold">送出新增後會傳送通知至應用程式</font></div>
+    <p></p>
+  <marquee direction="right" class="text-center" scrollamount="2"><div class="alert m-0 p-0 p-2 alert-info" style="max-width:25rem">本頁面每15分鐘自動刷新，請注意。</div></marquee>
+    <p></p>
+  <div class="container img-thumbnail p-2" style="margin-bottom:25rem">
+      <form action="./add{{cls}}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="index" value="{{id}}" readonly>
+    <input class="btn btn-lg btn-primary" type='button' onclick="location.replace('./add{{cls}}?id={{id}}')" value="重整頁面">
+    <input class="btn btn-lg btn-secondary" type="button" value="返回行程表" onclick="location.replace('./class{{cls}}')">
+    <div class="row text-center fs-5 fw-bold g-0 p-1 justify-content-around">
+      <div class="col">
+        <div class="bg-primary-subtle border-bottom">指派時間</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center">
+          <input type="datetime-local" name="start_time" class="form-control border border-2" value="{{value['start_time'].replace(' ','T')}}" readonly></div>
+      </div>
+      <div class="w-100 d-block d-sm-none"></div>
+      <div class="col">
+        <div class="bg-primary-subtle border-bottom">截止時間</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center">
+          <input type="date" name="end_date" class="form-control border border-bottom-0 border-2 rounded-0 rounded-top" value="{%if value['end_date']%}{{value['end_date']}}{%else%}{{get_today('%Y-%m-%d')}}{%endif%}">
+          <select name="end_time" id="end_time" class="form-select border border-2 border-top-0 rounded-0 rounded-bottom">
+            <option value="none" selected>請選擇節數</option>
+            <option value="早自習" {%if value["end_time"]=="早自習"%}selected{%endif%} >早自習</option>
+            <option value="第一節" {%if value["end_time"]=="第一節"%}selected{%endif%} >第一節</option>
+            <option value="第二節" {%if value["end_time"]=="第二節"%}selected{%endif%}>第二節</option>
+            <option value="第三節" {%if value["end_time"]=="第三節"%}selected{%endif%}>第三節</option>
+            <option value="第四節" {%if value["end_time"]=="第四節"%}selected{%endif%}>第四節</option>
+            <option value="午  休" {%if value["end_time"]=="午  休"%}selected{%endif%}>午  休</option>
+            <option value="第五節" {%if value["end_time"]=="第五節"%}selected{%endif%}>第五節</option>
+            <option value="第六節" {%if value["end_time"]=="第六節"%}selected{%endif%}>第六節</option>
+            <option value="第七節" {%if value["end_time"]=="第七節"%}selected{%endif%}>第七節</option>
+            <option value="第八節" {%if value["end_time"]=="第八節"%}selected{%endif%}>第八節</option>
+            <option value="第九節" {%if value["end_time"]=="第九節"%}selected{%endif%}>第九節</option>
+          </select>
+        </div>
+      </div>
+      <div class="w-100 d-block d-sm-none"></div>
+      <div class="col">
+        <div class="bg-primary-subtle border-bottom">標題</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center">
+          <input type="text" name="title" value="{{value['title']}}" class="form-control border border-2">
+        </div>
+      </div>
+      <div class="w-100 d-block d-sm-none"></div>
+      <div class="col">
+        <div class="bg-primary-subtle border-bottom">內容</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center">
+          <textarea name="content" class="form-control border border-2">{{value['content']}}</textarea></div>
+      </div>
+      <div class="w-100 d-block d-sm-none"></div>
+      <div class="col">
+        <div class="bg-primary-subtle border-bottom">指派者</div>
+        <div class="p-1 bg-light-subtle fs-6 mt-1 mx-1 px-auto text-center">
+          <input type="text" name="tasker" class="form-control border border-2" value="{{Users[value['tasker']]['fullname']}}" readonly>
+        </div>
+      </div>
+    </div>
+        <div class="row g-0 justify-content-around text-center">
+          <div class="col p-2 border-top">
+        <input type="submit" value="確認新增" class="btn btn-lg btn-primary fw-bold"></div>
+        </div>
+  <input class="form-control" name="uploaded_files" id="formFileSm" type="file" multiple>
+</div>
+{{footer|safe}}
+<script>
+  $(function(){
+      $("#formFileSm").fileinput({
+        'showUpload': false,
+        "showRemove":false,
+        'dropZoneTitle':"拖放至此即可上傳",
+        'msgPlaceholder':"上傳檔案",
+        "browseLabel":"瀏覽",
+        "msgProcessing":"載入中"
+      });
+  })
+</script>
+</body>
+</html>

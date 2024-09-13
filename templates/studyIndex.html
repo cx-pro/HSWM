@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW" data-bs-theme="{{session.get('dark','light')}}"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta name="google-site-verification" content="cprO5RyLKebRcuGNZ3vvB9sqHi9GJWklHWcQPByLebg" />
+    <meta charset="UTF-8">
+    <title>高中職小幫手｜英文頂裂</title>
+</head>
+<body>
+    <div class="position-fixed top-0 end-0"><label id="darkl" class="theme user-select-none fw-bold fs-3" style="cursor:pointer;"><i class="bi bi-moon-fill" id="dark"></i></label>
+        <label id="lightl" class="theme user-select-none fw-bold fs-3" style="cursor:pointer;"><i class="bi bi-brightness-high-fill" id="light"></i></label>
+    </div>
+  {{header.replace(header[header.find("<header"):header.find("</header>")],"")|safe}}
+  <div class="mt-5"></div>
+  <a class="text-muted fs-2 text-center user-select-none text-decoration-none"><span data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions3" aria-controls="offcanvasWithBothOptionsLabel3">目標 <span class="ms-1 fs-5 text-primary"><i class="bi bi-caret-down-fill"></i></span></span></a>
+  <div class="offcanvas offcanvas-top w-100" data-bs-backdrop="static" tabindex="-1" id="offcanvasWithBothOptions3" aria-labelledby="staticBackdropLabel3" style="height:100vh;">
+    <div class="offcanvas-header">
+      <h1 class="text-primary" id="offcanvasWithBothOptionsLabel3">目標</h1>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body text-center overflow-y-scroll bg-secondary-subtle">
+      <div class="row p-3 gap-4 overflow-scroll mx-auto fs-1">
+        
+        <div class="border p-3 rounded bg-light-subtle col-12 col-md-3 fs-6">
+          <div class="card-body text-start">
+            <h5 class="card-title">英文</h5>
+            <p class="card-text">每天看三篇全英文文章，並合併寫出至少50字摘要。</p>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="container text-center overflow-scroll mx-auto">
+    <form method="post" id="form" class="mt-3 needs-validation">
+      <div class="row">
+        <div class="col-12 col-lg-4">
+          <div class="form-floating">
+            <input type="url" class="form-control url" placeholder=" " required>
+            <label>新聞連結</label>
+            <div class="invalid-tooltip">
+              不可空白!
+              須符合網址格式
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4">
+          <div class="form-floating">
+            <input type="url" class="form-control url" placeholder=" " required>
+            <label>新聞連結</label>
+            <div class="invalid-tooltip">
+              不可空白!
+              須符合網址格式
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-4">
+          <div class="form-floating">
+            <input type="url" class="form-control url" placeholder=" " required>
+            <label>新聞連結</label>
+            <div class="invalid-tooltip">
+              不可空白!
+              須符合網址格式
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="form-floating mt-5">
+          <textarea id="summary" class="form-control" required placeholder=" " style="height:30rem" minlength="50"></textarea>
+          <label>摘要</label>
+          <div class="invalid-tooltip">需輸入至少50字!</div>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline-primary btn-lg fw-bold my-5 w-100" id="sub">送出</button>
+    </form>
+  </div>
+  {{footer.replace(footer[footer.find("<footer"):footer.find("</footer>")],"")|safe}}
+  <script>
+    $(function(){
+      $("#sub").click(function(){
+        event.preventDefault()
+        var form=document.querySelector("#form");
+        if (!form.checkValidity()) {
+          $("#form").addClass("was-validated");
+        }else{
+          var a=[]
+          $(".url").each(function(){a.push(this.value)})
+          $.ajax({
+            url:"/study/",
+            method:"post",
+            data:{"url":JSON.stringify(a),"summary":$("#summary").val()},
+            success:()=>{location.replace(location)}
+          })
+        }
+      })
+    })
+  </script>
+</body>
+</html>
