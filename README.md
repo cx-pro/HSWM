@@ -5,4 +5,4 @@
 This project purposed to create a integrated platform to help high school students and teachers in Taiwan on processing daily routines, 
 such as homeworks, daily tasks, announcements, learning, courses managements, and etc.
 
-Now I am bringing this project to the open-source world, and hoping there will be someone need it.
+Now I am bringing this project to the world of open-source, and hoping there will be someone need it.
