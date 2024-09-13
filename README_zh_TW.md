@@ -1,4 +1,4 @@
-**Read this in other languages: [English](README.md), [中文](README_zh_TW.md).**  
+**Languages: [English](README.md), [中文](README_zh_TW.md).**  
 . 
 .  
 # 高中職小幫手 專案
